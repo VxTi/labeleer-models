@@ -17,7 +17,7 @@ import {
 } from '../../util/locales';
 import { ParsingError } from '../processing-errors';
 
-export const parseXliff: ParserFn = (input, locale) => {
+export const parseXliff: ParserFn = input => {
   try {
     const parser = new XMLParser({
       ignoreAttributes: false,
@@ -34,8 +34,8 @@ export const parseXliff: ParserFn = (input, locale) => {
 
     const xliff = parsed.data.xliff;
 
-    const srcLang: Locale | null | undefined = xliff['@_srcLang'];
-    const tgtLang: Locale | undefined = xliff['@_trgLang'] ?? locale;
+    const srcLang: Locale | undefined = xliff['@_srcLang'] ?? undefined;
+    const tgtLang: Locale | undefined = xliff['@_trgLang'] ?? undefined;
 
     if (!srcLang) {
       throw new Error('Source language (srcLang) is missing or invalid.');

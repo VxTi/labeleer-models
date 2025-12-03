@@ -15,10 +15,10 @@ import {
 } from '../../util/locales';
 import { ParsingError } from '../processing-errors';
 
-export const parseTs: ParserFn = (input, locale) => {
-  if (!locale) {
+export const parseTs: ParserFn = (input, { referenceLocale }) => {
+  if (!referenceLocale) {
     throw new ParsingError(
-      'Parsing TS files requires a locale to be specified.'
+      'Parsing TS files requires a reference language to be specified.'
     );
   }
   try {
@@ -36,16 +36,8 @@ export const parseTs: ParserFn = (input, locale) => {
       );
     }
 
-    const {
-      data: { TS },
-    } = parsed;
-
-    const referenceLanguage: Locale | undefined = TS['@_language'];
-    if (!referenceLanguage) {
-      throw new Error(
-        'The TS file is missing a valid language attribute on the <TS> element.'
-      );
-    }
+    const TS = parsed.data.TS;
+    const translateTo: Locale | undefined = TS['@_language'];
 
     const dataset: TranslationDataset = {};
 
@@ -58,8 +50,8 @@ export const parseTs: ParserFn = (input, locale) => {
 
       dataset[key] = {
         translations: {
-          [referenceLanguage]: msg.source || '',
-          ...(msg.translation ? { [locale]: msg.translation || '' } : {}),
+          [referenceLocale]: msg.source || '',
+          ...(translateTo ? { [translateTo]: msg.translation || '' } : {}),
         },
       };
     });

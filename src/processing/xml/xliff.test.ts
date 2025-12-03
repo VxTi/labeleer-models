@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { mockDataset } from '../__testutils__/mock-dataset';
+import { mockParsingOptions } from '../__testutils__/mock-parsing-options';
 import { mockSerializationOptions } from '../__testutils__/mock-serialization-options';
 import { parseXliff, serializeXliff } from './xliff';
 
@@ -19,7 +20,7 @@ describe('XLIFF 2.1 Parsing', () => {
       </xliff>
     `;
 
-    const result = parseXliff(xml, 'de_DE');
+    const result = parseXliff(xml, mockParsingOptions());
 
     expect(result).toMatchInlineSnapshot(`
       {
@@ -47,14 +48,13 @@ describe('XLIFF 2.1 Parsing', () => {
       </xliff>
     `;
 
-    const result = parseXliff(xml, 'fr_FR');
+    const result = parseXliff(xml, mockParsingOptions());
 
     expect(result).toMatchInlineSnapshot(`
       {
         "greeting": {
           "translations": {
             "en_GB": "Hello world",
-            "fr_FR": "",
           },
         },
       }

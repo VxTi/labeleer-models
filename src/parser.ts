@@ -1,11 +1,15 @@
-import { parseAndroidStrings } from './processing/xml/android-strings';
-import { parseXliff } from './processing/xml/xliff';
-import { parseXml } from './processing/xml/xml';
-import { parseTs } from './processing/xml/qt-linguist';
+import {
+  parseAndroidStrings,
+  parseXliff,
+  parseXml,
+  parseTs,
+  parseJson,
+  parseYaml,
+  parsePo,
+  parseAppleStrings,
+} from './processing';
 import type { ParserFn, TranslationDataset } from './types';
 import { SupportedFormat } from './util/file-formats';
-import { parseJson } from './processing/json';
-import { parseYaml } from './processing/yaml';
 
 export function parse(
   input: string,
@@ -15,14 +19,11 @@ export function parse(
   return parser(input);
 }
 
-const _noop = (_: string): undefined => undefined;
-
 const parserMap: Record<SupportedFormat, ParserFn> = {
   [SupportedFormat.ANDROID_STRINGS]: parseAndroidStrings,
-  [SupportedFormat.APPLE_STRINGS]: _noop,
-  [SupportedFormat.CSV]: _noop,
+  [SupportedFormat.APPLE_STRINGS]: parseAppleStrings,
   [SupportedFormat.JSON]: parseJson,
-  [SupportedFormat.PO]: _noop,
+  [SupportedFormat.PO]: parsePo,
   [SupportedFormat.TS]: parseTs,
   [SupportedFormat.XLIFF]: parseXliff,
   [SupportedFormat.XML]: parseXml,

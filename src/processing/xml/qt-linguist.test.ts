@@ -1,5 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { mockDataset } from '../__testutils__/mock-dataset';
+import { mockParsingOptions } from '../__testutils__/mock-parsing-options';
 import { mockSerializationOptions } from '../__testutils__/mock-serialization-options';
 import { parseTs, serializeTs } from './qt-linguist';
 
@@ -103,7 +104,7 @@ describe('qt-linguist', () => {
   describe('parsing', () => {
     it('should parse a simple Qt Linguist XML dataset', () => {
       const dataset = `<?xml version="1.0" encoding="utf-8"?>
-        <TS version="2.1" language="en-US">
+        <TS version="2.1" language="nl-NL">
           <context>
             <name>Labeleer Translations</name>
             <message key="first-entry">
@@ -117,24 +118,27 @@ describe('qt-linguist', () => {
           </context>
         </TS>`;
 
-      const parsed = parseTs(dataset, 'nl_NL');
+      const parsed = parseTs(
+        dataset,
+        mockParsingOptions({ referenceLocale: 'en_US' })
+      );
       expect(parsed).toBeDefined();
       expect(parsed).toMatchInlineSnapshot(`
-      {
-        "first-entry": {
-          "translations": {
-            "en_US": "hello",
-            "nl_NL": "world",
+        {
+          "first-entry": {
+            "translations": {
+              "en_US": "hello",
+              "nl_NL": "world",
+            },
           },
-        },
-        "second-entry": {
-          "translations": {
-            "en_US": "hello",
-            "nl_NL": "again",
+          "second-entry": {
+            "translations": {
+              "en_US": "hello",
+              "nl_NL": "again",
+            },
           },
-        },
-      }
-    `);
+        }
+      `);
     });
 
     it('should parse a TS set even if there are no translations other than the reference', () => {
@@ -150,19 +154,19 @@ describe('qt-linguist', () => {
             </message>
           </context>
         </TS>`;
-      const parsed = parseTs(dataset, 'en_US');
+      const parsed = parseTs(dataset, mockParsingOptions());
 
       expect(parsed).toBeDefined();
       expect(parsed).toMatchInlineSnapshot(`
         {
           "first-entry": {
             "translations": {
-              "en_US": "hello",
+              "en_US": "",
             },
           },
           "second-entry": {
             "translations": {
-              "en_US": "hello",
+              "en_US": "",
             },
           },
         }

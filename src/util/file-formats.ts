@@ -1,10 +1,8 @@
 export const enum SupportedFormat {
   JSON = 'json',
-  XML = 'xml',
   YAML = 'yaml',
   TS = 'ts',
   PO = 'po',
-  CSV = 'csv',
   ANDROID_STRINGS = 'android_strings',
   APPLE_STRINGS = 'apple_strings',
   XLIFF = 'xliff',
@@ -18,10 +16,6 @@ export function mimeTypeForExportFormat(format: SupportedFormat): string {
   switch (format) {
     case SupportedFormat.JSON:
       return 'application/json';
-    case SupportedFormat.CSV:
-      return 'text/csv';
-    case SupportedFormat.XML:
-      return 'application/xml';
     case SupportedFormat.YAML:
       return 'application/yaml';
     case SupportedFormat.ANDROID_STRINGS:

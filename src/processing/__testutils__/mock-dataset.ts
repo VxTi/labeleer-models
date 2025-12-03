@@ -9,6 +9,10 @@ export function mockDataset(
         en_US: 'hello',
         nl_NL: 'world',
       },
+      plurals: {
+        en_US: 'hellos',
+        nl_NL: 'werelden',
+      },
     },
     'second-entry': {
       translations: {

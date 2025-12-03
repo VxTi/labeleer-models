@@ -1,19 +1,23 @@
 import { datasetParser } from '../decoders';
 import type { ParserFn, SerializerFn } from '../types';
+import { ParsingError } from './processing-errors';
 
 export const parseJson: ParserFn = input => {
   const json = safeParseJson(input);
   if (!json) {
-    return;
+    throw new ParsingError(
+      'Invalid JSON format. Please ensure the input is valid JSON.'
+    );
   }
 
   const result = datasetParser.safeParse(json);
 
   if (!result.success) {
-    console.error(result.error);
+    throw new ParsingError('JSON structure is invalid.', {
+      cause: result.error,
+    });
   }
-
-  return result.success ? result.data : undefined;
+  return result.data;
 };
 
 export const serializeJson: SerializerFn = data => {

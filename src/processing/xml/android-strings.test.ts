@@ -59,7 +59,7 @@ describe('Android Strings', () => {
           <string name="second-label">again</string>
         </resources>`;
 
-      const parsed = parseAndroidStrings(input, 'en_US');
+      const parsed = parseAndroidStrings(input, { referenceLocale: 'en_US' });
       expect(parsed).toBeDefined();
       expect(parsed).toMatchInlineSnapshot(`
         {

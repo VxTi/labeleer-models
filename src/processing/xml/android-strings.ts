@@ -7,11 +7,11 @@ import type {
 import { XMLBuilder, XMLParser } from 'fast-xml-parser';
 import { z } from 'zod';
 import type { Locale } from '../../util/locales';
-import { ParsingError } from '../processing-errors';
+import { ParsingError, SerializationError } from '../processing-errors';
 
-export const parseAndroidStrings: ParserFn = (input, locale) => {
+export const parseAndroidStrings: ParserFn = (input, { referenceLocale }) => {
   // Requires a locale to parse properly
-  if (!locale) {
+  if (!referenceLocale) {
     throw new ParsingError('Locale is required to parse Android Strings XML');
   }
 
@@ -21,7 +21,7 @@ export const parseAndroidStrings: ParserFn = (input, locale) => {
     });
     const xmlObj: unknown = parser.parse(input);
 
-    return transformToDataset(xmlObj, locale);
+    return transformToDataset(xmlObj, referenceLocale);
   } catch (e: unknown) {
     throw new ParsingError(`Failed to parse Android Strings XML: ${String(e)}`);
   }
@@ -47,11 +47,10 @@ export const serializeAndroidStrings: SerializerFn = (input, config) => {
 
     return outputFragments;
   } catch (e) {
-    console.error(
+    throw new SerializationError(
       'Something went wrong whilst attempting to serialize Android Strings XML: ',
-      e
+      { cause: e }
     );
-    return undefined;
   }
 };
 
@@ -117,9 +116,13 @@ type SerializationIrFragment = z.infer<typeof serializationIrFragmentDecoder>;
 function transformToDataset(
   xmlObj: unknown,
   locale: Locale
-): TranslationDataset | undefined {
+): TranslationDataset {
   const ir = serializationIrDecoder.safeParse(xmlObj);
-  if (!ir.success) return;
+  if (!ir.success) {
+    throw new ParsingError('Invalid Android Strings XML structure.', {
+      cause: ir.error,
+    });
+  }
 
   const dataset: TranslationDataset = {};
 

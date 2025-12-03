@@ -1,16 +1,19 @@
+import {
+  serializeAndroidStrings,
+  serializeJson,
+  serializePo,
+  serializeTs,
+  serializeXliff,
+  serializeYaml,
+  serializeAppleStrings,
+} from './processing';
 import type {
   SerializationFragment,
   SerializationOptions,
   SerializerFn,
   TranslationDataset,
-} from '@labeleer/models';
-import { serializeAndroidStrings } from './processing/xml/android-strings';
-import { serializeTs } from './processing/xml/qt-linguist';
-import { serializeXliff } from './processing/xml/xliff';
+} from './types';
 import { SupportedFormat } from './util/file-formats';
-import { serializeJson } from './processing/json';
-import { serializeXml } from './processing/xml/xml';
-import { serializeYaml } from './processing/yaml';
 
 export function serialize(
   dataset: TranslationDataset,
@@ -25,11 +28,9 @@ export function serialize(
 const serializerMap: Record<SupportedFormat, SerializerFn> = {
   [SupportedFormat.JSON]: serializeJson,
   [SupportedFormat.ANDROID_STRINGS]: serializeAndroidStrings,
-  [SupportedFormat.APPLE_STRINGS]: () => undefined,
-  [SupportedFormat.CSV]: () => undefined,
-  [SupportedFormat.PO]: () => undefined,
+  [SupportedFormat.APPLE_STRINGS]: serializeAppleStrings,
+  [SupportedFormat.PO]: serializePo,
   [SupportedFormat.TS]: serializeTs,
   [SupportedFormat.XLIFF]: serializeXliff,
-  [SupportedFormat.XML]: serializeXml,
   [SupportedFormat.YAML]: serializeYaml,
 };
