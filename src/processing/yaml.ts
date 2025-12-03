@@ -16,5 +16,6 @@ export const parseYaml: ParserFn = input => {
 };
 
 export const serializeYaml: SerializerFn = input => {
-  return YAML.stringify(input);
+  const content = YAML.stringify(input);
+  return [{ content }];
 };

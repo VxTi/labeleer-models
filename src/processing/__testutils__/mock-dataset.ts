@@ -1,4 +1,8 @@
-export function mockDataset() {
+import type { TranslationDataset } from '../../types';
+
+export function mockDataset(
+  updates: Partial<TranslationDataset> = {}
+): TranslationDataset {
   return {
     'first-entry': {
       translations: {
@@ -12,5 +16,6 @@ export function mockDataset() {
         nl_NL: 'again',
       },
     },
+    ...updates,
   };
 }

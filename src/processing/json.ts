@@ -17,7 +17,8 @@ export const parseJson: ParserFn = input => {
 };
 
 export const serializeJson: SerializerFn = data => {
-  return JSON.stringify(data, null, 2);
+  const content = JSON.stringify(data, null, 2);
+  return [{ content }];
 };
 
 function safeParseJson(input: string): object | undefined {

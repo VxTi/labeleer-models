@@ -1,5 +1,5 @@
-import { describe, it, expect } from 'vitest';
-import { mockDataset } from './__testutils__/mockDataset';
+import { describe, it, expect }     from 'vitest';
+import { mockDataset }              from './__testutils__/mock-dataset';
 import { parseYaml, serializeYaml } from './yaml';
 
 describe('yaml parsing', () => {
@@ -25,7 +25,7 @@ describe('yaml parsing', () => {
     `);
   });
 
-  it('should serialize a dataset into yaml correctly', () => {
+  it('should serialize a simple YAML dataset', () => {
     const dataset = mockDataset();
 
     const serialized = serializeYaml(dataset);
