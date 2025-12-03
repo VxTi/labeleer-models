@@ -9,7 +9,8 @@ export const parseYaml: ParserFn = input => {
     const parsedDataset = datasetParser.safeParse(parsedYaml);
 
     return parsedDataset.success ? parsedDataset.data : undefined;
-  } catch {
+  } catch (e) {
+    console.error('Something went wrong whilst trying to parse yaml: ', e);
     return undefined;
   }
 };
