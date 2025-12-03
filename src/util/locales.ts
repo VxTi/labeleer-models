@@ -146,6 +146,15 @@ export interface NamedLocaleEntry {
   name: string;
 }
 
+export function isBCP47Locale(
+  value: string | undefined
+): value is BCP47Locale<Locale> {
+  if (!value) return false;
+
+  const bcp47Locales = Locales.map(loc => loc.replace('_', '-'));
+  return (bcp47Locales as readonly string[]).includes(value);
+}
+
 export function toBCP47<T extends Locale>(posixLocale: T): BCP47Locale<T> {
   return posixLocale.replace('_', '-') as BCP47Locale<T>;
 }

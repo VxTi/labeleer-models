@@ -1,17 +1,76 @@
-import { XMLBuilder } from 'fast-xml-parser';
+import { XMLBuilder, XMLParser } from 'fast-xml-parser';
+import { z } from 'zod';
 import type {
   ParserFn,
   SerializationFragment,
   SerializerFn,
   TranslationDataset,
 } from '../../types';
-import type { Locale } from '../../util/locales';
+import {
+  isBCP47Locale,
+  isLocale,
+  type Locale,
+  toBCP47,
+  toPOSIX,
+} from '../../util/locales';
+import { ParsingError } from '../processing-errors';
 
-export const parseTs: ParserFn = input => {
-  const parser = new XMLBuilder({
-    ignoreAttributes: false,
-    parseAttributeValue: true,
-  });
+export const parseTs: ParserFn = (input, locale) => {
+  if (!locale) {
+    throw new ParsingError(
+      'Parsing TS files requires a locale to be specified.'
+    );
+  }
+  try {
+    const parser = new XMLParser({
+      ignoreAttributes: false,
+    });
+
+    const xmlObj: unknown = parser.parse(input);
+
+    const parsed = linquistTsDecoder.safeParse(xmlObj);
+
+    if (!parsed.success) {
+      throw new Error(
+        `The TS file structure is invalid: ${parsed.error.message}`
+      );
+    }
+
+    const {
+      data: { TS },
+    } = parsed;
+
+    const referenceLanguage: Locale | undefined = TS['@_language'];
+    if (!referenceLanguage) {
+      throw new Error(
+        'The TS file is missing a valid language attribute on the <TS> element.'
+      );
+    }
+
+    const dataset: TranslationDataset = {};
+
+    const messages: LinquistTsMessage[] = Array.isArray(TS.context.message)
+      ? TS.context.message
+      : [TS.context.message];
+
+    messages.forEach((msg: LinquistTsMessage) => {
+      const key = msg['@_key'];
+
+      dataset[key] = {
+        translations: {
+          [referenceLanguage]: msg.source || '',
+          ...(msg.translation ? { [locale]: msg.translation || '' } : {}),
+        },
+      };
+    });
+
+    return dataset;
+  } catch (e) {
+    throw new ParsingError(
+      'Something went wrong while trying to parse the TS file.',
+      { cause: e }
+    );
+  }
 };
 
 export const serializeTs: SerializerFn = (input, config) => {
@@ -48,7 +107,7 @@ function constructTsFragment(
   const tsObj = {
     TS: {
       '@_version': '2.1',
-      '@_language': referenceLocale,
+      '@_language': toBCP47(referenceLocale),
       context: {
         name: 'Labeleer Translations',
         message: Object.entries(dataset).map(([key, entry]) => ({
@@ -66,6 +125,30 @@ function constructTsFragment(
 
   return {
     content,
-    identifier: locale,
+    identifier: toBCP47(locale ?? referenceLocale),
   };
 }
+
+const linquistTsMessageDecoder = z.object({
+  '@_key': z.string(),
+  source: z.string(),
+  translation: z.string().optional(),
+});
+
+type LinquistTsMessage = z.infer<typeof linquistTsMessageDecoder>;
+
+const linquistTsDecoder = z.object({
+  TS: z.object({
+    '@_language': z
+      .string()
+      .transform(val =>
+        isLocale(val) ? val : isBCP47Locale(val) ? toPOSIX(val) : undefined
+      ),
+    context: z.object({
+      message: z.union([
+        z.array(linquistTsMessageDecoder),
+        linquistTsMessageDecoder,
+      ]),
+    }),
+  }),
+});
