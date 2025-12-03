@@ -83,7 +83,7 @@ export const serializeTs: SerializerFn = (input, config) => {
   });
 
   if (nonReferenceLanguages.length === 0) {
-    const fragment = constructTsFragment(
+    const fragment = constructTsSerializationFragment(
       builder,
       input,
       undefined,
@@ -94,11 +94,16 @@ export const serializeTs: SerializerFn = (input, config) => {
   }
 
   return nonReferenceLanguages.map(locale =>
-    constructTsFragment(builder, input, locale, config.referenceLocale)
+    constructTsSerializationFragment(
+      builder,
+      input,
+      locale,
+      config.referenceLocale
+    )
   );
 };
 
-function constructTsFragment(
+function constructTsSerializationFragment(
   builder: XMLBuilder,
   dataset: TranslationDataset,
   locale: Locale | undefined,

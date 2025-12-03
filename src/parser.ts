@@ -1,8 +1,8 @@
-import type { ParserFn, TranslationDataset } from '@labeleer/models';
 import { parseAndroidStrings } from './processing/xml/android-strings';
 import { parseXliff } from './processing/xml/xliff';
 import { parseXml } from './processing/xml/xml';
 import { parseTs } from './processing/xml/qt-linguist';
+import type { ParserFn, TranslationDataset } from './types';
 import { SupportedFormat } from './util/file-formats';
 import { parseJson } from './processing/json';
 import { parseYaml } from './processing/yaml';

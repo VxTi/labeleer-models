@@ -24,10 +24,7 @@ export type TranslationDataset = Record<string, TranslationEntry>;
  * Whenever a {@link Locale} is provided, the parser should prioritize
  * parsing translations relevant to that locale.
  */
-export type ParserFn = (
-  input: string,
-  locale?: Locale
-) => TranslationDataset | undefined;
+export type ParserFn = (input: string, locale?: Locale) => TranslationDataset;
 
 /**
  * Options for serialization functions

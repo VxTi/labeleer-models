@@ -32,7 +32,9 @@ describe('yaml parsing', () => {
 
     expect(serialized).toBeDefined();
     expect(serialized).toMatchInlineSnapshot(`
-      "first-entry:
+      [
+        {
+          "content": "first-entry:
         translations:
           en_US: hello
           nl_NL: world
@@ -40,7 +42,9 @@ describe('yaml parsing', () => {
         translations:
           en_US: hello
           nl_NL: again
-      "
+      ",
+        },
+      ]
     `);
   });
 });

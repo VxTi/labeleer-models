@@ -1,6 +1,6 @@
-import type { ParserFn, SerializerFn } from '@labeleer/models';
 import { XMLBuilder, XMLParser } from 'fast-xml-parser';
 import { datasetParser } from '../../decoders';
+import type { ParserFn, SerializerFn } from '../../types';
 
 export const parseXml: ParserFn = input => {
   try {

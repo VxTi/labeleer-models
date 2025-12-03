@@ -138,12 +138,39 @@ const rtlLanguages = new Set([
 
 export type Locale = (typeof Locales)[number];
 
-export type BCP47Locale<T extends Locale> =
+export type BCP47Locale<T extends string> =
   T extends `${infer Lang}_${infer Region}` ? `${Lang}-${Region}` : never;
+
+export type ISO639_1LanguageCode<T extends string> =
+  T extends `${infer Lang}_${infer _Region}` ? Lang : never;
 
 export interface NamedLocaleEntry {
   code: Locale;
   name: string;
+}
+
+export function isISO639_1LanguageCode(
+  value: string | undefined
+): value is ISO639_1LanguageCode<Locale> {
+  if (!value) return false;
+
+  const iso639_1Codes = Locales.map(loc => loc.split('_')[0]);
+  return iso639_1Codes.includes(value);
+}
+
+export function toISO639_1LanguageCode<T extends Locale>(
+  locale: T
+): ISO639_1LanguageCode<T> {
+  return locale.split('_')[0] as ISO639_1LanguageCode<T>;
+}
+
+export function iso639_1ToLocale(
+  languageCode: ISO639_1LanguageCode<Locale>
+): Locale | null {
+  const matchingLocale = Locales.find(loc =>
+    loc.startsWith(`${languageCode}_`)
+  );
+  return matchingLocale || null;
 }
 
 export function isBCP47Locale(

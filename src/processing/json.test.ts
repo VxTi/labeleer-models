@@ -59,6 +59,25 @@ describe('json serialization', () => {
 
     const serialized = serializeJson(dataset);
     expect(serialized).toBeDefined();
-    expect(serialized).toMatchInlineSnapshot();
+    expect(serialized).toMatchInlineSnapshot(`
+      [
+        {
+          "content": "{
+        "first-entry": {
+          "translations": {
+            "en_US": "hello",
+            "nl_NL": "world"
+          }
+        },
+        "second-entry": {
+          "translations": {
+            "en_US": "hello",
+            "nl_NL": "again"
+          }
+        }
+      }",
+        },
+      ]
+    `);
   });
 });

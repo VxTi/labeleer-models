@@ -1,5 +1,5 @@
-import type { ParserFn, SerializerFn } from '@labeleer/models';
 import { datasetParser } from '../decoders';
+import type { ParserFn, SerializerFn } from '../types';
 
 export const parseJson: ParserFn = input => {
   const json = safeParseJson(input);
