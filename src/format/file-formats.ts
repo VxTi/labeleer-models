@@ -18,23 +18,27 @@ export enum SupportedFormat {
  * This function maps each SupportedFormat to its common file extensions,
  * as some formats can have multiple valid extensions.
  */
-export function getExtensionsForFormat(format: SupportedFormat): string[] {
-  switch (format) {
-    case SupportedFormat.JSON:
-      return ['json'];
-    case SupportedFormat.YAML:
-      return ['yaml', 'yml'];
-    case SupportedFormat.ANDROID_STRINGS:
-      return ['xml'];
-    case SupportedFormat.APPLE_STRINGS:
-      return ['strings'];
-    case SupportedFormat.XLIFF:
-      return ['xliff', 'xlf', 'xml'];
-    case SupportedFormat.PO:
-      return ['po', 'pot'];
-    case SupportedFormat.TS:
-      return ['ts'];
-  }
+export function getFormatForExtension(
+  extension: string
+): SupportedFormat | undefined {
+  if (extension.endsWith('.json')) return SupportedFormat.JSON;
+
+  if (extension.endsWith('.yaml') || extension.endsWith('.yml'))
+    return SupportedFormat.YAML;
+
+  if (extension.endsWith('.xml')) return SupportedFormat.XLIFF;
+
+  if (extension.endsWith('.strings')) return SupportedFormat.APPLE_STRINGS;
+
+  if (extension.endsWith('.xliff') || extension.endsWith('.xlf'))
+    return SupportedFormat.XLIFF;
+
+  if (extension.endsWith('.po') || extension.endsWith('.pot'))
+    return SupportedFormat.PO;
+
+  if (extension.endsWith('.ts')) return SupportedFormat.TS;
+
+  return undefined;
 }
 
 /**
