@@ -1,4 +1,4 @@
-import type { Locale } from './util/locales';
+import type { Locale } from './locales';
 
 /**
  * An entry in a translation dataset,
@@ -90,7 +90,7 @@ export interface SerializationFragment {
   /**
    * The serialized content of the fragment.
    */
-  content: string;
+  data: string;
 }
 
 /**

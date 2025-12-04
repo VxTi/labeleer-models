@@ -10,8 +10,8 @@ import type {
   SerializationFragment,
   SerializerFn,
   TranslationDataset,
-} from '../types';
-import { type Locale } from '../util/locales';
+}                       from '../types';
+import { type Locale }  from '../locales';
 import { ParsingError } from './processing-errors';
 
 /**
@@ -126,9 +126,10 @@ function constructPoSerializationFragment(
     output.translations[''][key] = poEntry;
   }
 
-  const content = po.compile(output).toString('utf-8');
+  const data = po.compile(output).toString('utf-8');
+
   return {
-    content,
+    data,
     identifier: locale,
   };
 }

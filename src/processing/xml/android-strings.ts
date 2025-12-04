@@ -5,8 +5,8 @@ import type {
   TranslationDataset,
 } from '../../types';
 import { XMLBuilder, XMLParser } from 'fast-xml-parser';
-import { z } from 'zod';
-import type { Locale } from '../../util/locales';
+import { z }                                from 'zod';
+import type { Locale }                      from '../../locales';
 import { ParsingError, SerializationError } from '../processing-errors';
 
 export const parseAndroidStrings: ParserFn = (input, { referenceLocale }) => {
@@ -41,7 +41,7 @@ export const serializeAndroidStrings: SerializerFn = (input, config) => {
     for (const [locale, dataset] of Object.entries(perLanguageDatasets)) {
       outputFragments.push({
         identifier: locale,
-        content: buildXmlDataset(builder, dataset, locale as Locale),
+        data: buildXmlDataset(builder, dataset, locale as Locale),
       });
     }
 

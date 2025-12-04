@@ -5,7 +5,7 @@ import type {
   SerializationFragment,
   SerializerFn,
   TranslationDataset,
-} from '../../types';
+}                       from '../../types';
 import {
   isBCP47Locale,
   isISO639_1LanguageCode,
@@ -14,7 +14,7 @@ import {
   type Locale,
   toISO639_1LanguageCode,
   toPOSIX,
-} from '../../util/locales';
+}                       from '../../locales';
 import { ParsingError } from '../processing-errors';
 
 export const parseXliff: ParserFn = input => {
@@ -94,7 +94,7 @@ export const serializeXliff: SerializerFn = (input, config) => {
       ds,
       undefined,
       config.referenceLocale
-    ).content;
+    ).data;
   }
 
   for (const locale of nonRef) {
@@ -151,7 +151,7 @@ function constructXliff21Fragment(
 
   return {
     identifier: targetLocale,
-    content: `<?xml version="1.0" encoding="UTF-8"?>\n${xmlContent}`,
+    data: `<?xml version="1.0" encoding="UTF-8"?>\n${xmlContent}`,
   };
 }
 

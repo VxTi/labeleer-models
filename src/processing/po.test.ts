@@ -53,7 +53,7 @@ describe('po files', () => {
       expect(serialized).toMatchInlineSnapshot(`
         [
           {
-            "content": "msgid ""
+            "data": "msgid ""
         msgstr ""
         "Content-Type: text/plain; charset=utf-8\\n"
         "Content-Transfer-Encoding: 8bit\\n"
@@ -69,7 +69,7 @@ describe('po files', () => {
             "identifier": "en_US",
           },
           {
-            "content": "msgid ""
+            "data": "msgid ""
         msgstr ""
         "Content-Type: text/plain; charset=utf-8\\n"
         "Content-Transfer-Encoding: 8bit\\n"

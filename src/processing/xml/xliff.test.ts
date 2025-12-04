@@ -104,7 +104,7 @@ describe('XLIFF 2.1 Serialization', () => {
     expect(result).toMatchInlineSnapshot(`
       [
         {
-          "content": "<?xml version="1.0" encoding="UTF-8"?>
+          "data": "<?xml version="1.0" encoding="UTF-8"?>
       <xliff version="2.1" xmlns="urn:oasis:names:tc:xliff:document:2.1" srcLang="en" trgLang="de">
         <file id="f1">
           <unit id="first-entry">
@@ -139,7 +139,7 @@ describe('XLIFF 2.1 Serialization', () => {
     expect(result).toMatchInlineSnapshot(`
       [
         {
-          "content": "<?xml version="1.0" encoding="UTF-8"?>
+          "data": "<?xml version="1.0" encoding="UTF-8"?>
       <xliff version="2.1" xmlns="urn:oasis:names:tc:xliff:document:2.1" srcLang="en" trgLang="fr">
         <file id="f1">
           <unit id="first-entry">
@@ -160,7 +160,7 @@ describe('XLIFF 2.1 Serialization', () => {
           "identifier": "fr_FR",
         },
         {
-          "content": "<?xml version="1.0" encoding="UTF-8"?>
+          "data": "<?xml version="1.0" encoding="UTF-8"?>
       <xliff version="2.1" xmlns="urn:oasis:names:tc:xliff:document:2.1" srcLang="en" trgLang="es">
         <file id="f1">
           <unit id="first-entry">

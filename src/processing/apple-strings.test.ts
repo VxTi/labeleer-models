@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import type { Locale } from '../util/locales';
-import { mockParsingOptions } from './__testutils__/mock-parsing-options';
+import type { Locale }          from '../locales';
+import { mockParsingOptions }   from './__testutils__/mock-parsing-options';
 import { mockSerializationOptions } from './__testutils__/mock-serialization-options';
 import {
   parseAppleStrings,
@@ -98,12 +98,12 @@ describe('apple strings', () => {
       expect(serialized).toMatchInlineSnapshot(`
         [
           {
-            "content": ""first-entry" = "english";
+            "data": ""first-entry" = "english";
         "second-entry" = "english \\"second\\"";",
             "identifier": "en_US",
           },
           {
-            "content": ""first-entry" = "dutch";
+            "data": ""first-entry" = "dutch";
         "second-entry" = "dutch \\"second\\"";",
             "identifier": "nl_NL",
           },

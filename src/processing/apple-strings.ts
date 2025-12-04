@@ -5,8 +5,8 @@ import type {
   SerializationFragment,
   SerializerFn,
   TranslationDataset,
-} from '../types';
-import type { Locale } from '../util/locales';
+}                       from '../types';
+import type { Locale }  from '../locales';
 import { ParsingError } from './processing-errors';
 
 const APPLE_STRING_LINE_REGEX =
@@ -53,12 +53,12 @@ function constructAppleStringsSerializationFragment(
     }
   }
 
-  const content = Object.entries(kvMapping)
+  const data = Object.entries(kvMapping)
     .map(([key, value]) => `"${escapeText(key)}" = "${escapeText(value)}";`)
     .join('\n');
 
   return {
-    content,
+    data,
     identifier: targetLocale,
   };
 }

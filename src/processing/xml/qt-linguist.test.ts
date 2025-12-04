@@ -30,7 +30,7 @@ describe('qt-linguist', () => {
       expect(serialized).toMatchInlineSnapshot(`
         [
           {
-            "content": "<?xml version="1.0" encoding="utf-8"?>
+            "data": "<?xml version="1.0" encoding="utf-8"?>
         <TS version="2.1" language="en-US">
           <context>
             <name>Labeleer Translations</name>
@@ -48,7 +48,7 @@ describe('qt-linguist', () => {
             "identifier": "nl-NL",
           },
           {
-            "content": "<?xml version="1.0" encoding="utf-8"?>
+            "data": "<?xml version="1.0" encoding="utf-8"?>
         <TS version="2.1" language="en-US">
           <context>
             <name>Labeleer Translations</name>
@@ -82,7 +82,7 @@ describe('qt-linguist', () => {
       expect(serialized).toHaveLength(1);
       expect(serialized?.[0]).toMatchInlineSnapshot(`
         {
-          "content": "<?xml version="1.0" encoding="utf-8"?>
+          "data": "<?xml version="1.0" encoding="utf-8"?>
         <TS version="2.1" language="en-US">
           <context>
             <name>Labeleer Translations</name>

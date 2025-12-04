@@ -20,9 +20,10 @@ export const parseJson: ParserFn = input => {
   return result.data;
 };
 
-export const serializeJson: SerializerFn = data => {
-  const content = JSON.stringify(data, null, 2);
-  return [{ content }];
+export const serializeJson: SerializerFn = dataset => {
+  const data = JSON.stringify(dataset, null, 2);
+
+  return [{ data }];
 };
 
 function safeParseJson(input: string): object | undefined {

@@ -5,14 +5,14 @@ import type {
   SerializationFragment,
   SerializerFn,
   TranslationDataset,
-} from '../../types';
+}                       from '../../types';
 import {
   isBCP47Locale,
   isLocale,
   type Locale,
   toBCP47,
   toPOSIX,
-} from '../../util/locales';
+}                       from '../../locales';
 import { ParsingError } from '../processing-errors';
 
 export const parseTs: ParserFn = (input, { referenceLocale }) => {
@@ -118,10 +118,10 @@ function constructTsSerializationFragment(
     },
   };
 
-  const content = `<?xml version="1.0" encoding="utf-8"?>\n${builder.build(tsObj)}`;
+  const data = `<?xml version="1.0" encoding="utf-8"?>\n${builder.build(tsObj)}`;
 
   return {
-    content,
+    data,
     identifier: toBCP47(locale ?? referenceLocale),
   };
 }

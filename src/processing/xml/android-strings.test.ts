@@ -24,24 +24,24 @@ describe('Android Strings', () => {
         expect.arrayContaining([
           {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            content: expect.anything(),
+            data: expect.anything(),
             identifier: 'en_US',
           },
           {
             // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
-            content: expect.anything(),
+            data: expect.anything(),
             identifier: 'nl_NL',
           },
         ])
       );
-      expect(serialized?.[0]?.content).toMatchInlineSnapshot(`
+      expect(serialized?.[0]?.data).toMatchInlineSnapshot(`
         "<?xml version="1.0" encoding="utf-8"?>
         <resources>
           <string name="second-entry">hello</string>
         </resources>
         "
       `);
-      expect(serialized?.[1]?.content).toMatchInlineSnapshot(`
+      expect(serialized?.[1]?.data).toMatchInlineSnapshot(`
         "<?xml version="1.0" encoding="utf-8"?>
         <resources>
           <string name="second-entry">again</string>

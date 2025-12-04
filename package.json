@@ -8,10 +8,11 @@
   "license": "ISC",
   "main": "./dist/index.js",
   "scripts": {
-    "build": "esbuild ./src/index.ts --bundle --packages=external --minify --platform=node --format=esm --outfile=./dist/index.js",
+    "build:types": "tsc --emitDeclarationOnly --declaration --declarationDir dist",
+    "build": "npm run clean; esbuild ./src/index.ts --bundle --packages=external --minify --platform=node --format=esm --outfile=./dist/index.js && npm run build:types",
     "prepublishOnly": "npm run build",
     "test": "vitest run -u",
-    "lint": "eslint --fix \"./{src}/**/*.{ts}\" --cache --max-warnings 0",
+    "lint": "eslint --fix \"./src/**/*.ts\" --cache --max-warnings 0",
     "sanity": "npm run lint; npm run test; tsc --noEmit; npm run clean",
     "clean": "rm -rf ./dist tsconfig.tsbuildinfo"
   },
