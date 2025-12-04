@@ -13,6 +13,28 @@ export enum SupportedFormat {
 }
 
 /**
+ * Returns the most prevalent file extensions for the provided file format.
+ */
+export function getFileExtensionFromFormat(format: SupportedFormat): string {
+  switch (format) {
+    case SupportedFormat.YAML:
+      return 'yaml';
+    case SupportedFormat.XLIFF:
+      return 'xliff';
+    case SupportedFormat.TS:
+      return 'ts';
+    case SupportedFormat.PO:
+      return 'po';
+    case SupportedFormat.JSON:
+      return 'json';
+    case SupportedFormat.APPLE_STRINGS:
+      return 'strings';
+    case SupportedFormat.ANDROID_STRINGS:
+      return 'xml';
+  }
+}
+
+/**
  * Returns the file extensions associated with a given export format.
  *
  * This function maps each SupportedFormat to its common file extensions,
