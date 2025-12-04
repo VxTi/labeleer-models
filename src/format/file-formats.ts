@@ -2,7 +2,7 @@
  * Enum representing the supported export formats for localization files.
  * Each format corresponds to a specific file type used in localization workflows.
  */
-export const enum SupportedFormat {
+export enum SupportedFormat {
   JSON = 'json',
   YAML = 'yaml',
   TS = 'ts',
@@ -56,7 +56,9 @@ export function mimeTypeForExportFormat(format: SupportedFormat): string {
   }
 }
 
-// Formats that require compression when exporting multiple locale files.
+/**
+ * Formats that require compression when exporting multiple locale files.
+ */
 export const compressedFormats = [
   SupportedFormat.XLIFF,
   SupportedFormat.APPLE_STRINGS,
@@ -65,6 +67,9 @@ export const compressedFormats = [
   SupportedFormat.PO,
 ] as const;
 
+/**
+ * Type representing formats that require compression.
+ */
 export type CompressedFormat = (typeof compressedFormats)[number];
 
 /**
