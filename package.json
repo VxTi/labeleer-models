@@ -1,12 +1,15 @@
 {
   "name": "@labeleer/models",
-  "private": true,
   "version": "1.0.0",
+  "private": false,
   "type": "module",
   "description": "Utility parser methods used by all Labeleer tools",
   "author": "Luca Warmenhoven",
   "license": "ISC",
   "main": "./dist/index.js",
+  "files": [
+    "dist"
+  ],
   "scripts": {
     "build:types": "tsc --emitDeclarationOnly --declaration --declarationDir dist",
     "build": "npm run clean; esbuild ./src/index.ts --bundle --packages=external --minify --platform=node --format=esm --outfile=./dist/index.js && npm run build:types",
