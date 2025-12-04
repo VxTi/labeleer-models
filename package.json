@@ -1,6 +1,6 @@
 {
   "name": "@labeleer/models",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": false,
   "type": "module",
   "description": "Utility parser methods used by all Labeleer tools",
