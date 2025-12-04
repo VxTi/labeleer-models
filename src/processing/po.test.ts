@@ -84,20 +84,6 @@ describe('po files', () => {
         ",
             "identifier": "nl_NL",
           },
-          {
-            "content": "msgid ""
-        msgstr ""
-        "Content-Type: text/plain; charset=utf-8\\n"
-        "Content-Transfer-Encoding: 8bit\\n"
-
-        msgid "first-entry"
-        msgstr ""
-
-        msgid "second-entry"
-        msgstr ""
-        ",
-            "identifier": "fr_FR",
-          },
         ]
       `);
     });

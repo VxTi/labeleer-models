@@ -53,7 +53,7 @@ export type ParserFn<T extends object = {}> = (
  * and returns a single aggregated TranslationDataset.
  */
 export type AggregateParserFn<T extends object = {}> = (
-  inputs: Record<string, string>,
+  inputs: Partial<Record<Locale, string>>,
   options: ParsingOptions<T>
 ) => TranslationDataset;
 

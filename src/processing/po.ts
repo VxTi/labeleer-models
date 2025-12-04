@@ -11,7 +11,7 @@ import type {
   SerializerFn,
   TranslationDataset,
 } from '../types';
-import { isLocale, type Locale } from '../util/locales';
+import { type Locale } from '../util/locales';
 import { ParsingError } from './processing-errors';
 
 /**
@@ -61,12 +61,11 @@ export const parsePo: ParserFn = (input, { targetLocale }) => {
 export const parsePoAggregated: AggregateParserFn = (inputs, options) => {
   const aggregatedDataset: TranslationDataset = {};
 
-  for (const [locale, content] of Object.values(inputs)) {
-    if (!isLocale(locale)) {
-      throw new ParsingError('Target locale is required for parsing PO files.');
-    }
-
-    const dataset = parsePo(content, { ...options, targetLocale: locale });
+  for (const [locale, content] of Object.entries(inputs)) {
+    const dataset = parsePo(content, {
+      ...options,
+      targetLocale: locale as Locale,
+    });
 
     merge(aggregatedDataset, dataset);
   }
