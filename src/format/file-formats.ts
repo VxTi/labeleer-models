@@ -1,3 +1,7 @@
+/**
+ * Enum representing the supported export formats for localization files.
+ * Each format corresponds to a specific file type used in localization workflows.
+ */
 export const enum SupportedFormat {
   JSON = 'json',
   YAML = 'yaml',
@@ -6,6 +10,31 @@ export const enum SupportedFormat {
   ANDROID_STRINGS = 'android_strings',
   APPLE_STRINGS = 'apple_strings',
   XLIFF = 'xliff',
+}
+
+/**
+ * Returns the file extensions associated with a given export format.
+ *
+ * This function maps each SupportedFormat to its common file extensions,
+ * as some formats can have multiple valid extensions.
+ */
+export function getExtensionsForFormat(format: SupportedFormat): string[] {
+  switch (format) {
+    case SupportedFormat.JSON:
+      return ['json'];
+    case SupportedFormat.YAML:
+      return ['yaml', 'yml'];
+    case SupportedFormat.ANDROID_STRINGS:
+      return ['xml'];
+    case SupportedFormat.APPLE_STRINGS:
+      return ['strings'];
+    case SupportedFormat.XLIFF:
+      return ['xliff', 'xlf', 'xml'];
+    case SupportedFormat.PO:
+      return ['po', 'pot'];
+    case SupportedFormat.TS:
+      return ['ts'];
+  }
 }
 
 /**
@@ -27,6 +56,7 @@ export function mimeTypeForExportFormat(format: SupportedFormat): string {
   }
 }
 
+// Formats that require compression when exporting multiple locale files.
 export const compressedFormats = [
   SupportedFormat.XLIFF,
   SupportedFormat.APPLE_STRINGS,
@@ -37,6 +67,9 @@ export const compressedFormats = [
 
 export type CompressedFormat = (typeof compressedFormats)[number];
 
+/**
+ * Type guard to check if a format requires compression.
+ */
 export function requiresCompression(
   format: SupportedFormat
 ): format is CompressedFormat {
