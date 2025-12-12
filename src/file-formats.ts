@@ -12,6 +12,7 @@ export enum SupportedFormat {
   ANDROID_STRINGS = 'android_strings',
   APPLE_STRINGS = 'apple_strings',
   XLIFF = 'xliff',
+  XCSTRINGS = 'xcstrings',
 }
 
 /**
@@ -21,6 +22,7 @@ export enum SupportedFormat {
 export function mimeTypeForExportFormat(format: SupportedFormat): string {
   switch (format) {
     case SupportedFormat.JSON:
+    case SupportedFormat.XCSTRINGS:
       return 'application/json';
     case SupportedFormat.YAML:
       return 'application/yaml';
@@ -66,6 +68,7 @@ const formatExtensionRegistry: Record<SupportedFormat, string[]> = {
   [SupportedFormat.ANDROID_STRINGS]: ['.xml'],
   [SupportedFormat.APPLE_STRINGS]: ['.strings'],
   [SupportedFormat.XLIFF]: ['.xliff', '.xlf'],
+  [SupportedFormat.XCSTRINGS]: ['.xcstrings'],
 };
 
 /**

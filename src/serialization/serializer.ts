@@ -10,6 +10,7 @@ import { serializeAppleStrings } from './apple-strings-serializer';
 import { serializeJson } from './json-serializer';
 import { serializePo } from './po-serialization';
 import { serializeTs } from './qt-linquist-serializer';
+import { serializeXcstrings } from './xcstrings-serializer';
 import { serializeXliff } from './xliff-serializer';
 import { serializeYaml } from './yaml-serializer';
 
@@ -57,4 +58,5 @@ const serializerMap: Record<SupportedFormat, SerializerFn> = {
   [SupportedFormat.PO]: serializePo,
   [SupportedFormat.YAML]: serializeYaml,
   [SupportedFormat.JSON]: serializeJson,
+  [SupportedFormat.XCSTRINGS]: serializeXcstrings,
 };

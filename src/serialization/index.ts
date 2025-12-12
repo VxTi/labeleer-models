@@ -4,4 +4,6 @@ export * from './json-serializer';
 export * from './po-serialization';
 export * from './qt-linquist-serializer';
 export * from './xliff-serializer';
+export * from './xcstrings-serializer';
 export * from './yaml-serializer';
+export * from './serializer';

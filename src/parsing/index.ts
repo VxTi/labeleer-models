@@ -4,4 +4,5 @@ export * from './json-parser';
 export * from './po-parser';
 export * from './qt-linquist-parser';
 export * from './yaml-parser';
+export * from './xcstrings-parser';
 export * from './parser';

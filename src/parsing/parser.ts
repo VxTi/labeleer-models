@@ -10,6 +10,7 @@ import { parseAppleStrings } from './apple-strings-parser';
 import { parseJson } from './json-parser';
 import { parsePo } from './po-parser';
 import { parseTs } from './qt-linquist-parser';
+import { parseXcstrings } from './xcstrings-parser';
 import { parseXliff } from './xliff-parser';
 import { parseYaml } from './yaml-parser';
 
@@ -49,4 +50,5 @@ const parserMap: Record<SupportedFormat, ParserFn | AggregateParserFn> = {
   [SupportedFormat.XLIFF]: parseXliff,
   [SupportedFormat.TS]: parseTs,
   [SupportedFormat.APPLE_STRINGS]: parseAppleStrings,
+  [SupportedFormat.XCSTRINGS]: parseXcstrings,
 } as const;
