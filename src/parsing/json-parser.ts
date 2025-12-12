@@ -1,6 +1,6 @@
 import { datasetParser } from '../decoders';
-import type { ParserFn, SerializerFn } from '../types';
-import { ParsingError } from './processing-errors';
+import { ParsingError } from '../processing';
+import type { ParserFn } from '../types';
 
 export const parseJson: ParserFn = input => {
   const json = safeParseJson(input);
@@ -18,12 +18,6 @@ export const parseJson: ParserFn = input => {
     });
   }
   return result.data;
-};
-
-export const serializeJson: SerializerFn = dataset => {
-  const data = JSON.stringify(dataset, null, 2);
-
-  return [{ data }];
 };
 
 function safeParseJson(input: string): object | undefined {
