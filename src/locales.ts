@@ -1,5 +1,7 @@
-// POSIX locale codes supported by the application.
-// Source: https://www.gnu.org/software/libc/manual/html_node/Locale-Names.html
+/**
+ * Supported POSIX locale codes
+ * @see [GNU - Locale names](https://www.gnu.org/software/libc/manual/html_node/Locale-Names.html)
+ */
 export const Locales = [
   'af_ZA', // Afrikaans
   'am_ET', // Amharic
@@ -136,36 +138,50 @@ const rtlLanguages = new Set([
   'ks', // Kashmiri
 ]);
 
-export type Locale = (typeof Locales)[number];
-
-export type BCP47Locale<T extends string> =
+export type InferBCP47Locale<T extends string> =
   T extends `${infer Lang}_${infer Region}` ? `${Lang}-${Region}` : never;
-
-export type ISO639_1LanguageCode<T extends string> =
+export type InferISO639_1LanguageCode<T extends string> =
   T extends `${infer Lang}_${infer _Region}` ? Lang : never;
 
-export interface NamedLocaleEntry {
-  code: Locale;
-  name: string;
-}
+export type Locale = (typeof Locales)[number];
+export type BCP47Locale = InferBCP47Locale<Locale>;
+export type ISO639_1LanguageCode = InferISO639_1LanguageCode<Locale>;
 
+/**
+ * Checks whether the provided value is a valid `ISO 639-1` language code.
+ * A valid `ISO 639-1` code is a two-letter code representing a language (e.g., "en" for English).
+ *
+ * @param value - The string to check.
+ * @returns True if the value is a valid `ISO 639-1` language code, false otherwise.
+ */
 export function isISO639_1LanguageCode(
   value: string | undefined
-): value is ISO639_1LanguageCode<Locale> {
+): value is ISO639_1LanguageCode {
   if (!value) return false;
 
   const iso639_1Codes = Locales.map(loc => loc.split('_')[0]);
   return iso639_1Codes.includes(value);
 }
 
-export function toISO639_1LanguageCode<T extends Locale>(
-  locale: T
-): ISO639_1LanguageCode<T> {
-  return locale.split('_')[0] as ISO639_1LanguageCode<T>;
+/**
+ * Converts a given Locale to its corresponding `ISO 639-1` language code.
+ *
+ * @param locale - The Locale to convert (e.g., `en_US`).
+ * @returns The ISO 639-1 language code (e.g., `"en"`).
+ */
+export function toISO639_1LanguageCode(locale: Locale): ISO639_1LanguageCode {
+  return locale.split('_')[0] as ISO639_1LanguageCode;
 }
 
+/**
+ * Converts an `ISO 639-1` language code to a corresponding Locale.
+ * If multiple Locales exist for the same language code, the first match is returned.
+ *
+ * @param languageCode - The `ISO 639-1` language code (e.g., `"en"`).
+ * @returns The corresponding Locale (e.g., `en_US`), or null if not found.
+ */
 export function iso639_1ToLocale(
-  languageCode: ISO639_1LanguageCode<Locale>
+  languageCode: ISO639_1LanguageCode
 ): Locale | null {
   const matchingLocale = Locales.find(loc =>
     loc.startsWith(`${languageCode}_`)
@@ -173,20 +189,39 @@ export function iso639_1ToLocale(
   return matchingLocale || null;
 }
 
-export function isBCP47Locale(
-  value: string | undefined
-): value is BCP47Locale<Locale> {
+/**
+ * Checks whether the provided value is a valid `BCP 47` locale string.
+ * A valid `BCP 47` locale string follows the format "language-region" (e.g., "en-US").
+ *
+ * @param value - The string to check.
+ * @returns True if the value is a valid `BCP 47` locale string, false otherwise.
+ */
+export function isBCP47Locale(value: string | undefined): value is BCP47Locale {
   if (!value) return false;
 
   const bcp47Locales = Locales.map(loc => loc.replace('_', '-'));
   return (bcp47Locales as readonly string[]).includes(value);
 }
 
-export function toBCP47<T extends Locale>(posixLocale: T): BCP47Locale<T> {
-  return posixLocale.replace('_', '-') as BCP47Locale<T>;
+/**
+ * Converts a POSIX locale string (used in Unix-like systems, e.g., `"en_US"`)
+ * to `BCP 47` (Best Common Practice for Language Tags, e.g., `"en-US"`) format.
+ *
+ * @param posixLocale - The POSIX locale string (e.g., `"en_US"`).
+ * @returns The `BCP 47` locale string (e.g., `"en-US"`).
+ */
+export function toBCP47(posixLocale: Locale): BCP47Locale {
+  return posixLocale.replace('_', '-') as BCP47Locale;
 }
 
-export function toPOSIX<T extends BCP47Locale<Locale>>(locale: T): Locale {
+/**
+ * Converts a `BCP 47` (Best Common Practice for Language Tags, e.g., `"en-US"`)
+ * locale string to POSIX format (used in Unix-like systems, e.g., `"en_US"`).
+ *
+ * @param locale - The `BCP 47` locale string (e.g., `"en-US"`).
+ * @returns The `POSIX` locale string (e.g., `"en_US"`).
+ */
+export function toPOSIX<T extends BCP47Locale>(locale: T): Locale {
   return locale.replace('-', '_') as Locale;
 }
 
@@ -199,8 +234,12 @@ export function isLocale(value: string | undefined): value is Locale {
   return (Locales as readonly string[]).includes(value);
 }
 
-// Mapping to human-readable names.
-// You can expand this automatically with `new Intl.DisplayNames`.
+/**
+ * Retrieves the human-readable name of a given locale.
+ *
+ * @param locale - The locale string (e.g., `"en_US"` or `"fr-FR"`).
+ * @returns The human-readable name of the locale (e.g., `"English (United States)"` or `"French (France)"`).
+ */
 export function getLocaleName(locale: Locale): string {
   try {
     const [lang, region] = locale.split(/[_-]/); // support both en_US and en-US formats
@@ -221,11 +260,23 @@ export function getLocaleName(locale: Locale): string {
   }
 }
 
+/**
+ * Extracts the country/region code from a given locale string.
+ *
+ * @param locale - The locale string (e.g., `"en_US"` or `"fr-FR"`).
+ * @returns The `ISO 3166-1 alpha-2` country/region code (e.g., `"US"` or `"FR"`), or null if not found.
+ */
 export function getCountryFromLocale(locale: Locale): string | null {
   const parts = locale.split(/[_-]/);
   return parts.length === 2 ? parts[1] : null;
 }
 
+/**
+ * Extracts the language code from a given locale string.
+ *
+ * @param locale - The locale string (e.g., `"en_US"` or `"fr-FR"`).
+ * @returns The `ISO 639-1` language code (e.g., `"en"` or `"fr"`), or `undefined` if not found.
+ */
 export function getLanguageFromLocale(locale: string): string | undefined {
   return locale.split(/[_-]/)?.at(0);
 }
@@ -233,8 +284,8 @@ export function getLanguageFromLocale(locale: string): string | undefined {
 /**
  * Determines if a given locale corresponds to a right-to-left (RTL) language.
  *
- * @param language - The ISO 639-1 language code to check.
- * @returns True if the locale is RTL, false otherwise.
+ * @param language - The `ISO 639-1` language code to check.
+ * @returns `true` if the locale is RTL, `false` otherwise.
  */
 export function isRtlLanguage(language: string | undefined) {
   return !!language && rtlLanguages.has(language);

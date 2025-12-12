@@ -1,5 +1,10 @@
 {
   "compilerOptions": {
+    "rootDir": "./src",
+    "declaration": true,
+    "allowSyntheticDefaultImports": true,
+    "outDir": "./dist",
+    "module": "ES2022",
     "target": "ES2022",
     "useDefineForClassFields": true,
     "lib": ["ES2022"],
@@ -13,7 +18,8 @@
     "noFallthroughCasesInSwitch": true,
     "noEmit": false,
     "moduleResolution": "bundler",
-    "allowImportingTsExtensions": true,
+    "allowImportingTsExtensions": false,
+    "emitDeclarationOnly": false,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force"
   },

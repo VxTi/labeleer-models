@@ -1,6 +1,5 @@
 export * from './format/file-formats';
-export * from './parser';
-export * from './serializer';
+export * from './parsing';
+export * from './serialization';
 export * from './locales';
-export { SerializationError } from './errors';
-export { ParsingError } from './errors';
+export * from './errors';
