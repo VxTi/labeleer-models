@@ -1,7 +1,7 @@
 import YAML from 'yaml';
 import { datasetParser } from '../decoders';
-import type { ParserFn, SerializerFn } from '../types';
-import { ParsingError } from './processing-errors';
+import { ParsingError } from '../processing';
+import type { ParserFn } from '../types';
 
 export const parseYaml: ParserFn = input => {
   try {
@@ -22,9 +22,4 @@ export const parseYaml: ParserFn = input => {
       { cause: e }
     );
   }
-};
-
-export const serializeYaml: SerializerFn = input => {
-  const data = YAML.stringify(input);
-  return [{ data }];
 };
