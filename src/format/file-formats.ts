@@ -1,3 +1,5 @@
+import { uniq } from 'lodash';
+
 /**
  * Enum representing the supported export formats for localization files.
  * Each format corresponds to a specific file type used in localization workflows.
@@ -10,57 +12,6 @@ export enum SupportedFormat {
   ANDROID_STRINGS = 'android_strings',
   APPLE_STRINGS = 'apple_strings',
   XLIFF = 'xliff',
-}
-
-/**
- * Returns the most prevalent file extensions for the provided file format.
- */
-export function getFileExtensionFromFormat(format: SupportedFormat): string {
-  switch (format) {
-    case SupportedFormat.YAML:
-      return 'yaml';
-    case SupportedFormat.XLIFF:
-      return 'xliff';
-    case SupportedFormat.TS:
-      return 'ts';
-    case SupportedFormat.PO:
-      return 'po';
-    case SupportedFormat.JSON:
-      return 'json';
-    case SupportedFormat.APPLE_STRINGS:
-      return 'strings';
-    case SupportedFormat.ANDROID_STRINGS:
-      return 'xml';
-  }
-}
-
-/**
- * Returns the file extensions associated with a given export format.
- *
- * This function maps each SupportedFormat to its common file extensions,
- * as some formats can have multiple valid extensions.
- */
-export function getFormatForExtension(
-  extension: string
-): SupportedFormat | undefined {
-  if (extension.endsWith('.json')) return SupportedFormat.JSON;
-
-  if (extension.endsWith('.yaml') || extension.endsWith('.yml'))
-    return SupportedFormat.YAML;
-
-  if (extension.endsWith('.xml')) return SupportedFormat.XLIFF;
-
-  if (extension.endsWith('.strings')) return SupportedFormat.APPLE_STRINGS;
-
-  if (extension.endsWith('.xliff') || extension.endsWith('.xlf'))
-    return SupportedFormat.XLIFF;
-
-  if (extension.endsWith('.po') || extension.endsWith('.pot'))
-    return SupportedFormat.PO;
-
-  if (extension.endsWith('.ts')) return SupportedFormat.TS;
-
-  return undefined;
 }
 
 /**
@@ -105,4 +56,44 @@ export function requiresCompression(
   format: SupportedFormat
 ): format is CompressedFormat {
   return compressedFormats.includes(format as CompressedFormat);
+}
+
+const formatExtensionRegistry: Record<SupportedFormat, string[]> = {
+  [SupportedFormat.JSON]: ['.json'],
+  [SupportedFormat.YAML]: ['.yaml', '.yml'],
+  [SupportedFormat.TS]: ['.ts'],
+  [SupportedFormat.PO]: ['.po', '.pot'],
+  [SupportedFormat.ANDROID_STRINGS]: ['.xml'],
+  [SupportedFormat.APPLE_STRINGS]: ['.strings'],
+  [SupportedFormat.XLIFF]: ['.xliff', '.xlf'],
+};
+
+/**
+ * Returns the file extensions associated with a given export format.
+ * @param format - The SupportedFormat for which to retrieve extensions.
+ * @returns An array of file extensions corresponding to the format.
+ */
+export function getFileExtensionsFromFormat(format: SupportedFormat): string[] {
+  return formatExtensionRegistry[format];
+}
+
+/**
+ * Returns the file extensions associated with a given export format.
+ *
+ * This function maps each SupportedFormat to its common file extensions,
+ * as some formats can have multiple valid extensions.
+ */
+export function getFormatForExtension(
+  extension: string
+): SupportedFormat | undefined {
+  return Object.entries(formatExtensionRegistry).find(([, extensions]) =>
+    extensions.some(ext => extension.endsWith(ext))
+  )?.[0] as SupportedFormat | undefined;
+}
+
+/**
+ * Returns a list of all supported file extensions across all export formats.
+ */
+export function supportedFileExtensions(): string[] {
+  return uniq(Object.values(formatExtensionRegistry).flat());
 }
