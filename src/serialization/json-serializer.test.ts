@@ -10,7 +10,7 @@ describe('json serialization', () => {
     expect(serialized).toMatchInlineSnapshot(`
       [
         {
-          "content": "{
+          "data": "{
         "first-entry": {
           "translations": {
             "en_US": "hello",

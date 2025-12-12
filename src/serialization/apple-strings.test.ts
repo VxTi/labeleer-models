@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { mockSerializationOptions } from '../processing/__testutils__/mock-serialization-options';
+import { mockSerializationOptions } from '../__testutils__/mock-serialization-options';
 import { serializeAppleStrings } from './apple-strings';
 
 describe('apple strings serialization', () => {

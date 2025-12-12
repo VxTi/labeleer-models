@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
 import { type Locale } from '../locales';
-import { mockParsingOptions } from '../processing/__testutils__/mock-parsing-options';
+import { mockParsingOptions } from '../__testutils__/mock-parsing-options';
 import {
   parseAppleStrings,
   parseAppleStringsAggregated,

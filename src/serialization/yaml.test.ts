@@ -1,6 +1,6 @@
 import { describe, it, expect } from 'vitest';
-import { mockDataset } from '../processing/__testutils__/mock-dataset';
-import { mockSerializationOptions } from '../processing/__testutils__/mock-serialization-options';
+import { mockDataset } from '../__testutils__/mock-dataset';
+import { mockSerializationOptions } from '../__testutils__/mock-serialization-options';
 import { serializeYaml } from './yaml';
 
 describe('yaml serialization', () => {
@@ -11,7 +11,7 @@ describe('yaml serialization', () => {
     expect(serialized).toMatchInlineSnapshot(`
       [
         {
-          "content": "first-entry:
+          "data": "first-entry:
         translations:
           en_US: hello
           nl_NL: world

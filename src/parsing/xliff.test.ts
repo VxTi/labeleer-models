@@ -1,4 +1,4 @@
-import { mockParsingOptions } from '../processing/__testutils__/mock-parsing-options';
+import { mockParsingOptions } from '../__testutils__/mock-parsing-options';
 import { parseXliff } from './xliff';
 import { describe, expect, it } from 'vitest';
 
