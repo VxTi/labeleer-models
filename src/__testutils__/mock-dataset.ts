@@ -1,4 +1,4 @@
-import type { TranslationDataset } from '../../types';
+import type { TranslationDataset } from '../types';
 
 export function mockDataset(
   updates: Partial<TranslationDataset> = {}
