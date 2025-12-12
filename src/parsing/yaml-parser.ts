@@ -1,6 +1,6 @@
 import YAML from 'yaml';
 import { datasetParser } from '../decoders';
-import { ParsingError } from '../processing';
+import { ParsingError } from '../errors';
 import type { ParserFn } from '../types';
 
 export const parseYaml: ParserFn = input => {

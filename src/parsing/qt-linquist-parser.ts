@@ -1,7 +1,7 @@
 import { XMLParser } from 'fast-xml-parser';
 import { z } from 'zod';
+import { ParsingError } from '../errors';
 import { isBCP47Locale, isLocale, type Locale, toPOSIX } from '../locales';
-import { ParsingError } from '../processing';
 import type { ParserFn, TranslationDataset } from '../types';
 
 export const parseTs: ParserFn = (input, { referenceLocale }) => {

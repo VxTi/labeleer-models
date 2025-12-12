@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { mockSerializationOptions } from '../__testutils__/mock-serialization-options';
-import { serializeAppleStrings } from './apple-strings';
+import { serializeAppleStrings }    from './apple-strings-serializer';
 
 describe('apple strings serialization', () => {
   it('should serialize a dataset into apple strings', () => {

@@ -1,5 +1,6 @@
 import { XMLParser } from 'fast-xml-parser';
 import { z } from 'zod';
+import { ParsingError } from '../errors';
 import {
   isBCP47Locale,
   isISO639_1LanguageCode,
@@ -8,7 +9,6 @@ import {
   type Locale,
   toPOSIX,
 } from '../locales';
-import { ParsingError } from '../processing';
 import type { ParserFn, TranslationDataset } from '../types';
 
 export const parseXliff: ParserFn = input => {

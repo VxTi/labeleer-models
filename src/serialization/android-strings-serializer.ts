@@ -1,6 +1,6 @@
 import { XMLBuilder } from 'fast-xml-parser';
+import { SerializationError } from '../errors';
 import type { Locale } from '../locales';
-import { SerializationError } from '../processing';
 import type {
   SerializationFragment,
   SerializerFn,

@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { mockDataset } from '../__testutils__/mock-dataset';
 import { mockSerializationOptions } from '../__testutils__/mock-serialization-options';
-import { serializeYaml } from './yaml';
+import { serializeYaml }            from './yaml-serializer';
 
 describe('yaml serialization', () => {
   it('should serialize a simple YAML dataset', () => {

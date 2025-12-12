@@ -1,7 +1,7 @@
 import { po } from 'gettext-parser';
 import merge from 'lodash/merge';
+import { ParsingError } from '../errors';
 import type { Locale } from '../locales';
-import { ParsingError } from '../processing';
 import type { AggregateParserFn, ParserFn, TranslationDataset } from '../types';
 
 /**
