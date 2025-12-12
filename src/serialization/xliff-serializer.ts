@@ -6,7 +6,7 @@ import type {
   TranslationDataset,
 } from '../types';
 
-export const serializeXliff: SerializerFn = (input, config) => {
+export const serializeXliff: SerializerFn = async (input, config) => {
   const builder = new XMLBuilder({
     ignoreAttributes: false,
     format: true,
@@ -52,7 +52,7 @@ export const serializeXliff: SerializerFn = (input, config) => {
     );
   }
 
-  return fragments;
+  return Promise.resolve(fragments);
 };
 
 // XLIFF 2.1 builder
@@ -88,7 +88,7 @@ function constructXliff21Fragment(
   const xmlContent = builder.build(xliffObj);
 
   return {
-    identifier: targetLocale,
+    identifier: targetLocale ?? sourceLocale,
     data: `<?xml version="1.0" encoding="UTF-8"?>\n${xmlContent}`,
   };
 }

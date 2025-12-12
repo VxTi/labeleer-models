@@ -15,7 +15,7 @@ export const parseYaml: ParserFn = input => {
       });
     }
 
-    return parsedDataset.data;
+    return Promise.resolve(parsedDataset.data);
   } catch (e) {
     throw new ParsingError(
       'Something went wrong whilst trying to parse yaml: ',

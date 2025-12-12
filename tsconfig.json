@@ -21,7 +21,7 @@
     "allowImportingTsExtensions": false,
     "emitDeclarationOnly": false,
     "verbatimModuleSyntax": true,
-    "moduleDetection": "force"
+    "moduleDetection": "force",
   },
   "include": ["src"],
   "exclude": ["dist", "**/*.test.ts", "**/mock*.ts","node_modules"]

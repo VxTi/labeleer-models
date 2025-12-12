@@ -13,7 +13,11 @@ import type {
 export const serializePo: SerializerFn = (input, options) => {
   const { locales } = options;
 
-  return locales.map(locale => constructPoSerializationFragment(input, locale));
+  const fragments = locales.map(locale =>
+    constructPoSerializationFragment(input, locale)
+  );
+
+  return Promise.resolve(fragments);
 };
 
 function constructPoSerializationFragment(

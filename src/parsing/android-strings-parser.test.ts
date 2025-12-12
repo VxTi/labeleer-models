@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { parseAndroidStrings }  from './android-strings-parser';
+import { parseAndroidStrings } from './android-strings-parser';
 
 describe('android strings parsing', () => {
   it('should parse a simple android strings XML dataset', () => {

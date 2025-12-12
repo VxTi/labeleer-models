@@ -6,7 +6,7 @@ import type {
   TranslationDataset,
 } from '../types';
 
-export const serializeTs: SerializerFn = (input, config) => {
+export const serializeTs: SerializerFn = async (input, config) => {
   const nonReferenceLanguages = config.locales.filter(
     loc => loc !== config.referenceLocale
   );
@@ -26,12 +26,14 @@ export const serializeTs: SerializerFn = (input, config) => {
     return [fragment];
   }
 
-  return nonReferenceLanguages.map(locale =>
-    constructTsSerializationFragment(
-      builder,
-      input,
-      locale,
-      config.referenceLocale
+  return Promise.resolve(
+    nonReferenceLanguages.map(locale =>
+      constructTsSerializationFragment(
+        builder,
+        input,
+        locale,
+        config.referenceLocale
+      )
     )
   );
 };

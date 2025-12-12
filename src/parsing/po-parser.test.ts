@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { mockParsingOptions } from '../__testutils__/mock-parsing-options';
-import { parsePoAggregated }  from './po-parser';
+import { parsePoAggregated } from './po-parser';
 
 describe('po parsing', () => {
   it('should parse PO files correctly', () => {

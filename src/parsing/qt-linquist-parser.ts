@@ -45,7 +45,7 @@ export const parseTs: ParserFn = (input, { referenceLocale }) => {
       };
     });
 
-    return dataset;
+    return Promise.resolve(dataset);
   } catch (e) {
     throw new ParsingError(
       'Something went wrong while trying to parse the TS file.',

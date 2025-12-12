@@ -2,7 +2,7 @@ import { XMLParser } from 'fast-xml-parser';
 import { z } from 'zod';
 import { ParsingError } from '../errors';
 import type { Locale } from '../locales';
-import type { ParserFn, TranslationDataset } from '../types';
+import type { AggregateParserFn, ParserFn, TranslationDataset } from '../types';
 
 export const parseAndroidStrings: ParserFn = (input, { referenceLocale }) => {
   // Requires a locale to parse properly
@@ -16,11 +16,32 @@ export const parseAndroidStrings: ParserFn = (input, { referenceLocale }) => {
     });
     const xmlObj: unknown = parser.parse(input);
 
-    return transformToDataset(xmlObj, referenceLocale);
+    const transformed = transformToDataset(xmlObj, referenceLocale);
+
+    return Promise.resolve(transformed);
   } catch (e: unknown) {
     throw new ParsingError(`Failed to parse Android Strings XML: ${String(e)}`);
   }
 };
+
+export const parseAndroidStringsAggregated: AggregateParserFn = async (
+  inputs,
+  options
+) => {
+  const aggregatedDataset: TranslationDataset = {};
+
+  for (const [locale, content] of Object.entries(inputs)) {
+    const dataset = await parseAndroidStrings(content, {
+      ...options,
+      referenceLocale: locale as Locale,
+    });
+
+    Object.assign(aggregatedDataset, dataset);
+  }
+
+  return Promise.resolve(aggregatedDataset);
+};
+
 function transformToDataset(
   xmlObj: unknown,
   locale: Locale

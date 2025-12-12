@@ -15,7 +15,7 @@ export interface AppleStringsSerializationOptions {
 export const serializeAppleStrings: SerializerFn<
   AppleStringsSerializationOptions
 > = (input, options) => {
-  return options.locales.map(loc =>
+  const fragments = options.locales.map(loc =>
     constructAppleStringsSerializationFragment(
       input,
       options.referenceLocale,
@@ -23,6 +23,8 @@ export const serializeAppleStrings: SerializerFn<
       options.translateDirect
     )
   );
+
+  return Promise.resolve(fragments);
 };
 
 function constructAppleStringsSerializationFragment(

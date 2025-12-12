@@ -1,8 +1,8 @@
 import { datasetParser } from '../decoders';
-import { ParsingError }  from '../errors';
+import { ParsingError } from '../errors';
 import type { ParserFn } from '../types';
 
-export const parseJson: ParserFn = input => {
+export const parseJson: ParserFn = async input => {
   const json = safeParseJson(input);
   if (!json) {
     throw new ParsingError(
@@ -10,14 +10,14 @@ export const parseJson: ParserFn = input => {
     );
   }
 
-  const result = datasetParser.safeParse(json);
+  const result = await datasetParser.safeParseAsync(json);
 
   if (!result.success) {
     throw new ParsingError('JSON structure is invalid.', {
       cause: result.error,
     });
   }
-  return result.data;
+  return Promise.resolve(result.data);
 };
 
 function safeParseJson(input: string): object | undefined {

@@ -40,7 +40,7 @@ export const parsePo: ParserFn = (input, { targetLocale }) => {
       }
     }
 
-    return dataset;
+    return Promise.resolve(dataset);
   } catch (error) {
     throw new ParsingError(`Failed to parse PO input: ${String(error)}`, {
       cause: error as Error,
@@ -48,11 +48,11 @@ export const parsePo: ParserFn = (input, { targetLocale }) => {
   }
 };
 
-export const parsePoAggregated: AggregateParserFn = (inputs, options) => {
+export const parsePoAggregated: AggregateParserFn = async (inputs, options) => {
   const aggregatedDataset: TranslationDataset = {};
 
   for (const [locale, content] of Object.entries(inputs)) {
-    const dataset = parsePo(content, {
+    const dataset = await parsePo(content, {
       ...options,
       targetLocale: locale as Locale,
     });
@@ -60,5 +60,5 @@ export const parsePoAggregated: AggregateParserFn = (inputs, options) => {
     merge(aggregatedDataset, dataset);
   }
 
-  return aggregatedDataset;
+  return Promise.resolve(aggregatedDataset);
 };

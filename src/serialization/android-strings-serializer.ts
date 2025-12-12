@@ -25,7 +25,7 @@ export const serializeAndroidStrings: SerializerFn = (input, config) => {
       });
     }
 
-    return outputFragments;
+    return Promise.resolve(outputFragments);
   } catch (e) {
     throw new SerializationError(
       'Something went wrong whilst attempting to serialize Android Strings XML: ',

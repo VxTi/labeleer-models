@@ -4,7 +4,7 @@ import { mockParsingOptions } from '../__testutils__/mock-parsing-options';
 import {
   parseAppleStrings,
   parseAppleStringsAggregated,
-}                             from './apple-strings-parser';
+} from './apple-strings-parser';
 
 describe('apple strings parsing', () => {
   it('should aggregate several apple strings datasets', () => {

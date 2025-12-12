@@ -54,7 +54,7 @@ export const parseXliff: ParserFn = input => {
       };
     }
 
-    return dataset;
+    return Promise.resolve(dataset);
   } catch (e) {
     throw new ParsingError(
       `Failed to parse XLIFF 2.1 content: ${(e as Error).message}`

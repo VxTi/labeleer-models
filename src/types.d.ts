@@ -45,7 +45,7 @@ export interface ParsingOptions<T extends object> extends T {
 export type ParserFn<T extends object = {}> = (
   input: string,
   options: ParsingOptions<T>
-) => TranslationDataset;
+) => Promise<TranslationDataset>;
 
 /**
  * A function that takes multiple string inputs mapped by identifiers,
@@ -55,7 +55,7 @@ export type ParserFn<T extends object = {}> = (
 export type AggregateParserFn<T extends object = {}> = (
   inputs: Partial<Record<Locale, string>>,
   options: ParsingOptions<T>
-) => TranslationDataset;
+) => Promise<TranslationDataset>;
 
 /**
  * Options for serialization functions
@@ -85,7 +85,7 @@ export interface SerializationFragment {
    *
    * This will make it easier to identify the fragment later on.
    */
-  identifier?: string;
+  identifier: string;
 
   /**
    * The serialized content of the fragment.
@@ -103,4 +103,4 @@ export interface SerializationFragment {
 export type SerializerFn<T extends object = {}> = (
   dataset: TranslationDataset,
   options: SerializationOptions<T>
-) => SerializationFragment[] | string;
+) => Promise<SerializationFragment[] | string>;
