@@ -1,9 +1,9 @@
-// eslint.config.ts
+// @ts-ignore
+import prettierConfig from './prettier.config';
 import { defineConfig } from 'eslint/config';
 import tseslint from 'typescript-eslint';
 import prettierPlugin from 'eslint-plugin-prettier';
 import unusedImports from 'eslint-plugin-unused-imports';
-import prettierConfig from './prettier.config';
 import importPlugin from 'eslint-plugin-import';
 
 export default defineConfig([

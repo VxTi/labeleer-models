@@ -1,12 +1,8 @@
 import { po } from 'gettext-parser';
 import merge from 'lodash/merge';
-import { ParsingError } from '../../errors';
-import type { Locale } from '../../locales';
-import type {
-  AggregateParserFn,
-  ParserFn,
-  TranslationDataset,
-} from '../../types';
+import { ParsingError } from '@/errors';
+import type { Locale } from '@/locales';
+import type { AggregateParserFn, ParserFn, TranslationDataset } from '@/types';
 
 /**
  * Parses a PO file input into a TranslationDataset.

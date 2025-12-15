@@ -3,17 +3,17 @@ import {
   type GetTextTranslations,
   po,
 } from 'gettext-parser';
-import type { Locale } from '../../locales';
+import type { Locale } from '@/locales';
 import type {
   SerializationFragment,
   SerializerFn,
   TranslationDataset,
-} from '../../types';
+} from '@/types';
 
 export const serializePo: SerializerFn = (input, options) => {
   const { locales } = options;
 
-  const fragments = locales.map(locale =>
+  const fragments: SerializationFragment[] = locales.map((locale: Locale) =>
     constructPoSerializationFragment(input, locale)
   );
 
@@ -24,6 +24,8 @@ function constructPoSerializationFragment(
   input: TranslationDataset,
   locale: Locale
 ): SerializationFragment {
+  // TODO: Add support for more headers (e.g., Project-Id-Version, POT-Creation-Date, etc.)
+  // And also different encoding types
   const output: GetTextTranslations = {
     charset: 'UTF-8',
     headers: {
@@ -64,7 +66,6 @@ function constructPoSerializationFragment(
         poEntry.msgstr = [
           zero || poEntry.msgstr[0] || '',
           one || poEntry.msgstr[1] || '',
-          other,
         ];
       }
     }

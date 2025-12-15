@@ -10,6 +10,23 @@ describe('json serialization', () => {
       mockSerializationOptions()
     );
     expect(serialized).toBeDefined();
-    expect(serialized).toMatchInlineSnapshot(`Promise {}`);
+    expect(serialized).toContain('hello');
+    expect(serialized).toContain('again');
+    expect(serialized).toMatchInlineSnapshot(`
+      "{
+        "first-entry": {
+          "translations": {
+            "en_US": "hello",
+            "nl_NL": "world"
+          }
+        },
+        "second-entry": {
+          "translations": {
+            "en_US": "hello",
+            "nl_NL": "again"
+          }
+        }
+      }"
+    `);
   });
 });

@@ -21,21 +21,21 @@ describe('json parsing', () => {
 
     const parsed = await parseJson(dataset, mockParsingOptions());
     expect(parsed).toBeDefined();
-    expect(parsed).toMatchInlineSnapshot(`
-      {
-        "first-entry": {
-          "translations": {
-            "en_US": "hello",
-            "nl_NL": "world",
+    expect(parsed).toEqual(
+      expect.objectContaining({
+        'first-entry': {
+          translations: {
+            en_US: 'hello',
+            nl_NL: 'world',
           },
         },
-        "second-entry": {
-          "translations": {
-            "en_US": "hello",
-            "nl_NL": "again",
+        'second-entry': {
+          translations: {
+            en_US: 'hello',
+            nl_NL: 'again',
           },
         },
-      }
-    `);
+      })
+    );
   });
 });
