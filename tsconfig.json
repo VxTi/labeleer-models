@@ -22,7 +22,10 @@
     "emitDeclarationOnly": false,
     "verbatimModuleSyntax": true,
     "moduleDetection": "force",
+    "paths": {
+      "@/*": ["./src/*"]
+    }
   },
   "include": ["src"],
-  "exclude": ["dist", "**/*.test.ts", "**/mock*.ts","node_modules"]
+  "exclude": ["dist", "**/*.test.ts", "**/mock*.ts", "node_modules"]
 }

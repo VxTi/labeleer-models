@@ -1,12 +1,16 @@
 import { XMLBuilder } from 'fast-xml-parser';
-import { SerializationError } from '../../errors';
-import type { Locale } from '../../locales';
+import type {
+  AndroidStringsSet,
+  PluralizedAndroidStringsEntry,
+} from './models';
+import { SerializationError } from '@/errors';
+import type { Locale } from '@/locales';
 import type {
   PluralizationQuantity,
   SerializationFragment,
   SerializerFn,
   TranslationDataset,
-} from '../../types';
+} from '@/types';
 
 export const serializeAndroidStrings: SerializerFn = (input, config) => {
   try {
@@ -105,20 +109,3 @@ function constructPerLanguageDatasets(
 
   return perLanguageDatasets;
 }
-
-type SingularAndroidStringsEntry = { '@_name': string; '#text': string };
-
-type PluralizedAndroidStringsEntry = {
-  '@_quantity': PluralizationQuantity;
-  '#text': string;
-};
-
-type AndroidStringsSet = {
-  resources: {
-    string: SingularAndroidStringsEntry[];
-    plurals: {
-      '@_name': string;
-      item: PluralizedAndroidStringsEntry[];
-    }[];
-  };
-};

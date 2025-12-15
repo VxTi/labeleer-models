@@ -1,13 +1,17 @@
 import { XMLParser } from 'fast-xml-parser';
-import { z } from 'zod';
-import { ParsingError } from '../../errors';
-import type { Locale } from '../../locales';
+import { type z } from 'zod';
+import {
+  type pluralSerializationIrFragmentDecoder,
+  serializationIrDecoder,
+} from './models';
+import { ParsingError } from '@/errors';
+import type { Locale } from '@/locales';
 import type {
   AggregateParserFn,
   ParserFn,
   TranslationDataset,
   TranslationPluralization,
-} from '../../types';
+} from '@/types';
 
 export const parseAndroidStrings: ParserFn = (input, { referenceLocale }) => {
   // Requires a locale to parse properly
@@ -24,8 +28,10 @@ export const parseAndroidStrings: ParserFn = (input, { referenceLocale }) => {
     const transformed = transformToDataset(xmlObj, referenceLocale);
 
     return Promise.resolve(transformed);
-  } catch (e: unknown) {
-    throw new ParsingError(`Failed to parse Android Strings XML: ${String(e)}`);
+  } catch (e) {
+    throw new ParsingError(
+      `Failed to parse Android Strings XML: ${String(e.message)}`
+    );
   }
 };
 
@@ -62,9 +68,12 @@ function transformToDataset(
 
   // Handle the case where there's only a single string entry
   if (!Array.isArray(ir.data.resources.string)) {
-    dataset[ir.data.resources.string['@_name']] = {
+    const key = ir.data.resources.string['@_name'];
+    const value = ir.data.resources.string['#text'];
+
+    dataset[key] = {
       translations: {
-        [locale]: ir.data.resources.string['#text'],
+        [locale]: value,
       },
     };
   } else {
@@ -111,34 +120,3 @@ function extractPlurals(
     ])
   ) as TranslationPluralization;
 }
-
-const serializationIrFragmentDecoder = z.object({
-  '@_name': z.string(),
-  '#text': z.string(),
-});
-
-const quantities = ['zero', 'one', 'two', 'few', 'many', 'other'] as const;
-const pluralSerializationIrFragmentDecoder = z.object({
-  '@_name': z.string(),
-  item: z.array(
-    z.object({
-      '@_quantity': z.enum(quantities),
-      '#text': z.string(),
-    })
-  ),
-});
-
-const serializationIrDecoder = z.object({
-  resources: z.object({
-    // When the user only has a single resource entry, fast-xml-parser
-    // will parse it as an object instead of an array.
-    string: z.union([
-      z.array(serializationIrFragmentDecoder),
-      serializationIrFragmentDecoder,
-    ]),
-    plurals: z.union([
-      z.array(pluralSerializationIrFragmentDecoder),
-      pluralSerializationIrFragmentDecoder,
-    ]),
-  }),
-});

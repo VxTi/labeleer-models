@@ -9,12 +9,12 @@ import {
   parseAndroidStrings,
   parseAppleStrings,
   parseJson,
-} from './transformations';
-import { parsePo } from './transformations/po/parser';
-import { parseTs } from './transformations/qt-linquist/parser';
-import { parseXcstrings } from './transformations/xcstrings/parser';
-import { parseXliff } from './transformations/xliff/parser';
-import { parseYaml } from './transformations/yaml/parser';
+  parseYaml,
+  parsePo,
+  parseTs,
+  parseXcstrings,
+  parseXliff,
+} from '@/transformations';
 
 /**
  * Parses a dataset string based on the specified file format and options.

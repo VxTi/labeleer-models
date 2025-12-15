@@ -5,14 +5,16 @@ import type {
   SerializerFn,
   TranslationDataset,
 } from './types';
-import { serializeAndroidStrings } from './transformations/android-strings/serializer';
-import { serializeAppleStrings } from './transformations/apple-strings/serializer';
-import { serializeJson } from './transformations/json/serializer';
-import { serializePo } from './transformations/po/serializer';
-import { serializeTs } from './transformations/qt-linquist/serializer';
-import { serializeXcstrings } from './transformations/xcstrings/serializer';
-import { serializeXliff } from './transformations/xliff/serializer';
-import { serializeYaml } from './transformations/yaml/serializer';
+import {
+  serializeTs,
+  serializeXcstrings,
+  serializeAndroidStrings,
+  serializeAppleStrings,
+  serializeJson,
+  serializePo,
+  serializeXliff,
+  serializeYaml,
+} from '@/transformations';
 
 /**
  * Serializes a TranslationDataset into the specified format using the provided options.
