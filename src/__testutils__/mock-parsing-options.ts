@@ -1,4 +1,4 @@
-import type { ParsingOptions } from '../../types';
+import type { ParsingOptions } from '../types';
 
 export function mockParsingOptions<T extends object = {}>(
   updates: Partial<ParsingOptions<T>> = {}

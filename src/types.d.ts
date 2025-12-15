@@ -6,7 +6,7 @@ import type { Locale } from './locales';
  * along with optional metadata such as tags and description.
  */
 export type TranslationEntry = {
-  translations: TranslationLocalizedEntries;
+  translations?: TranslationLocalizedEntries;
   tags?: string[];
   description?: string;
   plurals?: TranslationPluralization;
