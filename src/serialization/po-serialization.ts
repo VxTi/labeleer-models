@@ -39,10 +39,8 @@ function constructPoSerializationFragment(
       msgstr: [],
     };
 
-    const translation = entry.translations[locale || ''];
-
-    if (translation) {
-      poEntry.msgstr[0] = translation;
+    if ('translations' in entry) {
+      poEntry.msgstr[0] = entry.translations[locale] || '';
     }
 
     if (entry.description) {
@@ -56,11 +54,18 @@ function constructPoSerializationFragment(
       poEntry.comments.reference = entry.tags.join('\n');
     }
 
-    if (entry.plurals) {
-      const pluralForm = entry.plurals[locale || ''];
-      if (pluralForm) {
-        poEntry.msgid_plural = pluralForm;
-        poEntry.msgstr = [poEntry.msgstr[0] || '', ''];
+    if ('plurals' in entry) {
+      const zero = entry.plurals.zero?.[locale];
+      const one = entry.plurals.one?.[locale];
+      const other = entry.plurals.other?.[locale];
+
+      if (other) {
+        poEntry.msgid_plural = other;
+        poEntry.msgstr = [
+          zero || poEntry.msgstr[0] || '',
+          one || poEntry.msgstr[1] || '',
+          other,
+        ];
       }
     }
 

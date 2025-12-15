@@ -3,7 +3,7 @@ import { mockParsingOptions } from '../__testutils__/mock-parsing-options';
 import { parseJson } from './json-parser';
 
 describe('json parsing', () => {
-  it('should parse a simple JSON dataset', () => {
+  it('should parse a simple JSON dataset', async () => {
     const dataset = `{
     "first-entry": {
     "translations": {
@@ -19,7 +19,7 @@ describe('json parsing', () => {
   }
   }`;
 
-    const parsed = parseJson(dataset, mockParsingOptions());
+    const parsed = await parseJson(dataset, mockParsingOptions());
     expect(parsed).toBeDefined();
     expect(parsed).toMatchInlineSnapshot(`
       {

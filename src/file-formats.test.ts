@@ -9,15 +9,16 @@ import {
 
 describe('getFormatForExtension', () => {
   it.each`
-    extension   | format
-    ${'.yaml'}  | ${SupportedFormat.YAML}
-    ${'.yml'}   | ${SupportedFormat.YAML}
-    ${'.xliff'} | ${SupportedFormat.XLIFF}
-    ${'.xlf'}   | ${SupportedFormat.XLIFF}
-    ${'.xml'}   | ${SupportedFormat.XLIFF}
-    ${'.json'}  | ${SupportedFormat.JSON}
-    ${'.po'}    | ${SupportedFormat.PO}
-    ${'.pot'}   | ${SupportedFormat.PO}
+    extension       | format
+    ${'.yaml'}      | ${SupportedFormat.YAML}
+    ${'.yml'}       | ${SupportedFormat.YAML}
+    ${'.xliff'}     | ${SupportedFormat.XLIFF}
+    ${'.xlf'}       | ${SupportedFormat.XLIFF}
+    ${'.xml'}       | ${SupportedFormat.ANDROID_STRINGS}
+    ${'.json'}      | ${SupportedFormat.JSON}
+    ${'.po'}        | ${SupportedFormat.PO}
+    ${'.pot'}       | ${SupportedFormat.PO}
+    ${'.xcstrings'} | ${SupportedFormat.XCSTRINGS}
   `(
     'should return the correct file format for the provided',
     ({ extension, format }) => {
@@ -40,6 +41,7 @@ describe('supportedFileExtensions', () => {
       '.strings',
       '.xliff',
       '.xlf',
+      '.xcstrings',
     ]);
   });
 });

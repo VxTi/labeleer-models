@@ -5,13 +5,13 @@ import { serializeAndroidStrings } from './android-strings-serializer';
 import type { SerializationFragment } from '../types';
 
 describe('android strings serialization', () => {
-  it('should serialize a simple Android Strings dataset', () => {
+  it('should serialize a simple Android Strings dataset', async () => {
     const options = mockSerializationOptions({
       locales: ['en_US', 'nl_NL'],
     });
     const dataset = mockDataset();
 
-    const serialized = serializeAndroidStrings(dataset, options) as
+    const serialized = (await serializeAndroidStrings(dataset, options)) as
       | SerializationFragment[]
       | undefined;
     expect(serialized).toBeDefined();

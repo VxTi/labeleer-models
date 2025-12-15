@@ -4,8 +4,8 @@ import { serializeXliff } from './xliff-serializer';
 import { describe, expect, it } from 'vitest';
 
 describe('XLIFF 2.1 Serialization', () => {
-  it('serializes dataset for a single locale (reference only)', () => {
-    const result = serializeXliff(
+  it('serializes dataset for a single locale (reference only)', async () => {
+    const result = await serializeXliff(
       mockDataset(),
       mockSerializationOptions({
         referenceLocale: 'en_US',
@@ -33,8 +33,8 @@ describe('XLIFF 2.1 Serialization', () => {
     `);
   });
 
-  it('serializes dataset with source and target languages', () => {
-    const result = serializeXliff(
+  it('serializes dataset with source and target languages', async () => {
+    const result = await serializeXliff(
       mockDataset(),
       mockSerializationOptions({
         referenceLocale: 'en_US',
@@ -69,10 +69,10 @@ describe('XLIFF 2.1 Serialization', () => {
     `);
   });
 
-  it('serializes multiple locale fragments', () => {
+  it('serializes multiple locale fragments', async () => {
     const dataset = mockDataset();
 
-    const result = serializeXliff(dataset, {
+    const result = await serializeXliff(dataset, {
       referenceLocale: 'en_US',
       locales: ['en_US', 'fr_FR', 'es_ES'],
     });

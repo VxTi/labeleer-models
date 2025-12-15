@@ -3,7 +3,7 @@ import { mockParsingOptions } from '../__testutils__/mock-parsing-options';
 import { parseTs } from './qt-linquist-parser';
 
 describe('qt linquist parsing', () => {
-  it('should parse a simple Qt Linguist XML dataset', () => {
+  it('should parse a simple Qt Linguist XML dataset', async () => {
     const dataset = `<?xml version="1.0" encoding="utf-8"?>
         <TS version="2.1" language="nl-NL">
           <context>
@@ -19,30 +19,30 @@ describe('qt linquist parsing', () => {
           </context>
         </TS>`;
 
-    const parsed = parseTs(
+    const parsed = await parseTs(
       dataset,
       mockParsingOptions({ referenceLocale: 'en_US' })
     );
     expect(parsed).toBeDefined();
     expect(parsed).toMatchInlineSnapshot(`
-        {
-          "first-entry": {
-            "translations": {
-              "en_US": "hello",
-              "nl_NL": "world",
-            },
+      {
+        "first-entry": {
+          "translations": {
+            "en_US": "hello",
+            "nl_NL": "world",
           },
-          "second-entry": {
-            "translations": {
-              "en_US": "hello",
-              "nl_NL": "again",
-            },
+        },
+        "second-entry": {
+          "translations": {
+            "en_US": "hello",
+            "nl_NL": "again",
           },
-        }
-      `);
+        },
+      }
+    `);
   });
 
-  it('should parse a TS set even if there are no translations other than the reference', () => {
+  it('should parse a TS set even if there are no translations other than the reference', async () => {
     const dataset = `<?xml version="1.0" encoding="utf-8"?>
         <TS version="2.1" language="en-US">
           <context>
@@ -55,22 +55,22 @@ describe('qt linquist parsing', () => {
             </message>
           </context>
         </TS>`;
-    const parsed = parseTs(dataset, mockParsingOptions());
+    const parsed = await parseTs(dataset, mockParsingOptions());
 
     expect(parsed).toBeDefined();
     expect(parsed).toMatchInlineSnapshot(`
-        {
-          "first-entry": {
-            "translations": {
-              "en_US": "",
-            },
+      {
+        "first-entry": {
+          "translations": {
+            "en_US": "",
           },
-          "second-entry": {
-            "translations": {
-              "en_US": "",
-            },
+        },
+        "second-entry": {
+          "translations": {
+            "en_US": "",
           },
-        }
-      `);
+        },
+      }
+    `);
   });
 });

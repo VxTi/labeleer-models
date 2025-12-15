@@ -2,6 +2,7 @@ import { XMLBuilder } from 'fast-xml-parser';
 import { SerializationError } from '../errors';
 import type { Locale } from '../locales';
 import type {
+  PluralizationQuantity,
   SerializationFragment,
   SerializerFn,
   TranslationDataset,
@@ -40,14 +41,45 @@ function buildXmlDataset(
   locale: Locale
 ): string {
   const outputIr = {
-    resources: { string: [] as Array<{ '@_name': string; '#text': string }> },
+    resources: {
+      string: [] as Array<{ '@_name': string; '#text': string }>,
+      plurals: [] as Array<{
+        '@_name': string;
+        item: Array<{ '@_quantity': string; '#text': string }>;
+      }>,
+    },
   };
 
   for (const [key, entry] of Object.entries(dataset)) {
-    outputIr.resources.string.push({
-      '@_name': key,
-      '#text': entry.translations[locale] ?? '',
-    });
+    const translation = entry.translations[locale];
+
+    if (translation) {
+      outputIr.resources.string.push({
+        '@_name': key,
+        '#text': translation,
+      });
+      continue;
+    }
+
+    if (!entry.plurals) continue;
+
+    const items: PluralizedAndroidStringsEntry[] = [];
+
+    for (const quantity of quantities) {
+      if (entry.plurals[quantity]?.[locale]) {
+        if (items.length > 0) {
+          outputIr.resources.plurals.push({
+            '@_name': key,
+            item: items,
+          });
+        }
+      } else {
+        items.push({
+          '@_quantity': quantity,
+          '#text': entry.plurals[quantity][locale],
+        });
+      }
+    }
   }
 
   const output = builder.build(outputIr);
@@ -74,3 +106,10 @@ function constructPerLanguageDatasets(
 
   return perLanguageDatasets;
 }
+
+const quantities = ['zero', 'one', 'two', 'few', 'many', 'other'] as const;
+
+type PluralizedAndroidStringsEntry = {
+  '@_quantity': PluralizationQuantity;
+  '#text': string;
+};

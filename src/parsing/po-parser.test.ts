@@ -3,7 +3,7 @@ import { mockParsingOptions } from '../__testutils__/mock-parsing-options';
 import { parsePoAggregated } from './po-parser';
 
 describe('po parsing', () => {
-  it('should parse PO files correctly', () => {
+  it('should parse PO files correctly', async () => {
     const input = `msgid ""
         msgstr ""
         "Content-Type: text/plain; charset=utf-8\\n"
@@ -16,29 +16,32 @@ describe('po parsing', () => {
 
         msgid "second-entry"
         msgstr "hello"`;
-    const parsed = parsePoAggregated({ en_US: input }, mockParsingOptions());
+    const parsed = await parsePoAggregated(
+      { en_US: input },
+      mockParsingOptions()
+    );
 
     expect(parsed).toBeDefined();
     expect(parsed).toMatchInlineSnapshot(`
-        {
-          "first-entry": {
-            "description": undefined,
-            "plurals": {
-              "en_US": "hellos",
-            },
-            "tags": undefined,
-            "translations": {
-              "en_US": "hello",
-            },
+      {
+        "first-entry": {
+          "description": undefined,
+          "plurals": {
+            "en_US": "hellos",
           },
-          "second-entry": {
-            "description": undefined,
-            "tags": undefined,
-            "translations": {
-              "en_US": "hello",
-            },
+          "tags": undefined,
+          "translations": {
+            "en_US": "hello",
           },
-        }
-      `);
+        },
+        "second-entry": {
+          "description": undefined,
+          "tags": undefined,
+          "translations": {
+            "en_US": "hello",
+          },
+        },
+      }
+    `);
   });
 });

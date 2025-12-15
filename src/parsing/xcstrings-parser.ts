@@ -1,6 +1,11 @@
 import { z } from 'zod';
 import { ParsingError } from '../errors';
-import { isISO639_1LanguageCode, isLocale, iso639_1ToLocale } from '../locales';
+import {
+  isISO639_1LanguageCode,
+  isLocale,
+  iso639_1ToLocale,
+  type Locale,
+} from '../locales';
 import type { ParserFn, TranslationDataset } from '../types';
 
 export const parseXcstrings: ParserFn = async dataset => {
@@ -27,7 +32,7 @@ export const parseXcstrings: ParserFn = async dataset => {
           );
         }
 
-        const locale = localeParseResult.data;
+        const locale: Locale = localeParseResult.data;
 
         if (isAtomicLocalizationEntry(localization)) {
           result[key].translations[locale] = localization.stringUnit.value;

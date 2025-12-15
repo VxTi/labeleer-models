@@ -3,7 +3,7 @@ import { parseXliff } from './xliff-parser';
 import { describe, expect, it } from 'vitest';
 
 describe('XLIFF 2.1 Parsing', () => {
-  it('parses a minimal XLIFF 2.1 document', () => {
+  it('parses a minimal XLIFF 2.1 document', async () => {
     const xml = `
       <?xml version="1.0" encoding="UTF-8"?>
       <xliff version="2.1" xmlns="urn:oasis:names:tc:xliff:document:2.1" srcLang="en" trgLang="de">
@@ -18,7 +18,7 @@ describe('XLIFF 2.1 Parsing', () => {
       </xliff>
     `;
 
-    const result = parseXliff(xml, mockParsingOptions());
+    const result = await parseXliff(xml, mockParsingOptions());
 
     expect(result).toMatchInlineSnapshot(`
       {
@@ -32,7 +32,7 @@ describe('XLIFF 2.1 Parsing', () => {
     `);
   });
 
-  it('parses XLIFF 2.1 without target language', () => {
+  it('parses XLIFF 2.1 without target language', async () => {
     const xml = `
       <?xml version="1.0" encoding="UTF-8"?>
       <xliff version="2.1" xmlns="urn:oasis:names:tc:xliff:document:2.1" srcLang="en">
@@ -46,7 +46,7 @@ describe('XLIFF 2.1 Parsing', () => {
       </xliff>
     `;
 
-    const result = parseXliff(xml, mockParsingOptions());
+    const result = await parseXliff(xml, mockParsingOptions());
 
     expect(result).toMatchInlineSnapshot(`
       {

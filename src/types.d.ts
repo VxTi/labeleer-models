@@ -5,12 +5,23 @@ import type { Locale } from './locales';
  * containing translations for multiple locales,
  * along with optional metadata such as tags and description.
  */
-export interface TranslationEntry {
-  translations: Partial<Record<Locale, string>>;
-  plurals?: Partial<Record<Locale, string>>;
+export type TranslationEntry = {
+  translations: TranslationLocalizedEntries;
   tags?: string[];
   description?: string;
-}
+  plurals?: TranslationPluralization;
+};
+
+/**
+ * Pluralization
+ */
+export type TranslationPluralization = {
+  [K in PluralizationQuantity]: TranslationLocalizedEntries;
+};
+
+type PluralizationQuantity = 'zero' | 'one' | 'two' | 'few' | 'many' | 'other';
+
+export type TranslationLocalizedEntries = Partial<Record<Locale, string>>;
 
 /**
  * A dataset of translation entries,

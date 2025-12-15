@@ -4,14 +4,14 @@ import { mockSerializationOptions } from '../__testutils__/mock-serialization-op
 import { serializeTs } from './qt-linquist-serializer';
 
 describe('serialization', () => {
-  it('should serialize a simple Qt Linguist XML dataset', () => {
+  it('should serialize a simple Qt Linguist XML dataset', async () => {
     const dataset = mockDataset();
     const options = mockSerializationOptions({
       locales: ['en_US', 'nl_NL', 'en_AU'],
       referenceLocale: 'en_US',
     });
 
-    const serialized = serializeTs(dataset, options);
+    const serialized = await serializeTs(dataset, options);
 
     expect(serialized).toBeDefined();
     expect(serialized).toHaveLength(2);
@@ -67,14 +67,14 @@ describe('serialization', () => {
       `);
   });
 
-  it('should serialize a Qt dataset even if there is just a single locale', () => {
+  it('should serialize a Qt dataset even if there is just a single locale', async () => {
     const dataset = mockDataset();
     const options = mockSerializationOptions({
       locales: ['en_US'],
       referenceLocale: 'en_US',
     });
 
-    const serialized = serializeTs(dataset, options);
+    const serialized = await serializeTs(dataset, options);
 
     expect(serialized).toBeDefined();
     expect(serialized).toHaveLength(1);

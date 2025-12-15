@@ -3,8 +3,8 @@ import { mockSerializationOptions } from '../__testutils__/mock-serialization-op
 import { serializeAppleStrings } from './apple-strings-serializer';
 
 describe('apple strings serialization', () => {
-  it('should serialize a dataset into apple strings', () => {
-    const serialized = serializeAppleStrings(
+  it('should serialize a dataset into apple strings', async () => {
+    const serialized = await serializeAppleStrings(
       {
         'first-entry': {
           translations: {

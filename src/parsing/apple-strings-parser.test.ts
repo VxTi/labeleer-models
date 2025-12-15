@@ -7,7 +7,7 @@ import {
 } from './apple-strings-parser';
 
 describe('apple strings parsing', () => {
-  it('should aggregate several apple strings datasets', () => {
+  it('should aggregate several apple strings datasets', async () => {
     const inputs: Partial<Record<Locale, string>> = {
       en_US: `
 "first-entry" = "english";
@@ -17,51 +17,51 @@ describe('apple strings parsing', () => {
 "second-entry" = "dutch \\"second\\"";`,
     };
 
-    const aggregated = parseAppleStringsAggregated(
+    const aggregated = await parseAppleStringsAggregated(
       inputs,
       mockParsingOptions()
     );
 
     expect(aggregated).toMatchInlineSnapshot(`
-        {
-          "first-entry": {
-            "translations": {
-              "en_US": "english",
-              "nl_NL": "dutch",
-            },
+      {
+        "first-entry": {
+          "translations": {
+            "en_US": "english",
+            "nl_NL": "dutch",
           },
-          "second-entry": {
-            "translations": {
-              "en_US": "english \\"second\\"",
-              "nl_NL": "dutch \\"second\\"",
-            },
+        },
+        "second-entry": {
+          "translations": {
+            "en_US": "english \\"second\\"",
+            "nl_NL": "dutch \\"second\\"",
           },
-        }
-      `);
+        },
+      }
+    `);
   });
 
-  it('should parse a simple apple strings dataset', () => {
+  it('should parse a simple apple strings dataset', async () => {
     const input = `
 "first-entry" = "dutch";
 "second-entry" = "dutch \\"second\\"";`;
-    const parsed = parseAppleStrings(
+    const parsed = await parseAppleStrings(
       input,
       mockParsingOptions({ targetLocale: 'en_US' })
     );
 
     expect(parsed).toMatchInlineSnapshot(`
-        {
-          "first-entry": {
-            "translations": {
-              "en_US": "dutch",
-            },
+      {
+        "first-entry": {
+          "translations": {
+            "en_US": "dutch",
           },
-          "second-entry": {
-            "translations": {
-              "en_US": "dutch \\"second\\"",
-            },
+        },
+        "second-entry": {
+          "translations": {
+            "en_US": "dutch \\"second\\"",
           },
-        }
-      `);
+        },
+      }
+    `);
   });
 });

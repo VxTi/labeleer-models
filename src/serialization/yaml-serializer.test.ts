@@ -4,14 +4,15 @@ import { mockSerializationOptions } from '../__testutils__/mock-serialization-op
 import { serializeYaml } from './yaml-serializer';
 
 describe('yaml serialization', () => {
-  it('should serialize a simple YAML dataset', () => {
-    const serialized = serializeYaml(mockDataset(), mockSerializationOptions());
+  it('should serialize a simple YAML dataset', async () => {
+    const serialized = await serializeYaml(
+      mockDataset(),
+      mockSerializationOptions()
+    );
 
     expect(serialized).toBeDefined();
     expect(serialized).toMatchInlineSnapshot(`
-      [
-        {
-          "data": "first-entry:
+      "first-entry:
         translations:
           en_US: hello
           nl_NL: world
@@ -22,9 +23,7 @@ describe('yaml serialization', () => {
         translations:
           en_US: hello
           nl_NL: again
-      ",
-        },
-      ]
+      "
     `);
   });
 });
