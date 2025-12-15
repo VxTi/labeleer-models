@@ -1,8 +1,11 @@
 import { describe, expect, it } from 'vitest';
-import { mockDataset } from '../../__testutils__/mock-dataset';
+import {
+  mockDataset,
+  mockPluralDataset,
+} from '../../__testutils__/mock-dataset';
 import { mockSerializationOptions } from '../../__testutils__/mock-serialization-options';
-import { serializeAndroidStrings } from './android-strings-serializer';
 import type { SerializationFragment } from '../../types';
+import { serializeAndroidStrings } from './serializer';
 
 describe('android strings serialization', () => {
   it('should serialize a simple Android Strings dataset', async () => {
@@ -44,5 +47,30 @@ describe('android strings serialization', () => {
         </resources>
         "
       `);
+  });
+
+  it('should serialize an android strings dataset with pluralization', async () => {
+    const options = mockSerializationOptions({
+      locales: ['en_US'],
+      referenceLocale: 'en_US',
+    });
+    const input = mockPluralDataset();
+
+    const serialized = (await serializeAndroidStrings(input, options)) as
+      | SerializationFragment[]
+      | undefined;
+    expect(serialized).toBeDefined();
+    expect(serialized).toMatchInlineSnapshot(`
+      [
+        {
+          "data": "<?xml version="1.0" encoding="utf-8"?>
+      <resources>
+        <plurals name="plural-entry"></plurals>
+      </resources>
+      ",
+          "identifier": "en_US",
+        },
+      ]
+    `);
   });
 });

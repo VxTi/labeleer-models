@@ -5,14 +5,16 @@ import type {
   ParsingOptions,
   TranslationDataset,
 } from './types';
-import { parseAndroidStrings } from './transformations/android-strings/android-strings-parser';
-import { parseAppleStrings } from './transformations/apple-strings/apple-strings-parser';
-import { parseJson } from './transformations/json/json-parser';
-import { parsePo } from './transformations/po/po-parser';
-import { parseTs } from './transformations/qt-linquist/qt-linquist-parser';
-import { parseXcstrings } from './transformations/xcstrings/xcstrings-parser';
-import { parseXliff } from './transformations/xliff/xliff-parser';
-import { parseYaml } from './transformations/yaml/yaml-parser';
+import {
+  parseAndroidStrings,
+  parseAppleStrings,
+  parseJson,
+} from './transformations';
+import { parsePo } from './transformations/po/parser';
+import { parseTs } from './transformations/qt-linquist/parser';
+import { parseXcstrings } from './transformations/xcstrings/parser';
+import { parseXliff } from './transformations/xliff/parser';
+import { parseYaml } from './transformations/yaml/parser';
 
 /**
  * Parses a dataset string based on the specified file format and options.

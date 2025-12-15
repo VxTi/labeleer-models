@@ -1,7 +1,7 @@
+import { describe, expect, it } from 'vitest';
 import { mockDataset } from '../../__testutils__/mock-dataset';
 import { mockSerializationOptions } from '../../__testutils__/mock-serialization-options';
-import { serializeXliff } from './xliff-serializer';
-import { describe, expect, it } from 'vitest';
+import { serializeXliff } from './serializer';
 
 describe('XLIFF 2.1 Serialization', () => {
   it('serializes dataset for a single locale (reference only)', async () => {

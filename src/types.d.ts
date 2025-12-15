@@ -16,7 +16,7 @@ export type TranslationEntry = {
  * Pluralization
  */
 export type TranslationPluralization = {
-  [K in PluralizationQuantity]: TranslationLocalizedEntries;
+  [K in PluralizationQuantity]?: TranslationLocalizedEntries;
 };
 
 type PluralizationQuantity = 'zero' | 'one' | 'two' | 'few' | 'many' | 'other';

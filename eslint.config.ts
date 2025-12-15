@@ -55,6 +55,9 @@ export default defineConfig([
       'import/no-mutable-exports': 2, // Disallow the export of non-constants
       'import/no-self-import': 2, // Prevent a module from importing itself
       'import/no-useless-path-segments': 2, // Prevent unnecessary path segments in import and require statements
+      'import/newline-after-import': 2, // Enforce a newline after import statements
+      'import/no-duplicates': 2, // Prevent duplicate imports
+      'import/order': 2, // Enforce a consistent order of imports
 
       '@typescript-eslint/consistent-type-imports': [
         'error',
@@ -71,6 +74,6 @@ export default defineConfig([
     files: ['**/*.test.ts'],
     rules: {
       '@typescript-eslint/no-unsafe-argument': 0,
-    }
-  }
+    },
+  },
 ]);

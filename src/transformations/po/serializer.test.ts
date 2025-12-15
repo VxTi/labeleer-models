@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { mockDataset } from '../../__testutils__/mock-dataset';
 import { mockSerializationOptions } from '../../__testutils__/mock-serialization-options';
-import { serializePo } from './po-serialization';
+import { serializePo } from './serializer';
 
 describe('po serialization', () => {
   it('should serialize PO files correctly', () => {

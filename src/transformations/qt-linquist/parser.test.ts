@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { mockParsingOptions } from '../../__testutils__/mock-parsing-options';
-import { parseTs } from './qt-linquist-parser';
+import { parseTs } from './parser';
 
 describe('qt linquist parsing', () => {
   it('should parse a simple Qt Linguist XML dataset', async () => {

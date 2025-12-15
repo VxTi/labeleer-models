@@ -9,15 +9,29 @@ export function mockDataset(
         en_US: 'hello',
         nl_NL: 'world',
       },
-      plurals: {
-        en_US: 'hellos',
-        nl_NL: 'werelden',
-      },
     },
     'second-entry': {
       translations: {
         en_US: 'hello',
         nl_NL: 'again',
+      },
+    },
+    ...updates,
+  };
+}
+
+export function mockPluralDataset(
+  updates: Partial<TranslationDataset> = {}
+): TranslationDataset {
+  return {
+    'plural-entry': {
+      plurals: {
+        one: {
+          en_US: 'One thing',
+        },
+        other: {
+          en_US: 'Many things',
+        },
       },
     },
     ...updates,

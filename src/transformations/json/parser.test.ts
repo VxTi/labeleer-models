@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { mockParsingOptions } from '../../__testutils__/mock-parsing-options';
-import { parseJson } from './json-parser';
+import { parseJson } from './parser';
 
 describe('json parsing', () => {
   it('should parse a simple JSON dataset', async () => {

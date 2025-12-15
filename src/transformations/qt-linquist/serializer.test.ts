@@ -1,7 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { mockDataset } from '../../__testutils__/mock-dataset';
 import { mockSerializationOptions } from '../../__testutils__/mock-serialization-options';
-import { serializeTs } from './qt-linquist-serializer';
+import { serializeTs } from './serializer';
 
 describe('serialization', () => {
   it('should serialize a simple Qt Linguist XML dataset', async () => {

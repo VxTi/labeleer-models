@@ -59,13 +59,13 @@ function buildXmlDataset(
 
     const items: PluralizedAndroidStringsEntry[] = [];
 
-    for (const quantity of quantities) {
-      const plural = entry.plurals[quantity]?.[locale];
+    for (const [quantity, pluralEntry] of Object.entries(entry.plurals)) {
+      const plural = pluralEntry?.[locale];
 
       if (!plural) continue;
 
       items.push({
-        '@_quantity': quantity,
+        '@_quantity': quantity as PluralizationQuantity,
         '#text': plural,
       });
     }
@@ -92,6 +92,12 @@ function constructPerLanguageDatasets(
           translations: {
             [locale]: entry.translations?.[locale] ?? '',
           },
+          plurals: Object.fromEntries(
+            Object.entries(entry.plurals ?? {}).map(([qt, pluralEntry]) => [
+              qt as PluralizationQuantity,
+              pluralEntry?.[locale] ?? '',
+            ])
+          ),
         },
       };
     }
@@ -99,8 +105,6 @@ function constructPerLanguageDatasets(
 
   return perLanguageDatasets;
 }
-
-const quantities = ['zero', 'one', 'two', 'few', 'many', 'other'] as const;
 
 type SingularAndroidStringsEntry = { '@_name': string; '#text': string };
 

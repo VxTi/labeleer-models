@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { mockParsingOptions } from '../../__testutils__/mock-parsing-options';
-import { parseAndroidStrings } from './android-strings-parser';
+import { parseAndroidStrings } from './parser';
 
 describe('android strings parsing', () => {
   it('should parse a simple android strings XML dataset', async () => {

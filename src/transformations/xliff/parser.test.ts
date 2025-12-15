@@ -1,6 +1,6 @@
-import { mockParsingOptions } from '../../__testutils__/mock-parsing-options';
-import { parseXliff } from './xliff-parser';
 import { describe, expect, it } from 'vitest';
+import { mockParsingOptions } from '../../__testutils__/mock-parsing-options';
+import { parseXliff } from './parser';
 
 describe('XLIFF 2.1 Parsing', () => {
   it('parses a minimal XLIFF 2.1 document', async () => {

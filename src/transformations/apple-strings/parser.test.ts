@@ -1,10 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { type Locale } from '../../locales';
 import { mockParsingOptions } from '../../__testutils__/mock-parsing-options';
-import {
-  parseAppleStrings,
-  parseAppleStringsAggregated,
-} from './apple-strings-parser';
+import { parseAppleStrings, parseAppleStringsAggregated } from './parser';
 
 describe('apple strings parsing', () => {
   it('should aggregate several apple strings datasets', async () => {
