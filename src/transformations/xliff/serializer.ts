@@ -1,10 +1,10 @@
 import { XMLBuilder } from 'fast-xml-parser';
-import { type Locale, toISO639_1LanguageCode } from '../../locales';
+import { type Locale, toISO639_1LanguageCode } from '@/locales';
 import type {
   SerializationFragment,
   SerializerFn,
   TranslationDataset,
-} from '../../types';
+} from '@/types';
 
 export const serializeXliff: SerializerFn = async (input, config) => {
   const builder = new XMLBuilder({
@@ -14,43 +14,52 @@ export const serializeXliff: SerializerFn = async (input, config) => {
   });
 
   const fragments: SerializationFragment[] = [];
-  const nonRef = config.locales.filter(l => l !== config.referenceLocale);
+  const nonReferenceLocales: Locale[] = config.locales.filter(
+    (loc: Locale) => loc !== config.referenceLocale
+  );
 
-  if (nonRef.length === 0) {
-    const ds: TranslationDataset = {};
-    for (const [key, entry] of Object.entries(input)) {
-      ds[key] = {
+  // If there are no non-reference locales, create a single fragment with only the source language.
+  if (nonReferenceLocales.length === 0) {
+    const dataset: TranslationDataset = {};
+
+    Object.entries(input).forEach(([key, entry]) => {
+      const locale: Locale = config.referenceLocale;
+      const value: string = entry.translations?.[config.referenceLocale] || '';
+
+      dataset[key] = {
         translations: {
-          [config.referenceLocale]:
-            entry.translations[config.referenceLocale] || '',
+          [locale]: value,
         },
       };
-    }
+    });
 
-    return constructXliff21Fragment(
-      builder,
-      ds,
-      undefined,
-      config.referenceLocale
-    ).data;
+    return [
+      constructXliff21Fragment(
+        builder,
+        dataset,
+        undefined,
+        config.referenceLocale
+      ),
+    ];
   }
 
-  for (const locale of nonRef) {
-    const ds: TranslationDataset = {};
-    for (const [key, entry] of Object.entries(input)) {
-      ds[key] = {
+  nonReferenceLocales.forEach((locale: Locale) => {
+    const dataset: TranslationDataset = {};
+
+    Object.entries(input).forEach(([key, entry]) => {
+      dataset[key] = {
         translations: {
           [config.referenceLocale]:
-            entry.translations[config.referenceLocale] || '',
-          [locale]: entry.translations[locale] || '',
+            entry.translations?.[config.referenceLocale] || '',
+          [locale]: entry.translations?.[locale] || '',
         },
       };
-    }
+    });
 
     fragments.push(
-      constructXliff21Fragment(builder, ds, locale, config.referenceLocale)
+      constructXliff21Fragment(builder, dataset, locale, config.referenceLocale)
     );
-  }
+  });
 
   return Promise.resolve(fragments);
 };
@@ -75,9 +84,9 @@ function constructXliff21Fragment(
         unit: Object.entries(dataset).map(([key, entry]) => ({
           '@_id': key,
           segment: {
-            source: entry.translations[sourceLocale] || '',
+            source: entry.translations?.[sourceLocale] || '',
             ...(targetLocale
-              ? { target: entry.translations[targetLocale] || '' }
+              ? { target: entry.translations?.[targetLocale] || '' }
               : {}),
           },
         })),

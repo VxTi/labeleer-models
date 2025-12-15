@@ -6,7 +6,18 @@ import { serializeYaml } from './serializer';
 describe('yaml serialization', () => {
   it('should serialize a simple YAML dataset', async () => {
     const serialized = await serializeYaml(
-      mockDataset(),
+      mockDataset({
+        pluralForm: {
+          plurals: {
+            one: {
+              en_US: 'hello',
+            },
+            other: {
+              nl_NL: 'world',
+            },
+          },
+        },
+      }),
       mockSerializationOptions()
     );
 
@@ -16,13 +27,16 @@ describe('yaml serialization', () => {
         translations:
           en_US: hello
           nl_NL: world
-        plurals:
-          en_US: hellos
-          nl_NL: werelden
       second-entry:
         translations:
           en_US: hello
           nl_NL: again
+      pluralForm:
+        plurals:
+          one:
+            en_US: hello
+          other:
+            nl_NL: world
       "
     `);
   });

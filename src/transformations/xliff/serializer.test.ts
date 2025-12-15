@@ -6,14 +6,19 @@ import { serializeXliff } from './serializer';
 describe('XLIFF 2.1 Serialization', () => {
   it('serializes dataset for a single locale (reference only)', async () => {
     const result = await serializeXliff(
-      mockDataset(),
+      mockDataset({
+        strict: { translations: { en_US: 'must exist' } },
+      }),
       mockSerializationOptions({
         referenceLocale: 'en_US',
         locales: ['en_US'],
       })
     );
 
-    expect(result).toMatchInlineSnapshot(`
+    expect(result).toBeDefined();
+    expect(result).toHaveLength(1);
+    expect(result[0]?.data).toContain('must exist');
+    expect(result[0]?.data).toMatchInlineSnapshot(`
       "<?xml version="1.0" encoding="UTF-8"?>
       <xliff version="2.1" xmlns="urn:oasis:names:tc:xliff:document:2.1" srcLang="en">
         <file id="f1">
@@ -25,6 +30,11 @@ describe('XLIFF 2.1 Serialization', () => {
           <unit id="second-entry">
             <segment>
               <source>hello</source>
+            </segment>
+          </unit>
+          <unit id="strict">
+            <segment>
+              <source>must exist</source>
             </segment>
           </unit>
         </file>
@@ -42,10 +52,10 @@ describe('XLIFF 2.1 Serialization', () => {
       })
     );
 
-    expect(result).toMatchInlineSnapshot(`
-      [
-        {
-          "data": "<?xml version="1.0" encoding="UTF-8"?>
+    expect(result).toBeDefined();
+    expect(result).toHaveLength(1);
+    expect(result[0]?.data).toMatchInlineSnapshot(`
+      "<?xml version="1.0" encoding="UTF-8"?>
       <xliff version="2.1" xmlns="urn:oasis:names:tc:xliff:document:2.1" srcLang="en" trgLang="de">
         <file id="f1">
           <unit id="first-entry">
@@ -62,10 +72,7 @@ describe('XLIFF 2.1 Serialization', () => {
           </unit>
         </file>
       </xliff>
-      ",
-          "identifier": "de_DE",
-        },
-      ]
+      "
     `);
   });
 
@@ -77,6 +84,14 @@ describe('XLIFF 2.1 Serialization', () => {
       locales: ['en_US', 'fr_FR', 'es_ES'],
     });
 
+    expect(result).toBeDefined();
+    expect(result).toHaveLength(2);
+    expect(result).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({ identifier: 'fr_FR' }),
+        expect.objectContaining({ identifier: 'es_ES' }),
+      ])
+    );
     expect(result).toMatchInlineSnapshot(`
       [
         {

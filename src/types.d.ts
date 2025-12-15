@@ -1,4 +1,5 @@
 import type { Locale } from './locales';
+import type { quantities } from '@/constants';
 
 /**
  * An entry in a translation dataset,
@@ -13,13 +14,17 @@ export type TranslationEntry = {
 };
 
 /**
- * Pluralization
+ * Pluralization entries for different quantities,
+ * each containing localized translations.
  */
 export type TranslationPluralization = {
   [K in PluralizationQuantity]?: TranslationLocalizedEntries;
 };
 
-type PluralizationQuantity = 'zero' | 'one' | 'two' | 'few' | 'many' | 'other';
+/**
+ * The possible quantities for pluralization.
+ */
+export type PluralizationQuantity = (typeof quantities)[number];
 
 export type TranslationLocalizedEntries = Partial<Record<Locale, string>>;
 

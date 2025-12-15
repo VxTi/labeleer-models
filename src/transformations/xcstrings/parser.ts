@@ -1,8 +1,8 @@
 import { type z } from 'zod';
 import {
   type atomicLocalizationEntry,
-  localeDecoder,
   type localizationValue,
+  localeDecoder,
   xcstringsDecoder,
 } from './models';
 import { ParsingError } from '@/errors';

@@ -52,10 +52,12 @@ function constructTsSerializationFragment(
         name: 'Labeleer Translations',
         message: Object.entries(dataset).map(([key, entry]) => ({
           '@_key': key,
-          source: entry.translations[referenceLocale],
+          source: entry.translations?.[referenceLocale],
           // It's not necessary to translate *to* another language
           // as one can also just use TS files for a single language.
-          ...(locale ? { translation: entry.translations[locale] || '' } : {}),
+          ...(locale
+            ? { translation: entry.translations?.[locale] || '' }
+            : {}),
         })),
       },
     },

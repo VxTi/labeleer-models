@@ -1,11 +1,11 @@
-import YAML from 'yaml';
-import { datasetParser } from '../../decoders';
-import { ParsingError } from '../../errors';
-import type { ParserFn } from '../../types';
+import { parse } from 'yaml';
+import { datasetParser } from '@/decoders';
+import { ParsingError } from '@/errors';
+import type { ParserFn } from '@/types';
 
 export const parseYaml: ParserFn = input => {
   try {
-    const parsedYaml: unknown = YAML.parse(input);
+    const parsedYaml: unknown = parse(input);
 
     const parsedDataset = datasetParser.safeParse(parsedYaml);
 
@@ -17,9 +17,8 @@ export const parseYaml: ParserFn = input => {
 
     return Promise.resolve(parsedDataset.data);
   } catch (e) {
-    throw new ParsingError(
-      'Something went wrong whilst trying to parse yaml: ',
-      { cause: e }
-    );
+    throw new ParsingError('Something went wrong whilst trying to parse yaml', {
+      cause: e,
+    });
   }
 };
