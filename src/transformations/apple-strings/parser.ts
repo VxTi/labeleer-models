@@ -1,14 +1,8 @@
 import merge from 'lodash/merge';
-import { ParsingError } from '../../errors';
-import type { Locale } from '../../locales';
-import type {
-  AggregateParserFn,
-  ParserFn,
-  TranslationDataset,
-} from '../../types';
-
-const APPLE_STRING_LINE_REGEX =
-  /^\s*\uFEFF?"((?:[^"\\]|\\(?:U[0-9A-Fa-f]{4}|.))*)"\s*=\s*"((?:[^"\\]|\\(?:U[0-9A-Fa-f]{4}|.))*)"\s*;\s*$/;
+import { APPLE_STRING_LINE_REGEX } from './models';
+import { ParsingError } from '@/errors';
+import type { Locale } from '@/locales';
+import type { AggregateParserFn, ParserFn, TranslationDataset } from '@/types';
 
 export const parseAppleStrings: ParserFn = (input, { targetLocale }) => {
   if (!targetLocale) {

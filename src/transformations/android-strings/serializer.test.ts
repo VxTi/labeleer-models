@@ -29,19 +29,21 @@ describe('android strings serialization', () => {
       ])
     );
     expect(serialized?.[0]?.data).toMatchInlineSnapshot(`
-        "<?xml version="1.0" encoding="utf-8"?>
-        <resources>
-          <string name="second-entry">hello</string>
-        </resources>
-        "
-      `);
+      "<?xml version="1.0" encoding="utf-8"?>
+      <resources>
+        <string name="first-entry">hello</string>
+        <string name="second-entry">hello</string>
+      </resources>
+      "
+    `);
     expect(serialized?.[1]?.data).toMatchInlineSnapshot(`
-        "<?xml version="1.0" encoding="utf-8"?>
-        <resources>
-          <string name="second-entry">again</string>
-        </resources>
-        "
-      `);
+      "<?xml version="1.0" encoding="utf-8"?>
+      <resources>
+        <string name="first-entry">world</string>
+        <string name="second-entry">again</string>
+      </resources>
+      "
+    `);
   });
 
   it('should serialize an android strings dataset with pluralization', async () => {
@@ -65,21 +67,24 @@ describe('android strings serialization', () => {
     };
 
     const serialized = (await serializeAndroidStrings(input, options)) as
-      | string
+      | SerializationFragment[]
       | undefined;
     expect(serialized).toBeDefined();
-    expect(Array.isArray(serialized)).toBeFalsy(); // Should only produce a single fragment
-    expect(serialized).toContain('a regular string');
-    expect(serialized).toContain('one strict');
-    expect(serialized).toMatchInlineSnapshot(`
-      "<?xml version="1.0" encoding="utf-8"?>
+    expect(serialized).toHaveLength(1);
+    expect(serialized?.[0].data).toContain('a regular string');
+    expect(serialized?.[0].data).toContain('one strict');
+    expect(serialized?.[0]).toMatchInlineSnapshot(`
+      {
+        "data": "<?xml version="1.0" encoding="utf-8"?>
       <resources>
         <string name="regular">a regular string</string>
         <plurals name="strict">
           <item quantity="one">one strict</item>
         </plurals>
       </resources>
-      "
+      ",
+        "identifier": "en_US",
+      }
     `);
   });
 });

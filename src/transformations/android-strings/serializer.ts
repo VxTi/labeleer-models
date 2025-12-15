@@ -31,10 +31,6 @@ export const serializeAndroidStrings: SerializerFn = (input, config) => {
       });
     }
 
-    if (outputFragments.length === 1) {
-      return Promise.resolve(outputFragments[0].data);
-    }
-
     return Promise.resolve(outputFragments);
   } catch (e) {
     throw new SerializationError(

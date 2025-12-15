@@ -1,9 +1,9 @@
-import type { Locale } from '../../locales';
+import type { Locale } from '@/locales';
 import type {
   SerializationFragment,
   SerializerFn,
   TranslationDataset,
-} from '../../types';
+} from '@/types';
 
 export interface AppleStringsSerializationOptions {
   /**
@@ -59,5 +59,5 @@ function constructAppleStringsSerializationFragment(
 }
 
 function escapeText(input: string): string {
-  return input.replace(/"/g, '\\"');
+  return input.replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\t/g, '\\t');
 }
