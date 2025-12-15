@@ -1,10 +1,7 @@
 import { describe, expect, it } from 'vitest';
-import {
-  mockDataset,
-  mockPluralDataset,
-} from '../../__testutils__/mock-dataset';
+import { mockDataset } from '../../__testutils__/mock-dataset';
 import { mockSerializationOptions } from '../../__testutils__/mock-serialization-options';
-import type { SerializationFragment } from '../../types';
+import type { SerializationFragment, TranslationDataset } from '../../types';
 import { serializeAndroidStrings } from './serializer';
 
 describe('android strings serialization', () => {
@@ -22,12 +19,10 @@ describe('android strings serialization', () => {
     expect(serialized).toEqual(
       expect.arrayContaining([
         {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           data: expect.anything(),
           identifier: 'en_US',
         },
         {
-          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
           data: expect.anything(),
           identifier: 'nl_NL',
         },
@@ -54,23 +49,37 @@ describe('android strings serialization', () => {
       locales: ['en_US'],
       referenceLocale: 'en_US',
     });
-    const input = mockPluralDataset();
+    const input: TranslationDataset = {
+      regular: {
+        translations: {
+          en_US: 'a regular string',
+        },
+      },
+      strict: {
+        plurals: {
+          one: {
+            en_US: 'one strict',
+          },
+        },
+      },
+    };
 
     const serialized = (await serializeAndroidStrings(input, options)) as
-      | SerializationFragment[]
+      | string
       | undefined;
     expect(serialized).toBeDefined();
+    expect(Array.isArray(serialized)).toBeFalsy(); // Should only produce a single fragment
+    expect(serialized).toContain('a regular string');
+    expect(serialized).toContain('one strict');
     expect(serialized).toMatchInlineSnapshot(`
-      [
-        {
-          "data": "<?xml version="1.0" encoding="utf-8"?>
+      "<?xml version="1.0" encoding="utf-8"?>
       <resources>
-        <plurals name="plural-entry"></plurals>
+        <string name="regular">a regular string</string>
+        <plurals name="strict">
+          <item quantity="one">one strict</item>
+        </plurals>
       </resources>
-      ",
-          "identifier": "en_US",
-        },
-      ]
+      "
     `);
   });
 });

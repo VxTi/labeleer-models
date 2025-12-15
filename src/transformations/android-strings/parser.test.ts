@@ -50,8 +50,25 @@ describe('android strings parsing', () => {
       })
     );
     expect(parsed).toBeDefined();
-    expect(parsed['plural-label']?.['plurals']?.['one']?.['en_US']).toBe(
-      'One item'
+    expect(parsed).toEqual(
+      expect.objectContaining({
+        'plural-label': expect.objectContaining({
+          plurals: expect.objectContaining({
+            one: expect.objectContaining({
+              en_US: 'One item',
+            }),
+            other: expect.objectContaining({
+              en_US: 'Many items',
+            }),
+            two: expect.objectContaining({
+              en_US: 'Two',
+            }),
+            zero: expect.objectContaining({
+              en_US: 'Zero',
+            }),
+          }),
+        }),
+      })
     );
     expect(parsed).toMatchInlineSnapshot(`
       {
@@ -84,5 +101,24 @@ describe('android strings parsing', () => {
         },
       }
     `);
+  });
+
+  it('should throw an error for invalid XML', () => {
+    const input = `<resources>
+  <string name="first-label">Hello</string>
+  <string name="second-label">again</string>
+  <plurals name="plural-label">
+    <item quantity="zero">Zero</item>
+    <item quantity="one">One item</item>
+    <item quantity="two">Two</item>
+    <item quantity="other">Many items</item>
+</plur
+`;
+
+    expect(() =>
+      parseAndroidStrings(input, { referenceLocale: 'en_US' })
+    ).toThrowError(
+      'Failed to parse Android Strings XML: Error: Closing Tag is not closed.'
+    );
   });
 });

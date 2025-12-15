@@ -10,6 +10,7 @@ import type {
   SerializationFragment,
   SerializerFn,
   TranslationDataset,
+  TranslationPluralization,
 } from '@/types';
 
 export const serializeAndroidStrings: SerializerFn = (input, config) => {
@@ -28,6 +29,10 @@ export const serializeAndroidStrings: SerializerFn = (input, config) => {
         identifier: locale,
         data: buildXmlDataset(builder, dataset, locale as Locale),
       });
+    }
+
+    if (outputFragments.length === 1) {
+      return Promise.resolve(outputFragments[0].data);
     }
 
     return Promise.resolve(outputFragments);
@@ -56,56 +61,61 @@ function buildXmlDataset(
         '@_name': key,
         '#text': translation,
       });
-      continue;
     }
 
-    if (!entry.plurals) continue;
+    const pluralItems: PluralizedAndroidStringsEntry[] = [];
 
-    const items: PluralizedAndroidStringsEntry[] = [];
-
-    for (const [quantity, pluralEntry] of Object.entries(entry.plurals)) {
-      const plural = pluralEntry?.[locale];
-
-      if (!plural) continue;
-
-      items.push({
+    for (const [quantity, pluralEntry] of Object.entries(entry.plurals ?? {})) {
+      const value = pluralEntry[locale];
+      pluralItems.push({
         '@_quantity': quantity as PluralizationQuantity,
-        '#text': plural,
+        '#text': value ?? '',
       });
     }
-    outputIr.resources.plurals.push({
-      '@_name': key,
-      item: items,
-    });
+
+    if (pluralItems.length > 0) {
+      outputIr.resources.plurals.push({
+        '@_name': key,
+        item: pluralItems,
+      });
+    }
   }
 
   const output = builder.build(outputIr);
   return `<?xml version="1.0" encoding="utf-8"?>\n${output}`;
 }
 
+/**
+ * Constructs per-language datasets from a combined dataset.
+ * This is necessary because Android Strings XML files are per-language.
+ */
 function constructPerLanguageDatasets(
   input: TranslationDataset,
   locales: Locale[]
 ): Partial<Record<Locale, TranslationDataset>> {
   const perLanguageDatasets: Partial<Record<Locale, TranslationDataset>> = {};
 
-  for (const [key, entry] of Object.entries(input)) {
-    for (const locale of locales) {
+  Object.entries(input).forEach(([key, entry]) => {
+    locales.forEach((locale: Locale) => {
+      const plurals: TranslationPluralization = Object.fromEntries(
+        Object.entries(entry.plurals ?? {}).map(([qt, pluralEntry]) => {
+          const pluralValue = pluralEntry?.[locale] ?? '';
+
+          return [qt as PluralizationQuantity, { [locale]: pluralValue }];
+        })
+      );
+
       perLanguageDatasets[locale] = {
+        ...(perLanguageDatasets[locale] ?? {}),
         [key]: {
           translations: {
             [locale]: entry.translations?.[locale] ?? '',
           },
-          plurals: Object.fromEntries(
-            Object.entries(entry.plurals ?? {}).map(([qt, pluralEntry]) => [
-              qt as PluralizationQuantity,
-              pluralEntry?.[locale] ?? '',
-            ])
-          ),
+          plurals,
         },
       };
-    }
-  }
+    });
+  });
 
   return perLanguageDatasets;
 }

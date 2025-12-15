@@ -1,13 +1,14 @@
 import { XMLParser } from 'fast-xml-parser';
-import { type z } from 'zod';
 import {
-  type pluralSerializationIrFragmentDecoder,
+  type PluralizedAndroidStringsSetEntry,
   serializationIrDecoder,
+  type SingularAndroidStringsEntry,
 } from './models';
 import { ParsingError } from '@/errors';
 import type { Locale } from '@/locales';
 import type {
   AggregateParserFn,
+  MaybeArray,
   ParserFn,
   TranslationDataset,
   TranslationPluralization,
@@ -29,9 +30,7 @@ export const parseAndroidStrings: ParserFn = (input, { referenceLocale }) => {
 
     return Promise.resolve(transformed);
   } catch (e) {
-    throw new ParsingError(
-      `Failed to parse Android Strings XML: ${String(e.message)}`
-    );
+    throw new ParsingError(`Failed to parse Android Strings XML: ${String(e)}`);
   }
 };
 
@@ -66,57 +65,49 @@ function transformToDataset(
 
   const dataset: TranslationDataset = {};
 
-  // Handle the case where there's only a single string entry
-  if (!Array.isArray(ir.data.resources.string)) {
-    const key = ir.data.resources.string['@_name'];
-    const value = ir.data.resources.string['#text'];
+  const stringsEntry: MaybeArray<SingularAndroidStringsEntry> | undefined =
+    ir.data.resources.string;
+  const strings: SingularAndroidStringsEntry[] = stringsEntry
+    ? Array.isArray(stringsEntry)
+      ? stringsEntry
+      : [stringsEntry]
+    : [];
+  const plurals: PluralizedAndroidStringsSetEntry[] = ir.data.resources.plurals
+    ? Array.isArray(ir.data.resources.plurals)
+      ? ir.data.resources.plurals
+      : [ir.data.resources.plurals]
+    : [];
+
+  strings.forEach(stringEntry => {
+    const key = stringEntry['@_name'];
+    const translation = stringEntry['#text'];
 
     dataset[key] = {
       translations: {
-        [locale]: value,
+        [locale]: translation,
       },
     };
-  } else {
-    for (const stringEntry of ir.data.resources.string) {
-      const key = stringEntry['@_name'];
-      const translation = stringEntry['#text'];
+  });
 
-      dataset[key] = {
-        translations: {
-          [locale]: translation,
-        },
-      };
-    }
-  }
-
-  if (!Array.isArray(ir.data.resources.plurals)) {
-    const key: string = ir.data.resources.plurals['@_name'];
-
+  plurals.forEach(pluralEntry => {
+    const key = pluralEntry['@_name'];
     dataset[key] = {
-      translations: dataset?.[key]?.translations ?? {},
-      plurals: extractPlurals(ir.data.resources.plurals, locale),
+      translations: dataset[key]?.translations ?? {},
+      plurals: extractPluralsFromEntry(pluralEntry, locale),
     };
-  } else {
-    for (const pluralEntry of ir.data.resources.plurals) {
-      const key = pluralEntry['@_name'];
-      dataset[key] = {
-        translations: dataset[key]?.translations ?? {},
-        plurals: extractPlurals(pluralEntry, locale),
-      };
-    }
-  }
+  });
 
   return dataset;
 }
 
-function extractPlurals(
-  plurals: z.infer<typeof pluralSerializationIrFragmentDecoder>,
+function extractPluralsFromEntry(
+  plurals: PluralizedAndroidStringsSetEntry,
   baseLocale: Locale
 ): TranslationPluralization {
-  return Object.fromEntries(
+  return Object.fromEntries<TranslationPluralization>(
     plurals.item.map(({ '@_quantity': key, '#text': value }) => [
       key,
       { [baseLocale]: value },
     ])
-  ) as TranslationPluralization;
+  );
 }

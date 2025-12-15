@@ -79,6 +79,7 @@ export default defineConfig([
     files: ['**/*.test.ts'],
     rules: {
       '@typescript-eslint/no-unsafe-argument': 0,
+      '@typescript-eslint/no-unsafe-assignment': 0,
     },
   },
 ]);

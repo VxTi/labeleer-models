@@ -115,3 +115,5 @@ export type SerializerFn<T extends object = {}> = (
   dataset: TranslationDataset,
   options: SerializationOptions<T>
 ) => Promise<SerializationFragment[] | string>;
+
+export type MaybeArray<T> = Array<T> | T;
