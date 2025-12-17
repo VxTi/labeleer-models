@@ -3,12 +3,12 @@ import {
   type GetTextTranslations,
   po,
 } from 'gettext-parser';
-import type { Locale } from '@/locales';
 import type {
   SerializationFragment,
   SerializerFn,
   TranslationDataset,
-} from '@/types';
+} from '@/definitions';
+import type { Locale } from '@/locales';
 
 export const serializePo: SerializerFn = (input, options) => {
   const { locales } = options;

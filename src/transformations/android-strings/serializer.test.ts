@@ -1,7 +1,10 @@
 import { describe, expect, it } from 'vitest';
 import { mockDataset } from '../../__testutils__/mock-dataset';
 import { mockSerializationOptions } from '../../__testutils__/mock-serialization-options';
-import type { SerializationFragment, TranslationDataset } from '../../types';
+import type {
+  SerializationFragment,
+  TranslationDataset,
+} from '../../definitions';
 import { serializeAndroidStrings } from './serializer';
 
 describe('android strings serialization', () => {

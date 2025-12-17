@@ -1,4 +1,4 @@
-import type { SerializerFn } from '@/types';
+import type { SerializerFn } from '@/definitions';
 
 export const serializeJson: SerializerFn = dataset => {
   const data = JSON.stringify(dataset, null, 2);

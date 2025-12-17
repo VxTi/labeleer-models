@@ -1,8 +1,12 @@
 import merge from 'lodash/merge';
 import { APPLE_STRING_LINE_REGEX } from './common';
+import type {
+  AggregateParserFn,
+  ParserFn,
+  TranslationDataset,
+} from '@/definitions';
 import { ParsingError } from '@/errors';
 import type { Locale } from '@/locales';
-import type { AggregateParserFn, ParserFn, TranslationDataset } from '@/types';
 
 export const parseAppleStrings: ParserFn = (input, { targetLocale }) => {
   if (!targetLocale) {

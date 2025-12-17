@@ -1,10 +1,10 @@
 import { XMLBuilder } from 'fast-xml-parser';
-import { type Locale, toBCP47 } from '@/locales';
 import type {
   SerializationFragment,
   SerializerFn,
   TranslationDataset,
-} from '@/types';
+} from '@/definitions';
+import { type Locale, toBCP47 } from '@/locales';
 
 export const serializeTs: SerializerFn = async (input, config) => {
   const nonReferenceLanguages = config.locales.filter(

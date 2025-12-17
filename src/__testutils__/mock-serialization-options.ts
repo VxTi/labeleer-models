@@ -1,4 +1,4 @@
-import type { SerializationOptions } from '../types';
+import type { SerializationOptions } from '../definitions';
 
 export function mockSerializationOptions<T extends object = {}>(
   updates: Partial<SerializationOptions<T>> = {}

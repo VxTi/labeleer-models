@@ -5,5 +5,5 @@ export * from './serializer';
 export * from './parser';
 export * from './transformations';
 export * from './dataset-builder';
-export * from './types';
+export * from './definitions';
 export * from './constants';

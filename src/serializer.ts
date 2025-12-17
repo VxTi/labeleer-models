@@ -1,10 +1,11 @@
 import JSZip from 'jszip';
-import { getFileExtensionsFromFormat, SupportedFormat } from './file-formats';
 import type {
+  SerializationFragment,
   SerializationOptions,
   SerializerFn,
   TranslationDataset,
-} from './types';
+} from './definitions';
+import { getFileExtensionsFromFormat, SupportedFormat } from './file-formats';
 import {
   serializeTs,
   serializeXcstrings,
@@ -32,16 +33,22 @@ export async function serializeDataset<
   format: TFormat,
   options: TOptions
 ): Promise<string> {
-  const serialized = await serializerMap[format](dataset, options);
+  const serializerFn = serializerMap[format] as SerializerFn<
+    InferSerializationOptions<TFormat>
+  >;
+  const output: string | SerializationFragment[] = await serializerFn(
+    dataset,
+    options
+  );
 
-  if (!Array.isArray(serialized)) {
-    return serialized; // Singular file serialization
+  if (!Array.isArray(output)) {
+    return output; // Singular file serialization
   }
 
   // Alright, we'll have to make a zip of it
   const zip = new JSZip();
 
-  serialized.forEach(({ filename, data }) => {
+  output.forEach(({ filename, data }) => {
     const extension = getFileExtensionsFromFormat(format)[0];
     const fileName = `${filename}${extension}`;
 

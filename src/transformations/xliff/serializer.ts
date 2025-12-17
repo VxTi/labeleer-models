@@ -1,10 +1,10 @@
 import { XMLBuilder } from 'fast-xml-parser';
-import { type Locale, toISO639_1LanguageCode } from '@/locales';
 import type {
   SerializationFragment,
   SerializerFn,
   TranslationDataset,
-} from '@/types';
+} from '@/definitions';
+import { type Locale, toISO639_1LanguageCode } from '@/locales';
 
 export const serializeXliff: SerializerFn = async (input, config) => {
   const builder = new XMLBuilder({

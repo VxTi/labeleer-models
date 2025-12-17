@@ -2,9 +2,14 @@
   "name": "@labeleer/translation-dataset-transformers",
   "version": "1.0.1",
   "main": "dist/index.js",
-  "exports": [
-    "./dist/index.js"
-  ],
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/index.js",
+      "types": "./dist/definitions.d.ts",
+      "require": "./dist/index.js"
+    }
+  },
   "private": false,
   "type": "module",
   "description": "Utility parser methods used by all Labeleer tools",
@@ -14,13 +19,13 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc --p tsconfig.json",
+    "build": "tsc --p tsconfig.release.json",
     "prepublishOnly": "npm run clean; npm run test && npm run build;",
     "test": "vitest run",
     "test:update": "vitest run -u",
     "lint": "eslint --fix \"./src/**/*.ts\" --cache --max-warnings 0",
     "sanity": "npm run lint; npm run test; tsc --noEmit; npm run clean",
-    "clean": "rm -rf ./dist tsconfig.tsbuildinfo"
+    "clean": "rm -rf ./dist tsconfig.release.tsbuildinfo"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",

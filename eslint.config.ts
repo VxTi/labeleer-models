@@ -1,10 +1,9 @@
-// @ts-ignore
-import prettierConfig from './prettier.config';
 import { defineConfig } from 'eslint/config';
-import tseslint from 'typescript-eslint';
+import importPlugin from 'eslint-plugin-import';
 import prettierPlugin from 'eslint-plugin-prettier';
 import unusedImports from 'eslint-plugin-unused-imports';
-import importPlugin from 'eslint-plugin-import';
+import tseslint from 'typescript-eslint';
+import prettierConfig from './prettier.config';
 
 export default defineConfig([
   // TypeScript recommendations
@@ -15,7 +14,7 @@ export default defineConfig([
     languageOptions: {
       parser: tseslint.parser,
       parserOptions: {
-        project: './tsconfig.node.json',
+        project: './tsconfig.json',
         tsconfigRootDir: process.cwd(),
       },
     },
@@ -57,12 +56,16 @@ export default defineConfig([
       'import/no-useless-path-segments': 2, // Prevent unnecessary path segments in import and require statements
       'import/newline-after-import': 2, // Enforce a newline after import statements
       'import/no-duplicates': 2, // Prevent duplicate imports
-      'import/order': ['error', { // Enforce a consistent order of imports
-        "alphabetize": {
-          "order": "asc",
-          "caseInsensitive": true
-        }
-      }],
+      'import/order': [
+        'error',
+        {
+          // Enforce a consistent order of imports
+          alphabetize: {
+            order: 'asc',
+            caseInsensitive: true,
+          },
+        },
+      ],
 
       '@typescript-eslint/consistent-type-imports': [
         'error',

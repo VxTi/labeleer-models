@@ -37,7 +37,7 @@ export type TranslationDataset = Record<string, TranslationEntry>;
 /**
  * Extensible options for parsing functions
  */
-export interface ParsingOptions<T extends object> extends T {
+export type ParsingOptions<T extends object> = T & {
   /**
    * The locale to prioritize when parsing translations.
    */
@@ -49,7 +49,7 @@ export interface ParsingOptions<T extends object> extends T {
    * and/or that are missing locale information in their structure.
    */
   targetLocale?: Locale;
-}
+};
 
 /**
  * A function that takes a string input and an optional locale,
@@ -76,9 +76,7 @@ export type AggregateParserFn<T extends object = {}> = (
 /**
  * Options for serialization functions
  */
-export interface SerializationOptions<
-  T extends Record<string, unknown> = {},
-> extends T {
+export type SerializationOptions<T extends {} = {}> = T & {
   /**
    * The reference locale for the serialization process.
    * This is necessary for formats that require a base language,
@@ -90,7 +88,7 @@ export interface SerializationOptions<
    * The list of locales to include in the serialization output.
    */
   locales: Locale[];
-}
+};
 
 /**
  * A fragment of serialized output,

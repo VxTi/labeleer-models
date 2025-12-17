@@ -4,15 +4,15 @@ import {
   type ASXmlSingularEntry,
   ASXmlDecoder,
 } from './common';
-import { ParsingError } from '@/errors';
-import type { Locale } from '@/locales';
 import type {
   AggregateParserFn,
   MaybeArray,
   ParserFn,
   TranslationDataset,
   TranslationPluralization,
-} from '@/types';
+} from '@/definitions';
+import { ParsingError } from '@/errors';
+import type { Locale } from '@/locales';
 
 export const parseAndroidStrings: ParserFn = (input, { referenceLocale }) => {
   // Requires a locale to parse properly

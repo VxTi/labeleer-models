@@ -47,6 +47,7 @@ describe('serializer', () => {
         SupportedFormat.APPLE_STRINGS,
         mockSerializationOptions({
           locales: ['en_US', 'nl_NL', 'fr_FR'],
+          translateDirect: false,
         })
       );
       expect(result).toBeDefined();

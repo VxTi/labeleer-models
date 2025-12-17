@@ -1,14 +1,14 @@
 import { XMLBuilder } from 'fast-xml-parser';
 import type { ASSerializationOutputSet, ASXmlPluralEntry } from './common';
-import { SerializationError } from '@/errors';
-import { type Locale, toISO639_1LanguageCode } from '@/locales';
 import type {
   PluralizationQuantity,
   SerializationFragment,
   SerializerFn,
   TranslationDataset,
   TranslationPluralization,
-} from '@/types';
+} from '@/definitions';
+import { SerializationError } from '@/errors';
+import { type Locale, toISO639_1LanguageCode } from '@/locales';
 
 export const serializeAndroidStrings: SerializerFn = (input, config) => {
   try {

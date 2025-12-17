@@ -4,13 +4,13 @@ import type {
   XCStringsPluralVariations,
   XCStringsTranslationEntry,
 } from './common';
-import type { Locale } from '@/locales';
 import type {
   PluralizationQuantity,
   SerializerFn,
   TranslationLocalizedEntries,
   TranslationPluralization,
-} from '@/types';
+} from '@/definitions';
+import type { Locale } from '@/locales';
 
 export const serializeXcstrings: SerializerFn = async (dataset, options) => {
   const xcstrings: XCStringsDataset = {

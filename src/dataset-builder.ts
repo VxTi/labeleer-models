@@ -1,5 +1,8 @@
+import type {
+  TranslationDataset,
+  TranslationPluralization,
+} from '@/definitions';
 import type { Locale } from '@/locales';
-import type { TranslationDataset, TranslationPluralization } from '@/types';
 
 /**
  * A builder class for constructing translation datasets.

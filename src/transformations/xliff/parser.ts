@@ -1,8 +1,8 @@
 import { XMLParser } from 'fast-xml-parser';
+import type { ParserFn, TranslationDataset } from '@/definitions';
 import { ParsingError } from '@/errors';
 import { type Locale } from '@/locales';
 import { XLIFF21Decoder } from '@/transformations/xliff/models';
-import type { ParserFn, TranslationDataset } from '@/types';
 
 export const parseXliff: ParserFn = input => {
   try {

@@ -7,15 +7,13 @@
     "isolatedModules": true,
     "esModuleInterop": true,
     "noEmit": false,
-
-    "rootDir": "./src",
     "declaration": true,
     "allowSyntheticDefaultImports": true,
     "outDir": "./dist",
     "useDefineForClassFields": true,
     "lib": ["ES2022", "ESNext"],
     "allowJs": true,
-    "incremental": true,
+    "incremental": false,
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
@@ -26,6 +24,11 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src/**/*.ts"],
-  "exclude": ["dist", "**/*.test.ts", "**/mock*.ts", "node_modules"]
+  "include": [
+    "src/**/*",
+    "eslint.config.ts",
+    "vite.config.ts",
+    "prettier.config.ts"
+  ],
+  "exclude": ["dist", "node_modules"]
 }

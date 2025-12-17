@@ -1,10 +1,10 @@
-import { SerializationError } from '@/errors';
-import type { Locale } from '@/locales';
 import type {
   SerializationFragment,
   SerializerFn,
   TranslationDataset,
-} from '@/types';
+} from '@/definitions';
+import { SerializationError } from '@/errors';
+import type { Locale } from '@/locales';
 
 export type AppleStringsSerializationOptions = {
   /**

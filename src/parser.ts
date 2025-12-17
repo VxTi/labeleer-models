@@ -1,10 +1,10 @@
-import { SupportedFormat } from './file-formats';
 import type {
   AggregateParserFn,
   ParserFn,
   ParsingOptions,
   TranslationDataset,
-} from './types';
+} from './definitions';
+import { SupportedFormat } from './file-formats';
 import {
   parseAndroidStrings,
   parseAppleStrings,
