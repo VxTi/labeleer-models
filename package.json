@@ -1,6 +1,10 @@
 {
   "name": "@labeleer/translation-dataset-transformers",
   "version": "1.0.0",
+  "main": "dist/index.js",
+  "exports": [
+    "./dist/index.js"
+  ],
   "private": false,
   "type": "module",
   "description": "Utility parser methods used by all Labeleer tools",
