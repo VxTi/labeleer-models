@@ -19,7 +19,7 @@
     "dist"
   ],
   "scripts": {
-    "build": "tsc --p tsconfig.release.json",
+    "build": "tsc --p tsconfig.release.json && tsc-alias -p tsconfig.release.json",
     "prepublishOnly": "npm run clean; npm run test && npm run build;",
     "test": "vitest run",
     "test:update": "vitest run -u",
@@ -33,7 +33,6 @@
     "@types/gettext-parser": "^8.0.0",
     "@types/lodash": "^4.17.21",
     "@types/node": "^24.10.1",
-    "esbuild": "^0.27.0",
     "eslint": "^9.39.1",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-import": "^2.32.0",
@@ -41,9 +40,10 @@
     "eslint-plugin-unused-imports": "^4.3.0",
     "jiti": "^2.6.1",
     "prettier": "^3.6.2",
+    "tsc-alias": "^1.8.16",
     "tsx": "^4.20.6",
-    "typescript-eslint": "^8.47.0",
     "typescript": "^5.9.3",
+    "typescript-eslint": "^8.47.0",
     "vite": "^7.3.0",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^4.0.14"
