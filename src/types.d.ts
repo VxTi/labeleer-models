@@ -76,7 +76,9 @@ export type AggregateParserFn<T extends object = {}> = (
 /**
  * Options for serialization functions
  */
-export interface SerializationOptions<T extends object = {}> extends T {
+export interface SerializationOptions<
+  T extends Record<string, unknown> = {},
+> extends T {
   /**
    * The reference locale for the serialization process.
    * This is necessary for formats that require a base language,
@@ -101,7 +103,7 @@ export interface SerializationFragment {
    *
    * This will make it easier to identify the fragment later on.
    */
-  identifier: string;
+  filename: string;
 
   /**
    * The serialized content of the fragment.
@@ -116,7 +118,7 @@ export interface SerializationFragment {
  * A {@link SerializationFragment} represents a part of the serialized output,
  * which can be useful for formats that require multiple files.
  */
-export type SerializerFn<T extends object = {}> = (
+export type SerializerFn<T extends Record<string, unknown> = {}> = (
   dataset: TranslationDataset,
   options: SerializationOptions<T>
 ) => Promise<SerializationFragment[] | string>;

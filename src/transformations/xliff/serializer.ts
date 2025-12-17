@@ -97,7 +97,7 @@ function constructXliff21Fragment(
   const xmlContent = builder.build(xliffObj);
 
   return {
-    identifier: targetLocale ?? sourceLocale,
+    filename: targetLocale ?? sourceLocale,
     data: `<?xml version="1.0" encoding="UTF-8"?>\n${xmlContent}`,
   };
 }

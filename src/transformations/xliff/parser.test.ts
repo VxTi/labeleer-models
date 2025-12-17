@@ -25,7 +25,7 @@ describe('XLIFF 2.1 Parsing', () => {
         "hello": {
           "translations": {
             "de_DE": "Hallo",
-            "en_GB": "Hello",
+            "en_US": "Hello",
           },
         },
       }
@@ -52,7 +52,7 @@ describe('XLIFF 2.1 Parsing', () => {
       {
         "greeting": {
           "translations": {
-            "en_GB": "Hello world",
+            "en_US": "Hello world",
           },
         },
       }

@@ -20,11 +20,11 @@ describe('android strings serialization', () => {
       expect.arrayContaining([
         {
           data: expect.anything(),
-          identifier: 'en_US',
+          filename: 'values-en/strings',
         },
         {
           data: expect.anything(),
-          identifier: 'nl_NL',
+          filename: 'values-nl/strings',
         },
       ])
     );
@@ -83,7 +83,7 @@ describe('android strings serialization', () => {
         </plurals>
       </resources>
       ",
-        "identifier": "en_US",
+        "filename": "values-en/strings",
       }
     `);
   });

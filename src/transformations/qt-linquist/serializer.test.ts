@@ -18,10 +18,10 @@ describe('serialization', () => {
     expect(serialized).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          identifier: 'nl-NL',
+          filename: 'nl-NL',
         }),
         expect.objectContaining({
-          identifier: 'en-AU',
+          filename: 'en-AU',
         }),
       ])
     );
@@ -43,7 +43,7 @@ describe('serialization', () => {
           </context>
         </TS>
         ",
-            "identifier": "nl-NL",
+            "filename": "nl-NL",
           },
           {
             "data": "<?xml version="1.0" encoding="utf-8"?>
@@ -61,7 +61,7 @@ describe('serialization', () => {
           </context>
         </TS>
         ",
-            "identifier": "en-AU",
+            "filename": "en-AU",
           },
         ]
       `);
@@ -93,7 +93,7 @@ describe('serialization', () => {
           </context>
         </TS>
         ",
-          "identifier": "en-US",
+          "filename": "en-US",
         }
       `);
   });

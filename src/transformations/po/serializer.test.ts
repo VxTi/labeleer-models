@@ -35,7 +35,7 @@ describe('po serialization', () => {
     expect(serialized).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          identifier: 'en_US',
+          filename: 'en_US',
           data: expect.any(String),
         }),
       ])

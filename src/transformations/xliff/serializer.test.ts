@@ -88,8 +88,8 @@ describe('XLIFF 2.1 Serialization', () => {
     expect(result).toHaveLength(2);
     expect(result).toEqual(
       expect.arrayContaining([
-        expect.objectContaining({ identifier: 'fr_FR' }),
-        expect.objectContaining({ identifier: 'es_ES' }),
+        expect.objectContaining({ filename: 'fr_FR' }),
+        expect.objectContaining({ filename: 'es_ES' }),
       ])
     );
     expect(result).toMatchInlineSnapshot(`
@@ -113,7 +113,7 @@ describe('XLIFF 2.1 Serialization', () => {
         </file>
       </xliff>
       ",
-          "identifier": "fr_FR",
+          "filename": "fr_FR",
         },
         {
           "data": "<?xml version="1.0" encoding="UTF-8"?>
@@ -134,7 +134,7 @@ describe('XLIFF 2.1 Serialization', () => {
         </file>
       </xliff>
       ",
-          "identifier": "es_ES",
+          "filename": "es_ES",
         },
       ]
     `);

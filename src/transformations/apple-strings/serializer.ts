@@ -6,12 +6,12 @@ import type {
   TranslationDataset,
 } from '@/types';
 
-export interface AppleStringsSerializationOptions {
+export type AppleStringsSerializationOptions = {
   /**
    * Determines whether the
    */
   translateDirect: boolean;
-}
+};
 
 export const serializeAppleStrings: SerializerFn<
   AppleStringsSerializationOptions
@@ -59,7 +59,7 @@ function constructAppleStringsSerializationFragment(
 
   return {
     data,
-    identifier: targetLocale,
+    filename: targetLocale,
   };
 }
 

@@ -29,7 +29,7 @@ export async function serializeDataset<
   TOptions extends SerializationOptions<InferSerializationOptions<TFormat>>,
 >(
   dataset: TranslationDataset,
-  format: SupportedFormat,
+  format: TFormat,
   options: TOptions
 ): Promise<string> {
   const serialized = await serializerMap[format](dataset, options);
@@ -40,19 +40,21 @@ export async function serializeDataset<
 
   // Alright, we'll have to make a zip of it
   const zip = new JSZip();
-  for (const fragment of serialized) {
-    const extension = getFileExtensionsFromFormat(format)[0];
-    const fileName = `${fragment.identifier}${extension}`;
 
-    zip.file(fileName, fragment.data);
-  }
+  serialized.forEach(({ filename, data }) => {
+    const extension = getFileExtensionsFromFormat(format)[0];
+    const fileName = `${filename}${extension}`;
+
+    zip.file(fileName, data);
+  });
 
   return await zip.generateAsync({ type: 'string' });
 }
 
-type InferSerializationOptions<T> = T extends SerializerFn<infer F> ? F : never;
+type InferSerializationOptions<T extends SupportedFormat> =
+  (typeof serializerMap)[T] extends SerializerFn<infer F> ? F : never;
 
-const serializerMap: Record<SupportedFormat, SerializerFn> = {
+const serializerMap = {
   [SupportedFormat.APPLE_STRINGS]: serializeAppleStrings,
   [SupportedFormat.TS]: serializeTs,
   [SupportedFormat.XLIFF]: serializeXliff,
@@ -61,4 +63,4 @@ const serializerMap: Record<SupportedFormat, SerializerFn> = {
   [SupportedFormat.YAML]: serializeYaml,
   [SupportedFormat.JSON]: serializeJson,
   [SupportedFormat.XCSTRINGS]: serializeXcstrings,
-};
+} as const;

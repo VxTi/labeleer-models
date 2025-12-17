@@ -77,6 +77,6 @@ function constructPoSerializationFragment(
 
   return {
     data,
-    identifier: locale,
+    filename: locale,
   };
 }

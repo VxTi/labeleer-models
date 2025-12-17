@@ -67,6 +67,6 @@ function constructTsSerializationFragment(
 
   return {
     data,
-    identifier: toBCP47(locale ?? referenceLocale),
+    filename: toBCP47(locale ?? referenceLocale),
   };
 }

@@ -1,7 +1,7 @@
 import { XMLBuilder } from 'fast-xml-parser';
 import type { ASSerializationOutputSet, ASXmlPluralEntry } from './common';
 import { SerializationError } from '@/errors';
-import type { Locale } from '@/locales';
+import { type Locale, toISO639_1LanguageCode } from '@/locales';
 import type {
   PluralizationQuantity,
   SerializationFragment,
@@ -22,10 +22,11 @@ export const serializeAndroidStrings: SerializerFn = (input, config) => {
     const outputFragments: SerializationFragment[] = [];
 
     for (const [locale, dataset] of Object.entries(perLanguageDatasets)) {
-      outputFragments.push({
-        identifier: locale,
-        data: buildXmlDataset(builder, dataset, locale as Locale),
-      });
+      const data = buildXmlDataset(builder, dataset, locale as Locale);
+
+      const filename = `values-${toISO639_1LanguageCode(locale as Locale)}/strings`;
+
+      outputFragments.push({ filename, data });
     }
 
     return Promise.resolve(outputFragments);
