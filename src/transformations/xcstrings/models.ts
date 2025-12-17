@@ -22,11 +22,15 @@ export const pluralLocalizationEntry = z.object({
   }),
 });
 
+export type XCStringsPluralVariations = keyof z.infer<
+  typeof pluralLocalizationEntry.shape.variations.shape.plural
+>;
+
 export type XCStringsPluralLocalizationEntry = z.infer<
   typeof pluralLocalizationEntry
 >;
 
-export const localeDecoder = z
+export const LocaleDecoder = z
   .string()
   .transform(val =>
     isISO639_1LanguageCode(val)
@@ -36,23 +40,30 @@ export const localeDecoder = z
         : null
   );
 
-export const localizationValue = z.union([
+export const XCStringsLocalizationEntryDecoder = z.union([
   atomicLocalizationEntry,
   pluralLocalizationEntry,
 ]);
 
-export const translationEntry = z.object({
+export const XCStringsTranslationEntryDecoder = z.object({
   comment: z.string(),
   extractionState: z.enum(['manual']),
-  localizations: z.record(/* Locale */ z.string(), localizationValue),
+  localizations: z.record(
+    z.string(/* Locale */).refine(val => {
+      return LocaleDecoder.safeParse(val).success;
+    }),
+    XCStringsLocalizationEntryDecoder
+  ),
 });
 
-export type XCStringsTranslationEntry = z.infer<typeof translationEntry>;
+export type XCStringsTranslationEntry = z.infer<
+  typeof XCStringsTranslationEntryDecoder
+>;
 
-export const xcstringsDecoder = z.object({
+export const XCStringsDatasetDecoder = z.object({
   version: z.string(),
   sourceLanguage: z.string().optional(),
-  strings: z.record(z.string(), translationEntry),
+  strings: z.record(z.string(), XCStringsTranslationEntryDecoder),
 });
 
-export type XCStringsDataset = z.infer<typeof xcstringsDecoder>;
+export type XCStringsDataset = z.infer<typeof XCStringsDatasetDecoder>;

@@ -1,9 +1,16 @@
 import merge from 'lodash/merge';
 import type {
   XCStringsDataset,
+  XCStringsPluralVariations,
   XCStringsTranslationEntry,
-} from '@/transformations/xcstrings/models';
-import type { PluralizationQuantity, SerializerFn } from '@/types';
+} from './models';
+import type { Locale } from '@/locales';
+import type {
+  PluralizationQuantity,
+  SerializerFn,
+  TranslationLocalizedEntries,
+  TranslationPluralization,
+} from '@/types';
 
 export const serializeXcstrings: SerializerFn = async (dataset, options) => {
   const xcstrings: XCStringsDataset = {
@@ -19,9 +26,10 @@ export const serializeXcstrings: SerializerFn = async (dataset, options) => {
       localizations: {},
     };
 
-    options.locales.forEach(locale => {
-      const regularTranslations = entry.translations ?? {};
-      const pluralTranslations = entry.plurals ?? {};
+    options.locales.forEach((locale: Locale) => {
+      const regularTranslations: TranslationLocalizedEntries =
+        entry.translations ?? {};
+      const pluralTranslations: TranslationPluralization = entry.plurals ?? {};
 
       if (regularTranslations[locale]) {
         stringUnit.localizations[locale] = {
@@ -33,17 +41,24 @@ export const serializeXcstrings: SerializerFn = async (dataset, options) => {
       }
 
       Object.entries(pluralTranslations).forEach(([qt, entry]) => {
-        const quantity = qt as PluralizationQuantity;
-        const xcstringPluralQuantityType = quantityToXcstringsType(quantity);
-
-        merge(stringUnit.localizations[locale], {
-          [xcstringPluralQuantityType]: {
-            state: 'translated',
-            value: entry[locale] ?? '',
+        const variation: XCStringsPluralVariations = quantityToXcstringsType(
+          qt as PluralizationQuantity
+        );
+        merge(stringUnit.localizations, {
+          [locale]: {
+            variations: {
+              plural: {
+                [variation]: {
+                  stringUnit: {
+                    state: 'translated',
+                    value: entry[locale] ?? '',
+                  },
+                },
+              },
+            },
           },
         });
       });
-
       xcstrings.strings[key] = stringUnit;
     });
   });
@@ -53,12 +68,11 @@ export const serializeXcstrings: SerializerFn = async (dataset, options) => {
 
 function quantityToXcstringsType(
   quantity: PluralizationQuantity
-): 'zero' | 'one' | 'other' {
+): XCStringsPluralVariations {
   switch (quantity) {
     case 'zero':
-      return 'zero';
     case 'one':
-      return 'one';
+      return quantity;
     default:
       return 'other';
   }

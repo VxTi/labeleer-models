@@ -87,7 +87,44 @@ describe('xcstrings serialization', () => {
           "plural": {
             "comment": "",
             "extractionState": "manual",
-            "localizations": {}
+            "localizations": {
+              "en_US": {
+                "variations": {
+                  "plural": {
+                    "one": {
+                      "stringUnit": {
+                        "state": "translated",
+                        "value": "hello"
+                      }
+                    },
+                    "other": {
+                      "stringUnit": {
+                        "state": "translated",
+                        "value": "hello"
+                      }
+                    }
+                  }
+                }
+              },
+              "nl_NL": {
+                "variations": {
+                  "plural": {
+                    "one": {
+                      "stringUnit": {
+                        "state": "translated",
+                        "value": "world"
+                      }
+                    },
+                    "other": {
+                      "stringUnit": {
+                        "state": "translated",
+                        "value": "again"
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "version": "1.0"

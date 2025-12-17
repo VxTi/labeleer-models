@@ -1,16 +1,21 @@
 import { type z } from 'zod';
 import {
   type atomicLocalizationEntry,
-  type localizationValue,
-  localeDecoder,
-  xcstringsDecoder,
+  type XCStringsLocalizationEntryDecoder,
+  LocaleDecoder,
+  XCStringsDatasetDecoder,
 } from './models';
 import { ParsingError } from '@/errors';
 import { type Locale } from '@/locales';
 import type { ParserFn, TranslationDataset } from '@/types';
+import { tryParseJson } from '@/util/parsing';
 
 export const parseXcstrings: ParserFn = async dataset => {
-  const decoded = await xcstringsDecoder.safeParseAsync(dataset);
+  const json = tryParseJson(dataset);
+  if (!json) {
+    throw new ParsingError('Invalid JSON format for xcstrings dataset');
+  }
+  const decoded = await XCStringsDatasetDecoder.safeParseAsync(json);
 
   if (!decoded.success) {
     throw new ParsingError(
@@ -21,11 +26,11 @@ export const parseXcstrings: ParserFn = async dataset => {
   const result: TranslationDataset = {};
 
   Object.entries(decoded.data.strings).forEach(([key, entry]) => {
-    result[key] = { translations: {} };
+    result[key] = {};
 
     Object.entries(entry.localizations).forEach(
       ([unsafeLocale, localization]) => {
-        const localeParseResult = localeDecoder.safeParse(unsafeLocale);
+        const localeParseResult = LocaleDecoder.safeParse(unsafeLocale);
 
         if (!localeParseResult.success || !localeParseResult.data) {
           throw new ParsingError(
@@ -60,7 +65,7 @@ export const parseXcstrings: ParserFn = async dataset => {
 };
 
 function isAtomicLocalizationEntry(
-  entry: z.infer<typeof localizationValue>
+  entry: z.infer<typeof XCStringsLocalizationEntryDecoder>
 ): entry is z.infer<typeof atomicLocalizationEntry> {
   return typeof entry === 'object' && entry !== null && 'stringUnit' in entry;
 }
