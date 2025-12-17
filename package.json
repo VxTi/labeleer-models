@@ -1,6 +1,6 @@
 {
   "name": "@labeleer/translation-dataset-transformers",
-  "version": "1.0.3",
+  "version": "1.0.0",
   "private": false,
   "type": "module",
   "description": "Utility parser methods used by all Labeleer tools",
@@ -34,6 +34,7 @@
     "prettier": "^3.6.2",
     "tsx": "^4.20.6",
     "typescript-eslint": "^8.47.0",
+    "typescript": "^5.9.3",
     "vite": "^7.3.0",
     "vite-tsconfig-paths": "^5.1.4",
     "vitest": "^4.0.14"
@@ -44,6 +45,6 @@
     "jszip": "^3.10.1",
     "lodash": "^4.17.21",
     "yaml": "^2.8.2",
-    "zod": "^4.1.13"
+    "zod": "^4.2.1"
   }
 }

@@ -1,31 +1,31 @@
 {
   "compilerOptions": {
+    "skipLibCheck": true,
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "target": "ESNext",
+    "isolatedModules": true,
+    "esModuleInterop": true,
+    "noEmit": false,
+
     "rootDir": "./src",
     "declaration": true,
     "allowSyntheticDefaultImports": true,
     "outDir": "./dist",
-    "module": "ES2022",
-    "target": "ES2022",
     "useDefineForClassFields": true,
-    "lib": ["ES2022"],
-    "skipLibCheck": true,
-    "esModuleInterop": true,
+    "lib": ["ES2022", "ESNext"],
     "allowJs": true,
     "incremental": true,
     "strict": true,
     "noUnusedLocals": true,
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
-    "noEmit": false,
-    "moduleResolution": "bundler",
-    "allowImportingTsExtensions": false,
     "emitDeclarationOnly": false,
-    "verbatimModuleSyntax": true,
     "moduleDetection": "force",
     "paths": {
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src"],
+  "include": ["src/**/*.ts"],
   "exclude": ["dist", "**/*.test.ts", "**/mock*.ts", "node_modules"]
 }
