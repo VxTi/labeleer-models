@@ -1,3 +1,4 @@
+import merge from 'lodash/merge';
 import { type z } from 'zod';
 import {
   type atomicLocalizationEntry,
@@ -50,12 +51,13 @@ export const parseXcstrings: ParserFn = async dataset => {
           const one = pluralVariations.one.stringUnit.value;
           const other = pluralVariations.other.stringUnit.value;
 
-          result[key].plurals = {
+          result[key].plurals ??= {};
+          merge(result[key].plurals, {
             ...(result[key].plurals ?? {}),
             ...(zero ? { zero: { [locale]: zero } } : {}),
             one: { [locale]: one },
             other: { [locale]: other },
-          };
+          });
         }
       }
     );
