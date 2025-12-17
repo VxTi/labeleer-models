@@ -1,5 +1,5 @@
 import merge from 'lodash/merge';
-import { APPLE_STRING_LINE_REGEX } from './models';
+import { APPLE_STRING_LINE_REGEX } from './common';
 import { ParsingError } from '@/errors';
 import type { Locale } from '@/locales';
 import type { AggregateParserFn, ParserFn, TranslationDataset } from '@/types';

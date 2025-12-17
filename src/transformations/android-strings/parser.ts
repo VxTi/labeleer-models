@@ -1,9 +1,9 @@
 import { XMLParser } from 'fast-xml-parser';
 import {
-  type PluralizedAndroidStringsSetEntry,
-  serializationIrDecoder,
-  type SingularAndroidStringsEntry,
-} from './models';
+  type ASXmlPluralList,
+  type ASXmlSingularEntry,
+  ASXmlDecoder,
+} from './common';
 import { ParsingError } from '@/errors';
 import type { Locale } from '@/locales';
 import type {
@@ -56,7 +56,7 @@ function transformToDataset(
   xmlObj: unknown,
   locale: Locale
 ): TranslationDataset {
-  const ir = serializationIrDecoder.safeParse(xmlObj);
+  const ir = ASXmlDecoder.safeParse(xmlObj);
   if (!ir.success) {
     throw new ParsingError('Invalid Android Strings XML structure.', {
       cause: ir.error,
@@ -65,14 +65,14 @@ function transformToDataset(
 
   const dataset: TranslationDataset = {};
 
-  const stringsEntry: MaybeArray<SingularAndroidStringsEntry> | undefined =
+  const stringsEntry: MaybeArray<ASXmlSingularEntry> | undefined =
     ir.data.resources.string;
-  const strings: SingularAndroidStringsEntry[] = stringsEntry
+  const strings: ASXmlSingularEntry[] = stringsEntry
     ? Array.isArray(stringsEntry)
       ? stringsEntry
       : [stringsEntry]
     : [];
-  const plurals: PluralizedAndroidStringsSetEntry[] = ir.data.resources.plurals
+  const plurals: ASXmlPluralList[] = ir.data.resources.plurals
     ? Array.isArray(ir.data.resources.plurals)
       ? ir.data.resources.plurals
       : [ir.data.resources.plurals]
@@ -101,7 +101,7 @@ function transformToDataset(
 }
 
 function extractPluralsFromEntry(
-  plurals: PluralizedAndroidStringsSetEntry,
+  plurals: ASXmlPluralList,
   baseLocale: Locale
 ): TranslationPluralization {
   return Object.fromEntries<TranslationPluralization>(

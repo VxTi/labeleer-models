@@ -17,42 +17,6 @@ export const Locales = [
   'da_DK', // Danish
   'de_DE', // German
   'el_GR', // Greek
-
-  // English variants
-  'en_GB',
-  'en_US',
-  'en_AU',
-  'en_CA',
-  'en_NZ',
-  'en_IN',
-
-  // French variants
-  'fr_CA',
-  'fr_BE',
-  'fr_CH',
-
-  // Portuguese variants
-  'pt_BR',
-
-  // Chinese variants
-  'zh_HK',
-
-  // Norwegian variant
-  'nn_NO',
-
-  // Serbian variants
-  'sr_BA',
-  'sr_ME',
-
-  // Malay-Indonesian variants
-  'id_ID',
-  'ms_BN',
-  // Spanish variants
-  'es_MX',
-  'es_AR',
-  'es_CO',
-  'es_CL',
-  'es_US',
   'es_ES', // Spanish
   'et_EE', // Estonian
   'eu_ES', // Basque
@@ -115,6 +79,42 @@ export const Locales = [
   'zh_CN', // Chinese (Simplified)
   'zh_TW', // Chinese (Traditional)
   'zu_ZA', // Zulu
+
+  // English variants
+  'en_US',
+  'en_GB',
+  'en_AU',
+  'en_CA',
+  'en_NZ',
+  'en_IN',
+
+  // French variants
+  'fr_CA',
+  'fr_BE',
+  'fr_CH',
+
+  // Portuguese variants
+  'pt_BR',
+
+  // Chinese variants
+  'zh_HK',
+
+  // Norwegian variant
+  'nn_NO',
+
+  // Serbian variants
+  'sr_BA',
+  'sr_ME',
+
+  // Malay-Indonesian variants
+  'id_ID',
+  'ms_BN',
+  // Spanish variants
+  'es_MX',
+  'es_AR',
+  'es_CO',
+  'es_CL',
+  'es_US',
 ] as const;
 
 /**

@@ -1,13 +1,13 @@
 import merge from 'lodash/merge';
 import { type z } from 'zod';
 import {
-  type atomicLocalizationEntry,
+  type XCStringsAtomicLocalizationEntryDecoder,
   type XCStringsLocalizationEntryDecoder,
-  LocaleDecoder,
   XCStringsDatasetDecoder,
-} from './models';
+} from './common';
 import { ParsingError } from '@/errors';
 import { type Locale } from '@/locales';
+import { LocaleDecoder } from '@/transformations/common/decoders';
 import type { ParserFn, TranslationDataset } from '@/types';
 import { tryParseJson } from '@/util/parsing';
 
@@ -68,6 +68,6 @@ export const parseXcstrings: ParserFn = async dataset => {
 
 function isAtomicLocalizationEntry(
   entry: z.infer<typeof XCStringsLocalizationEntryDecoder>
-): entry is z.infer<typeof atomicLocalizationEntry> {
+): entry is z.infer<typeof XCStringsAtomicLocalizationEntryDecoder> {
   return typeof entry === 'object' && entry !== null && 'stringUnit' in entry;
 }

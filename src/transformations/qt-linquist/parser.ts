@@ -1,8 +1,8 @@
 import { XMLParser } from 'fast-xml-parser';
-import { z } from 'zod';
-import { ParsingError } from '../../errors';
-import { isBCP47Locale, isLocale, type Locale, toPOSIX } from '../../locales';
-import type { ParserFn, TranslationDataset } from '../../types';
+import { type LinquistTsMessage, TSLinquistDatasetDecoder } from './common';
+import { ParsingError } from '@/errors';
+import { type Locale } from '@/locales';
+import type { ParserFn, TranslationDataset } from '@/types';
 
 export const parseTs: ParserFn = (input, { referenceLocale }) => {
   if (!referenceLocale) {
@@ -17,7 +17,7 @@ export const parseTs: ParserFn = (input, { referenceLocale }) => {
 
     const xmlObj: unknown = parser.parse(input);
 
-    const parsed = linquistTsDecoder.safeParse(xmlObj);
+    const parsed = TSLinquistDatasetDecoder.safeParse(xmlObj);
 
     if (!parsed.success) {
       throw new Error(
@@ -53,27 +53,3 @@ export const parseTs: ParserFn = (input, { referenceLocale }) => {
     );
   }
 };
-
-const linquistTsMessageDecoder = z.object({
-  '@_key': z.string(),
-  source: z.string(),
-  translation: z.string().optional(),
-});
-
-type LinquistTsMessage = z.infer<typeof linquistTsMessageDecoder>;
-
-const linquistTsDecoder = z.object({
-  TS: z.object({
-    '@_language': z
-      .string()
-      .transform(val =>
-        isLocale(val) ? val : isBCP47Locale(val) ? toPOSIX(val) : undefined
-      ),
-    context: z.object({
-      message: z.union([
-        z.array(linquistTsMessageDecoder),
-        linquistTsMessageDecoder,
-      ]),
-    }),
-  }),
-});

@@ -1,3 +1,4 @@
+import { SerializationError } from '@/errors';
 import type { Locale } from '@/locales';
 import type {
   SerializationFragment,
@@ -40,7 +41,11 @@ function constructAppleStringsSerializationFragment(
 
     if (direct) {
       const refTranslation = entry.translations?.[referenceLocale];
-      if (!refTranslation) continue; // Rather not have this happen...
+      if (!refTranslation) {
+        throw new SerializationError(
+          `No reference locale set for key "${key}"`
+        );
+      }
 
       kvMapping[refTranslation] = translated;
     } else {

@@ -25,7 +25,7 @@ describe('xcstrings parsing', () => {
               }
             }
           },
-          "plural": {
+          "plural-entry": {
             "comment": "",
             "extractionState": "manual",
             "localizations": {
@@ -78,7 +78,7 @@ describe('xcstrings parsing', () => {
           nl_NL: 'world',
         },
       },
-      plural: {
+      'plural-entry': {
         plurals: {
           one: {
             en_US: 'hello',

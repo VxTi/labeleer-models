@@ -1,6 +1,9 @@
 import { describe, expect, it } from 'vitest';
 import { mockSerializationOptions } from '../../__testutils__/mock-serialization-options';
-import { serializeAppleStrings } from './serializer';
+import {
+  type AppleStringsSerializationOptions,
+  serializeAppleStrings,
+} from './serializer';
 
 describe('apple strings serialization', () => {
   it('should serialize a dataset into apple strings', async () => {
@@ -67,5 +70,21 @@ describe('apple strings serialization', () => {
         data: `"special-entry" = "Line1\\nLine2\\tTabbed\\\\"Quote\\\\"";`,
       })
     );
+  });
+
+  it('should throw an error when no reference locale is set', () => {
+    expect(() =>
+      serializeAppleStrings(
+        {
+          'some-entry': {
+            en_US: 'english',
+          },
+        },
+        mockSerializationOptions<AppleStringsSerializationOptions>({
+          referenceLocale: undefined,
+          translateDirect: true,
+        })
+      )
+    ).toThrowError('No reference locale set for key "some-entry"');
   });
 });

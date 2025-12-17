@@ -1,8 +1,5 @@
 import { XMLBuilder } from 'fast-xml-parser';
-import type {
-  AndroidStringsSet,
-  PluralizedAndroidStringsEntry,
-} from './models';
+import type { ASSerializationOutputSet, ASXmlPluralEntry } from './common';
 import { SerializationError } from '@/errors';
 import type { Locale } from '@/locales';
 import type {
@@ -45,7 +42,7 @@ function buildXmlDataset(
   dataset: TranslationDataset,
   locale: Locale
 ): string {
-  const outputIr: AndroidStringsSet = {
+  const outputIr: ASSerializationOutputSet = {
     resources: { string: [], plurals: [] },
   };
 
@@ -59,7 +56,7 @@ function buildXmlDataset(
       });
     }
 
-    const pluralItems: PluralizedAndroidStringsEntry[] = [];
+    const pluralItems: ASXmlPluralEntry[] = [];
 
     for (const [quantity, pluralEntry] of Object.entries(entry.plurals ?? {})) {
       const value = pluralEntry[locale];

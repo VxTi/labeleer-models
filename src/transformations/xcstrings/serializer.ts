@@ -3,7 +3,7 @@ import type {
   XCStringsDataset,
   XCStringsPluralVariations,
   XCStringsTranslationEntry,
-} from './models';
+} from './common';
 import type { Locale } from '@/locales';
 import type {
   PluralizationQuantity,

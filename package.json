@@ -1,5 +1,5 @@
 {
-  "name": "@labeleer/models",
+  "name": "@labeleer/translation-dataset-transformers",
   "version": "1.0.3",
   "private": false,
   "type": "module",
@@ -11,7 +11,7 @@
   ],
   "scripts": {
     "build": "tsc --p tsconfig.json",
-    "prepublishOnly": "npm run clean; npm run build;",
+    "prepublishOnly": "npm run clean; npm run test && npm run build;",
     "test": "vitest run",
     "test:update": "vitest run -u",
     "lint": "eslint --fix \"./src/**/*.ts\" --cache --max-warnings 0",

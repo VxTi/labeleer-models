@@ -1,7 +1,7 @@
 import { XMLParser } from 'fast-xml-parser';
 import { ParsingError } from '@/errors';
 import { type Locale } from '@/locales';
-import { xliff21Decoder } from '@/transformations/xliff/models';
+import { XLIFF21Decoder } from '@/transformations/xliff/models';
 import type { ParserFn, TranslationDataset } from '@/types';
 
 export const parseXliff: ParserFn = input => {
@@ -11,7 +11,7 @@ export const parseXliff: ParserFn = input => {
     });
 
     const xmlObj: unknown = parser.parse(input);
-    const parsed = xliff21Decoder.safeParse(xmlObj);
+    const parsed = XLIFF21Decoder.safeParse(xmlObj);
 
     if (!parsed.success) {
       throw new Error(

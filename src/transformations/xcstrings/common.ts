@@ -1,7 +1,7 @@
 import { z } from 'zod';
-import { isISO639_1LanguageCode, isLocale, iso639_1ToLocale } from '@/locales';
+import { LocaleDecoder } from '@/transformations/common/decoders';
 
-export const atomicLocalizationEntry = z.object({
+export const XCStringsAtomicLocalizationEntryDecoder = z.object({
   stringUnit: z.object({
     state: z.string(),
     value: z.string(),
@@ -9,15 +9,15 @@ export const atomicLocalizationEntry = z.object({
 });
 
 export type XCStringsAtomicLocalizationEntry = z.infer<
-  typeof atomicLocalizationEntry
+  typeof XCStringsAtomicLocalizationEntryDecoder
 >;
 
 export const pluralLocalizationEntry = z.object({
   variations: z.object({
     plural: z.object({
-      zero: atomicLocalizationEntry.optional(),
-      one: atomicLocalizationEntry,
-      other: atomicLocalizationEntry,
+      zero: XCStringsAtomicLocalizationEntryDecoder.optional(),
+      one: XCStringsAtomicLocalizationEntryDecoder,
+      other: XCStringsAtomicLocalizationEntryDecoder,
     }),
   }),
 });
@@ -30,18 +30,8 @@ export type XCStringsPluralLocalizationEntry = z.infer<
   typeof pluralLocalizationEntry
 >;
 
-export const LocaleDecoder = z
-  .string()
-  .transform(val =>
-    isISO639_1LanguageCode(val)
-      ? iso639_1ToLocale(val)
-      : isLocale(val)
-        ? val
-        : null
-  );
-
 export const XCStringsLocalizationEntryDecoder = z.union([
-  atomicLocalizationEntry,
+  XCStringsAtomicLocalizationEntryDecoder,
   pluralLocalizationEntry,
 ]);
 
