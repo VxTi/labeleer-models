@@ -1,4 +1,4 @@
-import { uniq } from 'lodash';
+import uniq from 'lodash-es/uniq';
 
 /**
  * Enum representing the supported export formats for localization files.

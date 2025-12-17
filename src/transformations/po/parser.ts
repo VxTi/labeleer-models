@@ -1,5 +1,5 @@
 import { po } from 'gettext-parser';
-import merge from 'lodash/merge';
+import merge from 'lodash-es/merge';
 import type {
   AggregateParserFn,
   ParserFn,

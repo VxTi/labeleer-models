@@ -1,4 +1,4 @@
-import merge from 'lodash/merge';
+import merge from 'lodash-es/merge';
 import { APPLE_STRING_LINE_REGEX } from './common';
 import type {
   AggregateParserFn,
