@@ -1,5 +1,5 @@
 import type {
-  SerializationFragment,
+  SerializationResult,
   SerializerFn,
   TranslationDataset,
 } from '@/definitions';
@@ -33,7 +33,7 @@ function constructAppleStringsSerializationFragment(
   referenceLocale: Locale,
   targetLocale: Locale,
   direct: boolean = false
-): SerializationFragment {
+): SerializationResult {
   const kvMapping: Record<string, string> = {};
 
   for (const [key, entry] of Object.entries(dataset)) {

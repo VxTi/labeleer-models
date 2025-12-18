@@ -1,6 +1,6 @@
 import { XMLBuilder } from 'fast-xml-parser';
 import type {
-  SerializationFragment,
+  SerializationResult,
   SerializerFn,
   TranslationDataset,
 } from '@/definitions';
@@ -43,7 +43,7 @@ function constructTsSerializationFragment(
   dataset: TranslationDataset,
   locale: Locale | undefined,
   referenceLocale: Locale
-): SerializationFragment {
+): SerializationResult {
   const tsObj = {
     TS: {
       '@_version': '2.1',

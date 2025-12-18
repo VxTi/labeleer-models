@@ -2,7 +2,7 @@ import { XMLBuilder } from 'fast-xml-parser';
 import type { ASSerializationOutputSet, ASXmlPluralEntry } from './common';
 import type {
   PluralizationQuantity,
-  SerializationFragment,
+  SerializationResult,
   SerializerFn,
   TranslationDataset,
   TranslationPluralization,
@@ -19,7 +19,7 @@ export const serializeAndroidStrings: SerializerFn = (input, config) => {
       format: true,
       ignoreAttributes: false,
     });
-    const outputFragments: SerializationFragment[] = [];
+    const outputFragments: SerializationResult[] = [];
 
     for (const [locale, dataset] of Object.entries(perLanguageDatasets)) {
       const data = buildXmlDataset(builder, dataset, locale as Locale);

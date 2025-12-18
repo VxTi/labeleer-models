@@ -23,7 +23,9 @@ describe('yaml serialization', () => {
 
     expect(serialized).toBeDefined();
     expect(serialized).toMatchInlineSnapshot(`
-      "first-entry:
+      [
+        {
+          "data": "first-entry:
         translations:
           en_US: hello
           nl_NL: world
@@ -37,7 +39,10 @@ describe('yaml serialization', () => {
             en_US: hello
           other:
             nl_NL: world
-      "
+      ",
+          "filename": "labels",
+        },
+      ]
     `);
   });
 });

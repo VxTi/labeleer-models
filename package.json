@@ -19,12 +19,13 @@
     "dist"
   ],
   "scripts": {
+    "check:types": "tsc --noEmit",
     "build": "tsc --p tsconfig.release.json && tsc-alias -p tsconfig.release.json",
     "prepublishOnly": "npm run clean; npm run test && npm run build;",
     "test": "vitest run",
     "test:update": "vitest run -u",
     "lint": "eslint --fix \"./src/**/*.ts\" --cache --max-warnings 0",
-    "sanity": "npm run lint; npm run test; tsc --noEmit; npm run clean",
+    "sanity": "npm run lint; npm run test; npm run check:types; npm run clean",
     "clean": "rm -rf ./dist tsconfig.release.tsbuildinfo"
   },
   "devDependencies": {

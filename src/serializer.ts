@@ -1,6 +1,6 @@
 import JSZip from 'jszip';
 import type {
-  SerializationFragment,
+  SerializationResult,
   SerializationOptions,
   SerializerFn,
   TranslationDataset,
@@ -36,7 +36,7 @@ export async function serializeDataset<
   const serializerFn = serializerMap[format] as SerializerFn<
     InferSerializationOptions<TFormat>
   >;
-  const output: string | SerializationFragment[] = await serializerFn(
+  const output: string | SerializationResult[] = await serializerFn(
     dataset,
     options
   );

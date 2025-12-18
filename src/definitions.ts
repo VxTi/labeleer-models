@@ -94,7 +94,7 @@ export type SerializationOptions<T extends {} = {}> = T & {
  * A fragment of serialized output,
  * which can be useful for formats that require multiple files.
  */
-export interface SerializationFragment {
+export interface SerializationResult {
   /**
    * An optional identifier for the fragment,
    * useful for formats that require multiple files.
@@ -113,12 +113,12 @@ export interface SerializationFragment {
  * A function that takes a TranslationDataset and optional serialization options,
  * and returns an array of SerializationFragments, a single string, or undefined if serialization fails.
  *
- * A {@link SerializationFragment} represents a part of the serialized output,
+ * A {@link SerializationResult} represents a part of the serialized output,
  * which can be useful for formats that require multiple files.
  */
 export type SerializerFn<T extends Record<string, unknown> = {}> = (
   dataset: TranslationDataset,
   options: SerializationOptions<T>
-) => Promise<SerializationFragment[] | string>;
+) => Promise<SerializationResult[]>;
 
 export type MaybeArray<T> = Array<T> | T;

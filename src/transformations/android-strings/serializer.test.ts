@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { mockDataset } from '../../__testutils__/mock-dataset';
 import { mockSerializationOptions } from '../../__testutils__/mock-serialization-options';
 import type {
-  SerializationFragment,
+  SerializationResult,
   TranslationDataset,
 } from '../../definitions';
 import { serializeAndroidStrings } from './serializer';
@@ -15,7 +15,7 @@ describe('android strings serialization', () => {
     const dataset = mockDataset();
 
     const serialized = (await serializeAndroidStrings(dataset, options)) as
-      | SerializationFragment[]
+      | SerializationResult[]
       | undefined;
     expect(serialized).toBeDefined();
     expect(serialized).toHaveLength(2);
@@ -70,7 +70,7 @@ describe('android strings serialization', () => {
     };
 
     const serialized = (await serializeAndroidStrings(input, options)) as
-      | SerializationFragment[]
+      | SerializationResult[]
       | undefined;
     expect(serialized).toBeDefined();
     expect(serialized).toHaveLength(1);

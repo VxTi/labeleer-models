@@ -1,4 +1,4 @@
-import type { ParsingOptions } from '../definitions';
+import type { ParsingOptions } from '@/definitions';
 
 export function mockParsingOptions<T extends object = {}>(
   updates: Partial<ParsingOptions<T>> = {}
@@ -6,5 +6,5 @@ export function mockParsingOptions<T extends object = {}>(
   return {
     referenceLocale: 'en_US',
     ...updates,
-  };
+  } as ParsingOptions<T>;
 }

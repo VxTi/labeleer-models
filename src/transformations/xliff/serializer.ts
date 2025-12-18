@@ -1,6 +1,6 @@
 import { XMLBuilder } from 'fast-xml-parser';
 import type {
-  SerializationFragment,
+  SerializationResult,
   SerializerFn,
   TranslationDataset,
 } from '@/definitions';
@@ -13,7 +13,7 @@ export const serializeXliff: SerializerFn = async (input, config) => {
     suppressEmptyNode: true,
   });
 
-  const fragments: SerializationFragment[] = [];
+  const fragments: SerializationResult[] = [];
   const nonReferenceLocales: Locale[] = config.locales.filter(
     (loc: Locale) => loc !== config.referenceLocale
   );
@@ -70,7 +70,7 @@ function constructXliff21Fragment(
   dataset: TranslationDataset,
   targetLocale: Locale | undefined,
   sourceLocale: Locale
-): SerializationFragment {
+): SerializationResult {
   const xliffObj = {
     xliff: {
       '@_version': '2.1',

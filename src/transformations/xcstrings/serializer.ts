@@ -1,8 +1,9 @@
 import merge from 'lodash-es/merge';
-import type {
-  XCStringsDataset,
-  XCStringsPluralVariations,
-  XCStringsTranslationEntry,
+import {
+  DEFAULT_XCSTRINGS_FILE_NAME,
+  type XCStringsDataset,
+  type XCStringsPluralVariations,
+  type XCStringsTranslationEntry,
 } from './common';
 import type {
   PluralizationQuantity,
@@ -63,7 +64,14 @@ export const serializeXcstrings: SerializerFn = async (dataset, options) => {
     });
   });
 
-  return Promise.resolve(JSON.stringify(xcstrings, null, 2));
+  const data = JSON.stringify(xcstrings, null, 2);
+
+  return Promise.resolve([
+    {
+      filename: DEFAULT_XCSTRINGS_FILE_NAME,
+      data,
+    },
+  ]);
 };
 
 function quantityToXcstringsType(

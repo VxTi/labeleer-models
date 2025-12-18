@@ -2,6 +2,7 @@ import { describe, it, expect } from 'vitest';
 import { mockDataset } from '../../__testutils__/mock-dataset';
 import { mockSerializationOptions } from '../../__testutils__/mock-serialization-options';
 import { serializeXcstrings } from './serializer';
+import { DEFAULT_XCSTRINGS_FILE_NAME } from '@/transformations';
 
 describe('xcstrings serialization', () => {
   it('should serialize a simple dataset into xcstrings', async () => {
@@ -31,8 +32,10 @@ describe('xcstrings serialization', () => {
     );
 
     expect(result).toBeDefined();
-    expect(result).toContain('must exist');
-    expect(result).toMatchInlineSnapshot(`
+    expect(result).toHaveLength(1);
+    expect(result[0]?.filename).toEqual(DEFAULT_XCSTRINGS_FILE_NAME);
+    expect(result[0]?.data).toContain('must exist');
+    expect(result[0]?.data).toMatchInlineSnapshot(`
       "{
         "sourceLanguage": "en_US",
         "strings": {

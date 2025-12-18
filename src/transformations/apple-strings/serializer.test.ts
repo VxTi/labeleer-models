@@ -25,6 +25,7 @@ describe('apple strings serialization', () => {
       mockSerializationOptions({
         referenceLocale: 'en_US',
         locales: ['en_US', 'nl_NL'],
+        translateDirect: false,
       })
     );
 
@@ -59,6 +60,7 @@ describe('apple strings serialization', () => {
       mockSerializationOptions({
         referenceLocale: 'en_US',
         locales: ['en_US'],
+        translateDirect: false,
       })
     );
 
@@ -77,7 +79,9 @@ describe('apple strings serialization', () => {
       serializeAppleStrings(
         {
           'some-entry': {
-            en_US: 'english',
+            translations: {
+              en_US: 'english',
+            },
           },
         },
         mockSerializationOptions<AppleStringsSerializationOptions>({
