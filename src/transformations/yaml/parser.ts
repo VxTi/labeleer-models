@@ -1,5 +1,5 @@
 import { parse } from 'yaml';
-import { datasetParser } from '@/decoders';
+import { JsonTranslationDatasetDecoder } from '@/decoders';
 import type { ParserFn } from '@/definitions';
 import { ParsingError } from '@/errors';
 
@@ -7,7 +7,7 @@ export const parseYaml: ParserFn = input => {
   try {
     const parsedYaml: unknown = parse(input);
 
-    const parsedDataset = datasetParser.safeParse(parsedYaml);
+    const parsedDataset = JsonTranslationDatasetDecoder.safeParse(parsedYaml);
 
     if (!parsedDataset.success) {
       throw new ParsingError('YAML dataset is invalid', {

@@ -1,4 +1,4 @@
-import { datasetParser } from '@/decoders';
+import { JsonTranslationDatasetDecoder } from '@/decoders';
 import type { ParserFn } from '@/definitions';
 import { ParsingError } from '@/errors';
 
@@ -10,7 +10,7 @@ export const parseJson: ParserFn = async input => {
     );
   }
 
-  const result = await datasetParser.safeParseAsync(json);
+  const result = await JsonTranslationDatasetDecoder.safeParseAsync(json);
 
   if (!result.success) {
     throw new ParsingError('JSON structure is invalid.', {

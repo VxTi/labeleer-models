@@ -1,6 +1,6 @@
 import { z } from 'zod';
 
-export const datasetParser = z.record(
+export const JsonTranslationDatasetDecoder = z.record(
   z.string(),
   z.object({
     translations: z.record(z.string(), z.string()),
