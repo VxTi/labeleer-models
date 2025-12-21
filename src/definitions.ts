@@ -37,7 +37,7 @@ export type TranslationDataset = Record<string, TranslationEntry>;
 /**
  * Extensible options for parsing functions
  */
-export type ParsingOptions<T extends object> = T & {
+export type ParsingOptions<TAdditionalOptions extends object> = {
   /**
    * The locale to prioritize when parsing translations.
    */
@@ -49,7 +49,7 @@ export type ParsingOptions<T extends object> = T & {
    * and/or that are missing locale information in their structure.
    */
   targetLocale?: Locale;
-};
+} & Partial<TAdditionalOptions>;
 
 /**
  * A function that takes a string input and an optional locale,
@@ -76,7 +76,7 @@ export type AggregateParserFn<T extends object = {}> = (
 /**
  * Options for serialization functions
  */
-export type SerializationOptions<T extends {} = {}> = T & {
+export type SerializationOptions<TAdditionalOptions extends object = object> = {
   /**
    * The reference locale for the serialization process.
    * This is necessary for formats that require a base language,
@@ -88,7 +88,7 @@ export type SerializationOptions<T extends {} = {}> = T & {
    * The list of locales to include in the serialization output.
    */
   locales: Locale[];
-};
+} & Partial<TAdditionalOptions>;
 
 /**
  * A fragment of serialized output,
@@ -116,9 +116,9 @@ export interface SerializationResult {
  * A {@link SerializationResult} represents a part of the serialized output,
  * which can be useful for formats that require multiple files.
  */
-export type SerializerFn<T extends Record<string, unknown> = {}> = (
+export type SerializerFn<TAdditionalOptions extends object = object> = (
   dataset: TranslationDataset,
-  options: SerializationOptions<T>
+  options: SerializationOptions<TAdditionalOptions>
 ) => Promise<SerializationResult[]>;
 
 export type MaybeArray<T> = Array<T> | T;

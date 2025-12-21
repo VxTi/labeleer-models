@@ -16,26 +16,6 @@ export enum SupportedFormat {
 }
 
 /**
- * Returns the MIME type for a given export format.
- * For compressed formats, it returns 'application/zip'.
- */
-export function mimeTypeForExportFormat(format: SupportedFormat): string {
-  switch (format) {
-    case SupportedFormat.JSON:
-    case SupportedFormat.XCSTRINGS:
-      return 'application/json';
-    case SupportedFormat.YAML:
-      return 'application/yaml';
-    case SupportedFormat.ANDROID_STRINGS:
-    case SupportedFormat.APPLE_STRINGS:
-    case SupportedFormat.XLIFF:
-    case SupportedFormat.PO:
-    case SupportedFormat.TS:
-      return 'application/zip';
-  }
-}
-
-/**
  * Formats that require compression when exporting multiple locale files.
  */
 export const compressedFormats = [
@@ -54,22 +34,23 @@ export type CompressedFormat = (typeof compressedFormats)[number];
 /**
  * Type guard to check if a format requires compression.
  */
-export function requiresCompression(
+export function isCompressedFormat(
   format: SupportedFormat
 ): format is CompressedFormat {
   return compressedFormats.includes(format as CompressedFormat);
 }
 
-const formatExtensionRegistry: Record<SupportedFormat, string[]> = {
-  [SupportedFormat.JSON]: ['.json'],
-  [SupportedFormat.YAML]: ['.yaml', '.yml'],
-  [SupportedFormat.TS]: ['.ts'],
-  [SupportedFormat.PO]: ['.po', '.pot'],
-  [SupportedFormat.ANDROID_STRINGS]: ['.xml'],
-  [SupportedFormat.APPLE_STRINGS]: ['.strings'],
-  [SupportedFormat.XLIFF]: ['.xliff', '.xlf'],
-  [SupportedFormat.XCSTRINGS]: ['.xcstrings'],
-};
+const formatExtensionRegistry: Record<SupportedFormat, [string, ...string[]]> =
+  {
+    [SupportedFormat.JSON]: ['.json'],
+    [SupportedFormat.YAML]: ['.yaml', '.yml'],
+    [SupportedFormat.TS]: ['.ts'],
+    [SupportedFormat.PO]: ['.po', '.pot'],
+    [SupportedFormat.ANDROID_STRINGS]: ['.xml'],
+    [SupportedFormat.APPLE_STRINGS]: ['.strings'],
+    [SupportedFormat.XLIFF]: ['.xliff', '.xlf'],
+    [SupportedFormat.XCSTRINGS]: ['.xcstrings'],
+  };
 
 /**
  * Returns the file extensions associated with a given export format.

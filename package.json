@@ -26,7 +26,7 @@
     "test:update": "vitest run -u",
     "lint": "eslint --fix \"./src/**/*.ts\" --cache --max-warnings 0",
     "sanity": "npm run lint; npm run test; npm run check:types; npm run clean",
-    "clean": "rm -rf ./dist tsconfig.release.tsbuildinfo"
+    "clean": "rm -rf ./dist"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.3.1",

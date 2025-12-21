@@ -1,5 +1,7 @@
 import { XMLBuilder } from 'fast-xml-parser';
+import merge from 'lodash-es/merge';
 import type { ASSerializationOutputSet, ASXmlPluralEntry } from './common';
+import { DatasetBuilder } from '@/dataset-builder';
 import type {
   PluralizationQuantity,
   SerializationResult,
@@ -47,7 +49,7 @@ function buildXmlDataset(
     resources: { string: [], plurals: [] },
   };
 
-  for (const [key, entry] of Object.entries(dataset)) {
+  Object.entries(dataset).forEach(([key, entry]) => {
     const translation = entry.translations?.[locale];
 
     if (translation) {
@@ -59,13 +61,13 @@ function buildXmlDataset(
 
     const pluralItems: ASXmlPluralEntry[] = [];
 
-    for (const [quantity, pluralEntry] of Object.entries(entry.plurals ?? {})) {
+    Object.entries(entry.plurals ?? {}).forEach(([quantity, pluralEntry]) => {
       const value = pluralEntry[locale];
       pluralItems.push({
         '@_quantity': quantity as PluralizationQuantity,
         '#text': value ?? '',
       });
-    }
+    });
 
     if (pluralItems.length > 0) {
       outputIr.resources.plurals.push({
@@ -73,7 +75,7 @@ function buildXmlDataset(
         item: pluralItems,
       });
     }
-  }
+  });
 
   const output = builder.build(outputIr);
   return `<?xml version="1.0" encoding="utf-8"?>\n${output}`;
@@ -91,6 +93,8 @@ function constructPerLanguageDatasets(
 
   Object.entries(input).forEach(([key, entry]) => {
     locales.forEach((locale: Locale) => {
+      const builder = new DatasetBuilder();
+
       const pluralEntries = Object.entries(entry.plurals ?? {});
 
       const plurals: TranslationPluralization = Object.fromEntries(
@@ -101,15 +105,16 @@ function constructPerLanguageDatasets(
         })
       );
 
-      perLanguageDatasets[locale] = {
-        ...(perLanguageDatasets[locale] ?? {}),
-        [key]: {
-          translations: {
-            [locale]: entry.translations?.[locale] ?? '',
-          },
-          plurals,
-        },
-      };
+      if (pluralEntries.length > 0) {
+        builder.addPluralEntry(key, plurals);
+      } else {
+        builder.addTranslation(key, {
+          [locale]: entry.translations?.[locale] ?? '',
+        });
+      }
+
+      perLanguageDatasets[locale] ??= {};
+      merge(perLanguageDatasets[locale], builder.build());
     });
   });
 

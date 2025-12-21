@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import {
   getFileExtensionsFromFormat,
   getFormatForExtension,
-  mimeTypeForExportFormat,
+  isCompressedFormat,
   supportedFileExtensions,
   SupportedFormat,
 } from './file-formats';
@@ -66,20 +66,20 @@ describe('getFileExtensionsFromFormat', () => {
   );
 });
 
-describe('mimeTypeForExportFormat', () => {
+describe('isCompressedFormat', () => {
   it.each`
-    format                             | mimeType
-    ${SupportedFormat.JSON}            | ${'application/json'}
-    ${SupportedFormat.YAML}            | ${'application/yaml'}
-    ${SupportedFormat.TS}              | ${'application/zip'}
-    ${SupportedFormat.PO}              | ${'application/zip'}
-    ${SupportedFormat.ANDROID_STRINGS} | ${'application/zip'}
-    ${SupportedFormat.APPLE_STRINGS}   | ${'application/zip'}
-    ${SupportedFormat.XLIFF}           | ${'application/zip'}
+    format                             | compression
+    ${SupportedFormat.JSON}            | ${false}
+    ${SupportedFormat.YAML}            | ${false}
+    ${SupportedFormat.TS}              | ${true}
+    ${SupportedFormat.PO}              | ${true}
+    ${SupportedFormat.ANDROID_STRINGS} | ${true}
+    ${SupportedFormat.APPLE_STRINGS}   | ${true}
+    ${SupportedFormat.XLIFF}           | ${true}
   `(
-    'should return the correct MIME type for the provided format',
-    ({ format, mimeType }) => {
-      expect(mimeTypeForExportFormat(format)).toBe(mimeType);
+    'should return true for formats that require compression ($format = $compression)',
+    ({ format, compression }) => {
+      expect(isCompressedFormat(format)).toBe(compression);
     }
   );
 });

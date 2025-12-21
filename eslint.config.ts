@@ -39,7 +39,7 @@ export default defineConfig([
           ignoreRestSiblings: true,
         },
       ],
-      'import/no-cycle': 2,
+      'import/no-cycle': 'error',
       'arrow-body-style': 0,
       'prefer-arrow-callback': 0,
       'prefer-template': 2,
