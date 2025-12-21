@@ -45,9 +45,17 @@ export default defineConfig([
       'prefer-template': 2,
       'object-shorthand': ['error', 'always'],
 
-      '@typescript-eslint/no-explicit-any': 0,
+      '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-empty-object-type': 0,
-      '@typescript-eslint/no-misused-promises': 0,
+      '@typescript-eslint/no-misused-promises': [
+        'error',
+        {
+          checksConditionals: true,
+          checksVoidReturn: true,
+          checksSpreads: true,
+        },
+      ],
+      '@typescript-eslint/consistent-type-assertions': 'error',
       'no-duplicate-imports': 2,
 
       'import/export': 2, // No re-exporting the same name

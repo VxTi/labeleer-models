@@ -23,7 +23,7 @@ import {
  * @param dataset - The TranslationDataset to be serialized.
  * @param format - The target format for serialization (e.g., JSON, YAML, PO).
  * @param options - Serialization options including referenceLocale and locales.
- * @returns The serialized output as a string or an array of SerializationFragments.
+ * @returns The serialized output as an ArrayBuffer, containing the serialized data (Zipped file).
  */
 export async function serializeDataset<
   TFormat extends SupportedFormat,
@@ -32,18 +32,11 @@ export async function serializeDataset<
   dataset: TranslationDataset,
   format: TFormat,
   options: TOptions
-): Promise<string> {
+): Promise<ArrayBuffer> {
   const serializerFn = serializerMap[format] as SerializerFn<
     InferSerializationOptions<TFormat>
   >;
-  const output: string | SerializationResult[] = await serializerFn(
-    dataset,
-    options
-  );
-
-  if (!Array.isArray(output)) {
-    return output; // Singular file serialization
-  }
+  const output: SerializationResult[] = await serializerFn(dataset, options);
 
   // Alright, we'll have to make a zip of it
   const zip = new JSZip();
@@ -55,7 +48,7 @@ export async function serializeDataset<
     zip.file(fileName, data);
   });
 
-  return await zip.generateAsync({ type: 'string' });
+  return await zip.generateAsync({ type: 'arraybuffer' });
 }
 
 type InferSerializationOptions<T extends SupportedFormat> =

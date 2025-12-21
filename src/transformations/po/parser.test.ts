@@ -10,9 +10,10 @@ describe('po parsing', () => {
         "Content-Transfer-Encoding: 8bit\\n"
 
         msgid "first-entry"
-        msgid_plural "hellos"
-        msgstr[0] "hello"
-        msgstr[1] ""
+        msgid_plural "first-entry-plural"
+        msgstr[0] "0 hellos"
+        msgstr[1] "1 hello"
+        msgstr[2] "2 hellos"
 
         msgid "second-entry"
         msgstr "hello"`;
@@ -25,8 +26,16 @@ describe('po parsing', () => {
     expect(parsed).toMatchInlineSnapshot(`
       {
         "first-entry": {
-          "translations": {
-            "en_US": "hello",
+          "plurals": {
+            "one": {
+              "en_US": "1 hello",
+            },
+            "two": {
+              "en_US": "2 hellos",
+            },
+            "zero": {
+              "en_US": "0 hellos",
+            },
           },
         },
         "second-entry": {

@@ -47,8 +47,10 @@ export class DatasetBuilder {
    */
   addPluralEntry(
     key: string,
-    pluralForms: TranslationPluralization
+    pluralForms: TranslationPluralization | undefined
   ): DatasetBuilder {
+    if (!pluralForms) return this;
+
     const sanitizedKey = sanitizeLabel(key);
     this.dataset[sanitizedKey] ??= {};
     this.dataset[sanitizedKey].plurals ??= {};

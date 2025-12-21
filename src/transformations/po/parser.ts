@@ -1,4 +1,4 @@
-import { po } from 'gettext-parser';
+import { type GetTextTranslation, po } from 'gettext-parser';
 import { quantities } from '@/constants';
 import { DatasetBuilder } from '@/dataset-builder';
 import type {
@@ -25,36 +25,25 @@ export const parsePo: ParserFn = (input, { targetLocale }) => {
     const output = po.parse(input);
     const builder = new DatasetBuilder();
 
-    for (const context of Object.values(output.translations)) {
-      for (const [key, entry] of Object.entries(context)) {
-        if (!key) continue; // skip header
+    Object.values(output.translations).forEach(context => {
+      Object.entries(context).forEach(([key, entry]) => {
+        if (!key) return; // skip empty header
 
-        const translation = entry.msgstr?.[0] || '';
-        const tags = entry.comments?.reference
-          ? entry.comments.reference.split('\n')
-          : undefined;
+        const plurals = extractPlurals(targetLocale, entry);
+
+        if (plurals) {
+          builder.addPluralEntry(key, plurals);
+        } else {
+          builder.addTranslation(key, {
+            [targetLocale]: entry.msgstr?.[0] || '',
+          });
+        }
 
         builder
           .addDescription(key, entry.comments?.extracted)
-          .addTags(key, tags)
-          .addTranslation(key, {
-            [targetLocale]: translation,
-          });
-
-        if (entry.msgid_plural && entry.msgstr?.length > 1) {
-          const msgPlurals = entry.msgstr.slice(0, quantities.length);
-
-          const plurals = Object.fromEntries(
-            msgPlurals.map((msg, index) => [
-              quantities[index],
-              { [targetLocale]: msg },
-            ])
-          ) as TranslationPluralization;
-
-          builder.addPluralEntry(key, plurals);
-        }
-      }
-    }
+          .addTags(key, entry.comments?.reference?.split('\n'));
+      });
+    });
 
     return Promise.resolve(builder.build());
   } catch (error) {
@@ -78,3 +67,27 @@ export const parsePoAggregated: AggregateParserFn = async (inputs, options) => {
 
   return Promise.resolve(builder.build());
 };
+
+function extractPlurals(
+  targetLocale: Locale,
+  entry: GetTextTranslation
+): TranslationPluralization | undefined {
+  const plurals: TranslationPluralization = {};
+
+  if (!entry.msgid_plural || entry.msgstr.length <= 1) {
+    return;
+  }
+
+  const msgPlurals = entry.msgstr.slice(
+    0,
+    Math.min(entry.msgstr.length, quantities.length)
+  );
+
+  msgPlurals.forEach((plural, index) => {
+    if (plural.trim().length === 0) return;
+
+    plurals[quantities[index]] = { [targetLocale]: plural };
+  });
+
+  return plurals;
+}

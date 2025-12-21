@@ -25,7 +25,7 @@ describe('apple strings serialization', () => {
       mockSerializationOptions({
         referenceLocale: 'en_US',
         locales: ['en_US', 'nl_NL'],
-        translateDirect: false,
+        keylessTranslation: false,
       })
     );
 
@@ -60,7 +60,7 @@ describe('apple strings serialization', () => {
       mockSerializationOptions({
         referenceLocale: 'en_US',
         locales: ['en_US'],
-        translateDirect: false,
+        keylessTranslation: false,
       })
     );
 
@@ -86,7 +86,7 @@ describe('apple strings serialization', () => {
         },
         mockSerializationOptions<AppleStringsSerializationOptions>({
           referenceLocale: undefined,
-          translateDirect: true,
+          keylessTranslation: true,
         })
       )
     ).toThrowError('No reference locale set for key "some-entry"');

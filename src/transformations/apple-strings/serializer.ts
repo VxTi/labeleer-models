@@ -8,9 +8,17 @@ import type { Locale } from '@/locales';
 
 export type AppleStringsSerializationOptions = {
   /**
-   * Determines whether the
+   * Determines whether to serialize keys directly instead of using
+   * labels. An example of this would be:
+   * ```strings
+   * "key" = "translation";
+   * ```
+   * or
+   * ```
+   * "translation (language A)" = "translation (language B)";
+   * ```
    */
-  translateDirect: boolean;
+  keylessTranslation: boolean;
 };
 
 export const serializeAppleStrings: SerializerFn<
@@ -21,7 +29,7 @@ export const serializeAppleStrings: SerializerFn<
       input,
       options.referenceLocale,
       loc,
-      options.translateDirect
+      options.keylessTranslation
     )
   );
 
@@ -32,14 +40,14 @@ function constructAppleStringsSerializationFragment(
   dataset: TranslationDataset,
   referenceLocale: Locale,
   targetLocale: Locale,
-  direct: boolean = false
+  keylessTranslation: boolean = false
 ): SerializationResult {
   const kvMapping: Record<string, string> = {};
 
   for (const [key, entry] of Object.entries(dataset)) {
     const translated = entry.translations?.[targetLocale] ?? '';
 
-    if (direct) {
+    if (keylessTranslation) {
       const refTranslation = entry.translations?.[referenceLocale];
       if (!refTranslation) {
         throw new SerializationError(
