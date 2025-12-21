@@ -22,12 +22,8 @@ export const parseXliff: ParserFn = input => {
 
     const xliff = parsed.data.xliff;
 
-    const srcLang: Locale | undefined = xliff['@_srcLang'] ?? undefined;
+    const srcLang: Locale = xliff['@_srcLang'];
     const tgtLang: Locale | undefined = xliff['@_trgLang'] ?? undefined;
-
-    if (!srcLang) {
-      throw new Error('Source language (srcLang) is missing or invalid.');
-    }
 
     const units = xliff.file.unit;
     const arr = Array.isArray(units) ? units : [units];

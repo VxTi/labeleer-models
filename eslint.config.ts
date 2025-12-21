@@ -7,7 +7,7 @@ import prettierConfig from './prettier.config';
 
 export default defineConfig([
   // TypeScript recommendations
-  ...tseslint.configs.recommendedTypeChecked,
+  ...tseslint.configs.strictTypeChecked,
   {
     files: ['**/*.{mts,ts,tsx,js}'],
     ignores: ['**/*.json', '**/*.md', '**/*.cjs', '**/*.mjs'],
@@ -45,6 +45,7 @@ export default defineConfig([
       'prefer-template': 2,
       'object-shorthand': ['error', 'always'],
 
+      '@typescript-eslint/restrict-template-expressions': 0,
       '@typescript-eslint/no-explicit-any': 'error',
       '@typescript-eslint/no-empty-object-type': 0,
       '@typescript-eslint/no-misused-promises': [

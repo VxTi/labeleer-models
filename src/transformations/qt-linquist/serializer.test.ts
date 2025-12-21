@@ -78,7 +78,7 @@ describe('serialization', () => {
 
     expect(serialized).toBeDefined();
     expect(serialized).toHaveLength(1);
-    expect(serialized?.[0]).toMatchInlineSnapshot(`
+    expect(serialized[0]).toMatchInlineSnapshot(`
         {
           "data": "<?xml version="1.0" encoding="utf-8"?>
         <TS version="2.1" language="en-US">

@@ -6,11 +6,6 @@ import { ParsingError } from '@/errors';
 import { type Locale } from '@/locales';
 
 export const parseTs: ParserFn = (input, { referenceLocale }) => {
-  if (!referenceLocale) {
-    throw new ParsingError(
-      'Parsing TS files requires a reference language to be specified.'
-    );
-  }
   try {
     const parser = new XMLParser({
       ignoreAttributes: false,

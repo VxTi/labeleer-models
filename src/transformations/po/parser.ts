@@ -35,7 +35,7 @@ export const parsePo: ParserFn = (input, { targetLocale }) => {
           builder.addPluralEntry(key, plurals);
         } else {
           builder.addTranslation(key, {
-            [targetLocale]: entry.msgstr?.[0] || '',
+            [targetLocale]: entry.msgstr[0] || '',
           });
         }
 

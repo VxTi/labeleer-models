@@ -31,7 +31,7 @@ export const parseXcstrings: ParserFn = async dataset => {
       ([unsafeLocale, localization]) => {
         const localeParseResult = LocaleDecoder.safeParse(unsafeLocale);
 
-        if (!localeParseResult.success || !localeParseResult.data) {
+        if (!localeParseResult.success) {
           throw new ParsingError(
             `Invalid locale code in xcstrings for key "${key}": ${unsafeLocale}`
           );
@@ -66,5 +66,5 @@ export const parseXcstrings: ParserFn = async dataset => {
 function isAtomicLocalizationEntry(
   entry: z.infer<typeof XCStringsLocalizationEntryDecoder>
 ): entry is z.infer<typeof XCStringsAtomicLocalizationEntryDecoder> {
-  return typeof entry === 'object' && entry !== null && 'stringUnit' in entry;
+  return typeof entry === 'object' && 'stringUnit' in entry;
 }

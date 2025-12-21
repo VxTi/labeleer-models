@@ -1,6 +1,6 @@
-export function tryParseJson<T>(jsonString: string): T | null {
+export function tryParseJson(jsonString: string): unknown {
   try {
-    return JSON.parse(jsonString) as T;
+    return JSON.parse(jsonString);
   } catch {
     return null;
   }

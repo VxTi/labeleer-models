@@ -91,9 +91,11 @@ function constructPerLanguageDatasets(
 
   Object.entries(input).forEach(([key, entry]) => {
     locales.forEach((locale: Locale) => {
+      const pluralEntries = Object.entries(entry.plurals ?? {});
+
       const plurals: TranslationPluralization = Object.fromEntries(
-        Object.entries(entry.plurals ?? {}).map(([qt, pluralEntry]) => {
-          const pluralValue = pluralEntry?.[locale] ?? '';
+        pluralEntries.map(([qt, pluralEntry]) => {
+          const pluralValue = pluralEntry[locale] ?? '';
 
           return [qt as PluralizationQuantity, { [locale]: pluralValue }];
         })

@@ -24,27 +24,22 @@ import {
  * @param options - Parsing options including referenceLocale and targetLocale.
  * @returns The parsed TranslationDataset.
  */
-export async function parseDataset<
-  TFormat extends SupportedFormat,
-  TOptions extends ParsingOptions<
-    InferParsingOptions<(typeof parserMap)[TFormat]>
-  >,
->(
+export async function parseDataset<TFormat extends SupportedFormat>(
   dataset: string,
   fileFormat: TFormat,
-  options: TOptions
+  options: InferParsingOptions<TFormat>
 ): Promise<TranslationDataset> {
   return await parserMap[fileFormat](dataset, options);
 }
 
-type InferParsingOptions<T extends ParserFn | AggregateParserFn> =
-  T extends ParserFn<infer U>
-    ? U
-    : T extends AggregateParserFn<infer U>
-      ? U
+type InferParsingOptions<TFormat extends SupportedFormat> =
+  (typeof parserMap)[TFormat] extends ParserFn<infer TInferredOptions>
+    ? ParsingOptions<TInferredOptions>
+    : TFormat extends AggregateParserFn<infer TInferredOptions>
+      ? ParsingOptions<TInferredOptions>
       : never;
 
-const parserMap: Record<SupportedFormat, ParserFn | AggregateParserFn> = {
+const parserMap = {
   [SupportedFormat.JSON]: parseJson,
   [SupportedFormat.YAML]: parseYaml,
   [SupportedFormat.PO]: parsePo,

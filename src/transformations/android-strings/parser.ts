@@ -16,11 +16,6 @@ import { ParsingError } from '@/errors';
 import type { Locale } from '@/locales';
 
 export const parseAndroidStrings: ParserFn = (input, { referenceLocale }) => {
-  // Requires a locale to parse properly
-  if (!referenceLocale) {
-    throw new ParsingError('Locale is required to parse Android Strings XML');
-  }
-
   try {
     const parser = new XMLParser({
       ignoreAttributes: false,

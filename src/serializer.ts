@@ -25,13 +25,10 @@ import {
  * @param options - Serialization options including referenceLocale and locales.
  * @returns The serialized output as an ArrayBuffer, containing the serialized data (Zipped file).
  */
-export async function serializeDataset<
-  TFormat extends SupportedFormat,
-  TOptions extends SerializationOptions<InferSerializationOptions<TFormat>>,
->(
+export async function serializeDataset<TFormat extends SupportedFormat>(
   dataset: TranslationDataset,
   format: TFormat,
-  options: TOptions
+  options: SerializationOptions<InferSerializationOptions<TFormat>>
 ): Promise<ArrayBuffer> {
   const serializerFn = serializerMap[format] as SerializerFn<
     InferSerializationOptions<TFormat>
@@ -52,7 +49,11 @@ export async function serializeDataset<
 }
 
 type InferSerializationOptions<T extends SupportedFormat> =
-  (typeof serializerMap)[T] extends SerializerFn<infer F> ? F : never;
+  (typeof serializerMap)[T] extends SerializerFn<
+    infer InferSerializationOptions
+  >
+    ? InferSerializationOptions
+    : never;
 
 const serializerMap = {
   [SupportedFormat.APPLE_STRINGS]: serializeAppleStrings,

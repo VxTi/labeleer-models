@@ -193,7 +193,15 @@ export function toISO639_1LanguageCode(locale: Locale): ISO639_1LanguageCode {
  */
 export function iso639_1ToLocale(languageCode: ISO639_1LanguageCode): Locale {
   // Will always find something, as ISO639_1 type is derived from Locales
-  return Locales.find((loc: Locale) => loc.startsWith(`${languageCode}_`))!;
+  const foundLocale: Locale | undefined = Locales.find((loc: Locale) =>
+    loc.startsWith(`${languageCode}_`)
+  );
+
+  if (!foundLocale) {
+    throw new Error(`Failed to extract locale from ${languageCode}`);
+  }
+
+  return foundLocale;
 }
 
 /**
@@ -228,7 +236,7 @@ export function toBCP47(posixLocale: Locale): BCP47Locale {
  * @param locale - The `BCP 47` locale string (e.g., `"en-US"`).
  * @returns The `POSIX` locale string (e.g., `"en_US"`).
  */
-export function toPOSIX<T extends BCP47Locale>(locale: T): Locale {
+export function toPOSIX(locale: BCP47Locale): Locale {
   return locale.replace('-', '_') as Locale;
 }
 
@@ -285,7 +293,7 @@ export function getCountryFromLocale(locale: Locale): string | null {
  * @returns The `ISO 639-1` language code (e.g., `"en"` or `"fr"`), or `undefined` if not found.
  */
 export function getLanguageFromLocale(locale: string): string | undefined {
-  return locale.split(/[_-]/)?.at(0);
+  return locale.split(/[_-]/).at(0);
 }
 
 /**
