@@ -1,7 +1,6 @@
 export * from './transformations';
 export * from './constants';
 export * from './dataset-builder';
-export * from './decoders';
 export * from './definitions';
 export * from './errors';
 export * from './file-formats';

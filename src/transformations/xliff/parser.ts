@@ -1,5 +1,6 @@
 import { XMLParser } from 'fast-xml-parser';
-import type { ParserFn, TranslationDataset } from '@/definitions';
+import { DatasetBuilder } from '@/dataset-builder';
+import type { ParserFn } from '@/definitions';
 import { ParsingError } from '@/errors';
 import { type Locale } from '@/locales';
 import { XLIFF21Decoder } from '@/transformations/xliff/models';
@@ -31,7 +32,7 @@ export const parseXliff: ParserFn = input => {
     const units = xliff.file.unit;
     const arr = Array.isArray(units) ? units : [units];
 
-    const dataset: TranslationDataset = {};
+    const datasetBuilder = new DatasetBuilder();
 
     for (const unit of arr) {
       const key = unit['@_id'];
@@ -39,15 +40,13 @@ export const parseXliff: ParserFn = input => {
       const source = seg.source ?? '';
       const target = seg.target ?? '';
 
-      dataset[key] = {
-        translations: {
-          [srcLang]: source,
-          ...(tgtLang ? { [tgtLang]: target } : {}),
-        },
-      };
+      datasetBuilder.addTranslation(key, {
+        [srcLang]: source,
+        ...(tgtLang ? { [tgtLang]: target } : {}),
+      });
     }
 
-    return Promise.resolve(dataset);
+    return Promise.resolve(datasetBuilder.build());
   } catch (e) {
     throw new ParsingError(
       `Failed to parse XLIFF 2.1 content: ${(e as Error).message}`

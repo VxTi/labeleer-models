@@ -1,5 +1,7 @@
 import { XMLBuilder } from 'fast-xml-parser';
+import { DatasetBuilder } from '@/dataset-builder';
 import type {
+  SerializationOptions,
   SerializationResult,
   SerializerFn,
   TranslationDataset,
@@ -13,36 +15,16 @@ export const serializeXliff: SerializerFn = async (input, config) => {
     suppressEmptyNode: true,
   });
 
-  const fragments: SerializationResult[] = [];
   const nonReferenceLocales: Locale[] = config.locales.filter(
     (loc: Locale) => loc !== config.referenceLocale
   );
 
   // If there are no non-reference locales, create a single fragment with only the source language.
   if (nonReferenceLocales.length === 0) {
-    const dataset: TranslationDataset = {};
-
-    Object.entries(input).forEach(([key, entry]) => {
-      const locale: Locale = config.referenceLocale;
-      const value: string = entry.translations?.[config.referenceLocale] || '';
-
-      dataset[key] = {
-        translations: {
-          [locale]: value,
-        },
-      };
-    });
-
-    return [
-      constructXliff21Fragment(
-        builder,
-        dataset,
-        undefined,
-        config.referenceLocale
-      ),
-    ];
+    return serializeSingular(input, builder, config);
   }
 
+  const fragments: SerializationResult[] = [];
   nonReferenceLocales.forEach((locale: Locale) => {
     const dataset: TranslationDataset = {};
 
@@ -63,6 +45,30 @@ export const serializeXliff: SerializerFn = async (input, config) => {
 
   return Promise.resolve(fragments);
 };
+
+function serializeSingular(
+  input: TranslationDataset,
+  xmlBuilder: XMLBuilder,
+  options: SerializationOptions
+): SerializationResult[] {
+  const datasetBuilder = new DatasetBuilder();
+
+  Object.entries(input).forEach(([key, entry]) => {
+    const locale: Locale = options.referenceLocale;
+    const value: string = entry.translations?.[options.referenceLocale] || '';
+
+    datasetBuilder.addTranslation(key, { [locale]: value });
+  });
+
+  const fragment = constructXliff21Fragment(
+    xmlBuilder,
+    datasetBuilder.build(),
+    undefined,
+    options.referenceLocale
+  );
+
+  return [fragment];
+}
 
 // XLIFF 2.1 builder
 function constructXliff21Fragment(

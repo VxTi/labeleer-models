@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { mockParsingOptions } from '../../__testutils__/mock-parsing-options';
 import { parsePoAggregated } from './parser';
+import { mockParsingOptions } from '@/__testutils__';
 
 describe('po parsing', () => {
   it('should parse PO files correctly', async () => {
@@ -25,18 +25,11 @@ describe('po parsing', () => {
     expect(parsed).toMatchInlineSnapshot(`
       {
         "first-entry": {
-          "description": undefined,
-          "plurals": {
-            "en_US": "hellos",
-          },
-          "tags": undefined,
           "translations": {
             "en_US": "hello",
           },
         },
         "second-entry": {
-          "description": undefined,
-          "tags": undefined,
           "translations": {
             "en_US": "hello",
           },

@@ -1,9 +1,10 @@
+import _merge from 'lodash-es/merge';
 import type {
   TranslationDataset,
   TranslationPluralization,
 } from '@/definitions';
 import type { Locale } from '@/locales';
-
+import { sanitizeLabel } from '@/sanitizer';
 /**
  * A builder class for constructing translation datasets.
  */
@@ -14,59 +15,87 @@ export class DatasetBuilder {
     this.dataset = {};
   }
 
-  addEntries(
+  /**
+   * Add a translation to a translation entry.
+   */
+  addTranslation(
     key: string,
     translations: Partial<Record<Locale, string>>
   ): DatasetBuilder {
-    this.dataset[key] = { translations };
+    const sanitizedKey = sanitizeLabel(key);
+    this.dataset[sanitizedKey] ??= {};
+    this.dataset[sanitizedKey].translations ??= {};
+
+    _merge(this.dataset[sanitizedKey].translations, translations);
+
     return this;
   }
 
-  addEntry(key: string, locale: Locale, value: string): DatasetBuilder {
-    return this.addEntries(key, { [locale]: value });
+  /**
+   * Add a singular translation to a translation entry.
+   */
+  addTranslationForLocale(
+    key: string,
+    locale: Locale,
+    value: string
+  ): DatasetBuilder {
+    return this.addTranslation(key, { [locale]: value });
   }
 
+  /**
+   * Add plural forms to a translation entry.
+   */
   addPluralEntry(
     key: string,
     pluralForms: TranslationPluralization
   ): DatasetBuilder {
-    if (!this.dataset[key]) {
-      this.dataset[key] = { plurals: {} };
-    }
-    this.dataset[key].plurals = {
-      ...this.dataset[key].plurals,
-      ...pluralForms,
-    };
+    const sanitizedKey = sanitizeLabel(key);
+    this.dataset[sanitizedKey] ??= {};
+    this.dataset[sanitizedKey].plurals ??= {};
+
+    _merge(this.dataset[sanitizedKey].plurals, pluralForms);
     return this;
   }
 
-  addPluralEntries(
+  /**
+   * Add a description to a translation entry.
+   */
+  addDescription(
     key: string,
-    locale: Locale,
-    pluralForms: TranslationPluralization
+    description: string | undefined | null
   ): DatasetBuilder {
-    const pluralization: TranslationPluralization = {};
-    for (const [quantity, value] of Object.entries(pluralForms)) {
-      pluralization[quantity as keyof TranslationPluralization] = {
-        [locale]: value,
-      };
-    }
-    return this.addPluralEntry(key, pluralization);
-  }
+    if (!description) return this;
 
-  addComment(key: string, comment: string): DatasetBuilder {
-    if (!this.dataset[key]) {
-      this.dataset[key] = {};
+    const sanitizedKey = sanitizeLabel(key);
+
+    if (!this.dataset[sanitizedKey]) {
+      this.dataset[sanitizedKey] = {};
     }
-    this.dataset[key].description = comment;
+    this.dataset[sanitizedKey].description = description;
     return this;
   }
 
-  addDescription(key: string, description: string): DatasetBuilder {
-    if (!this.dataset[key]) {
-      this.dataset[key] = {};
+  /**
+   * Add tags to a translation entry.
+   */
+  addTags(key: string, tags: string[] | undefined): DatasetBuilder {
+    if (!tags?.length) return this;
+
+    const sanitizedKey = sanitizeLabel(key);
+
+    if (!this.dataset[sanitizedKey]) {
+      this.dataset[sanitizedKey] = {};
     }
-    this.dataset[key].description = description;
+
+    this.dataset[sanitizedKey].tags = tags;
+    return this;
+  }
+
+  /**
+   * Merge another dataset into this builder.
+   */
+  merge(otherDataset: TranslationDataset): DatasetBuilder {
+    _merge(this.dataset, otherDataset);
     return this;
   }
 

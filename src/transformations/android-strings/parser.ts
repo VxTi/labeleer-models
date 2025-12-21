@@ -4,6 +4,7 @@ import {
   type ASXmlSingularEntry,
   ASXmlDecoder,
 } from './common';
+import { DatasetBuilder } from '@/dataset-builder';
 import type {
   AggregateParserFn,
   MaybeArray,
@@ -38,7 +39,7 @@ export const parseAndroidStringsAggregated: AggregateParserFn = async (
   inputs,
   options
 ) => {
-  const aggregatedDataset: TranslationDataset = {};
+  const builder = new DatasetBuilder();
 
   for (const [locale, content] of Object.entries(inputs)) {
     const dataset = await parseAndroidStrings(content, {
@@ -46,10 +47,10 @@ export const parseAndroidStringsAggregated: AggregateParserFn = async (
       referenceLocale: locale as Locale,
     });
 
-    Object.assign(aggregatedDataset, dataset);
+    builder.merge(dataset);
   }
 
-  return Promise.resolve(aggregatedDataset);
+  return Promise.resolve(builder.build());
 };
 
 function transformToDataset(
@@ -63,41 +64,30 @@ function transformToDataset(
     });
   }
 
-  const dataset: TranslationDataset = {};
+  const datasetBuilder = new DatasetBuilder();
 
-  const stringsEntry: MaybeArray<ASXmlSingularEntry> | undefined =
-    ir.data.resources.string;
-  const strings: ASXmlSingularEntry[] = stringsEntry
-    ? Array.isArray(stringsEntry)
-      ? stringsEntry
-      : [stringsEntry]
-    : [];
-  const plurals: ASXmlPluralList[] = ir.data.resources.plurals
-    ? Array.isArray(ir.data.resources.plurals)
-      ? ir.data.resources.plurals
-      : [ir.data.resources.plurals]
-    : [];
+  const singularTranslations: ASXmlSingularEntry[] = extractArray(
+    ir.data.resources.string
+  );
+  const pluralTranslations: ASXmlPluralList[] = extractArray(
+    ir.data.resources.plurals
+  );
 
-  strings.forEach(stringEntry => {
-    const key = stringEntry['@_name'];
-    const translation = stringEntry['#text'];
-
-    dataset[key] = {
-      translations: {
-        [locale]: translation,
-      },
-    };
+  singularTranslations.forEach((entry: ASXmlSingularEntry) => {
+    datasetBuilder.addTranslationForLocale(
+      entry['@_name'],
+      locale,
+      entry['#text']
+    );
   });
 
-  plurals.forEach(pluralEntry => {
-    const key = pluralEntry['@_name'];
-    dataset[key] = {
-      translations: dataset[key]?.translations ?? {},
-      plurals: extractPluralsFromEntry(pluralEntry, locale),
-    };
+  pluralTranslations.forEach((entry: ASXmlPluralList) => {
+    const key = entry['@_name'];
+
+    datasetBuilder.addPluralEntry(key, extractPluralsFromEntry(entry, locale));
   });
 
-  return dataset;
+  return datasetBuilder.build();
 }
 
 function extractPluralsFromEntry(
@@ -110,4 +100,10 @@ function extractPluralsFromEntry(
       { [baseLocale]: value },
     ])
   );
+}
+
+function extractArray<T>(arr: MaybeArray<T> | undefined): T[] {
+  if (!arr) return [];
+
+  return Array.isArray(arr) ? arr : [arr];
 }

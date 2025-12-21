@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
-import { mockParsingOptions } from '../../__testutils__/mock-parsing-options';
 import { parseXcstrings } from './parser';
+import { mockParsingOptions } from '@/__testutils__';
 
 describe('xcstrings parsing', () => {
   it('should parse a simple xcstrings file', async () => {

@@ -1,10 +1,6 @@
-import merge from 'lodash-es/merge';
 import { APPLE_STRING_LINE_REGEX } from './common';
-import type {
-  AggregateParserFn,
-  ParserFn,
-  TranslationDataset,
-} from '@/definitions';
+import { DatasetBuilder } from '@/dataset-builder';
+import type { AggregateParserFn, ParserFn } from '@/definitions';
 import { ParsingError } from '@/errors';
 import type { Locale } from '@/locales';
 
@@ -16,7 +12,7 @@ export const parseAppleStrings: ParserFn = (input, { targetLocale }) => {
   }
 
   const lines = input.split('\n');
-  const dataset: TranslationDataset = {};
+  const builder = new DatasetBuilder();
 
   for (const line of lines) {
     const match = line.match(APPLE_STRING_LINE_REGEX);
@@ -25,30 +21,28 @@ export const parseAppleStrings: ParserFn = (input, { targetLocale }) => {
 
     const [, key, value] = match;
 
-    dataset[key] = {
-      translations: {
-        [targetLocale]: value,
-      },
-    };
+    builder.addTranslation(key, {
+      [targetLocale]: value,
+    });
   }
 
-  return Promise.resolve(dataset);
+  return Promise.resolve(builder.build());
 };
 
 export const parseAppleStringsAggregated: AggregateParserFn = async (
   inputs,
   options
 ) => {
-  const dataset: TranslationDataset = {};
+  const builder = new DatasetBuilder();
 
   for (const [locale, content] of Object.entries(inputs)) {
-    const parsed = await parseAppleStrings(content, {
+    const dataset = await parseAppleStrings(content, {
       ...options,
       targetLocale: locale as Locale,
     });
 
-    merge(dataset, parsed);
+    builder.merge(dataset);
   }
 
-  return Promise.resolve(dataset);
+  return Promise.resolve(builder.build());
 };

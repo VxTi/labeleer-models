@@ -1,11 +1,11 @@
-import merge from 'lodash-es/merge';
 import { type z } from 'zod';
 import {
   type XCStringsAtomicLocalizationEntryDecoder,
   type XCStringsLocalizationEntryDecoder,
   XCStringsDatasetDecoder,
 } from './common';
-import type { ParserFn, TranslationDataset } from '@/definitions';
+import { DatasetBuilder } from '@/dataset-builder';
+import type { ParserFn } from '@/definitions';
 import { ParsingError } from '@/errors';
 import { type Locale } from '@/locales';
 import { LocaleDecoder } from '@/transformations/common/decoders';
@@ -24,11 +24,9 @@ export const parseXcstrings: ParserFn = async dataset => {
     );
   }
 
-  const result: TranslationDataset = {};
+  const datasetBuilder = new DatasetBuilder();
 
   Object.entries(decoded.data.strings).forEach(([key, entry]) => {
-    result[key] = {};
-
     Object.entries(entry.localizations).forEach(
       ([unsafeLocale, localization]) => {
         const localeParseResult = LocaleDecoder.safeParse(unsafeLocale);
@@ -42,8 +40,9 @@ export const parseXcstrings: ParserFn = async dataset => {
         const locale: Locale = localeParseResult.data;
 
         if (isAtomicLocalizationEntry(localization)) {
-          result[key].translations ??= {};
-          result[key].translations[locale] = localization.stringUnit.value;
+          datasetBuilder.addTranslation(key, {
+            [locale]: localization.stringUnit.value,
+          });
         } else {
           // It's a plural translation!
           const pluralVariations = localization.variations.plural;
@@ -51,9 +50,7 @@ export const parseXcstrings: ParserFn = async dataset => {
           const one = pluralVariations.one.stringUnit.value;
           const other = pluralVariations.other.stringUnit.value;
 
-          result[key].plurals ??= {};
-          merge(result[key].plurals, {
-            ...(result[key].plurals ?? {}),
+          datasetBuilder.addPluralEntry(key, {
             ...(zero ? { zero: { [locale]: zero } } : {}),
             one: { [locale]: one },
             other: { [locale]: other },
@@ -63,7 +60,7 @@ export const parseXcstrings: ParserFn = async dataset => {
     );
   });
 
-  return result;
+  return datasetBuilder.build();
 };
 
 function isAtomicLocalizationEntry(

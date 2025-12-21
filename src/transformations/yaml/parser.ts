@@ -1,7 +1,7 @@
 import { parse } from 'yaml';
-import { JsonTranslationDatasetDecoder } from '@/decoders';
 import type { ParserFn } from '@/definitions';
 import { ParsingError } from '@/errors';
+import { JsonTranslationDatasetDecoder } from '@/transformations/common/decoders';
 
 export const parseYaml: ParserFn = input => {
   try {

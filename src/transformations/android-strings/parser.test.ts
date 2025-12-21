@@ -92,7 +92,6 @@ describe('android strings parsing', () => {
               "en_US": "Zero",
             },
           },
-          "translations": {},
         },
         "second-label": {
           "translations": {

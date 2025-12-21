@@ -1,6 +1,7 @@
 import { XMLParser } from 'fast-xml-parser';
 import { type LinquistTsMessage, TSLinquistDatasetDecoder } from './common';
-import type { ParserFn, TranslationDataset } from '@/definitions';
+import { DatasetBuilder } from '@/dataset-builder';
+import type { ParserFn } from '@/definitions';
 import { ParsingError } from '@/errors';
 import { type Locale } from '@/locales';
 
@@ -28,7 +29,7 @@ export const parseTs: ParserFn = (input, { referenceLocale }) => {
     const TS = parsed.data.TS;
     const translateTo: Locale | undefined = TS['@_language'];
 
-    const dataset: TranslationDataset = {};
+    const datasetBuilder = new DatasetBuilder();
 
     const messages: LinquistTsMessage[] = Array.isArray(TS.context.message)
       ? TS.context.message
@@ -37,15 +38,13 @@ export const parseTs: ParserFn = (input, { referenceLocale }) => {
     messages.forEach((msg: LinquistTsMessage) => {
       const key = msg['@_key'];
 
-      dataset[key] = {
-        translations: {
-          [referenceLocale]: msg.source || '',
-          ...(translateTo ? { [translateTo]: msg.translation || '' } : {}),
-        },
-      };
+      datasetBuilder.addTranslation(key, {
+        [referenceLocale]: msg.source || '',
+        ...(translateTo ? { [translateTo]: msg.translation || '' } : {}),
+      });
     });
 
-    return Promise.resolve(dataset);
+    return Promise.resolve(datasetBuilder.build());
   } catch (e) {
     throw new ParsingError(
       'Something went wrong while trying to parse the TS file.',

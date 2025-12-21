@@ -1,9 +1,10 @@
 import { po } from 'gettext-parser';
-import merge from 'lodash-es/merge';
+import { quantities } from '@/constants';
+import { DatasetBuilder } from '@/dataset-builder';
 import type {
   AggregateParserFn,
   ParserFn,
-  TranslationDataset,
+  TranslationPluralization,
 } from '@/definitions';
 import { ParsingError } from '@/errors';
 import type { Locale } from '@/locales';
@@ -22,29 +23,40 @@ export const parsePo: ParserFn = (input, { targetLocale }) => {
   }
   try {
     const output = po.parse(input);
-    const dataset: TranslationDataset = {};
+    const builder = new DatasetBuilder();
 
     for (const context of Object.values(output.translations)) {
-      for (const [msgid, entry] of Object.entries(context)) {
-        if (!msgid) continue; // skip header
+      for (const [key, entry] of Object.entries(context)) {
+        if (!key) continue; // skip header
 
         const translation = entry.msgstr?.[0] || '';
         const tags = entry.comments?.reference
           ? entry.comments.reference.split('\n')
           : undefined;
 
-        dataset[msgid] = {
-          translations: { [targetLocale]: translation },
-          ...(entry.msgid_plural && entry.msgstr?.length > 1
-            ? { plurals: { [targetLocale]: entry.msgid_plural } }
-            : {}),
-          tags,
-          description: entry.comments?.extracted || undefined,
-        };
+        builder
+          .addDescription(key, entry.comments?.extracted)
+          .addTags(key, tags)
+          .addTranslation(key, {
+            [targetLocale]: translation,
+          });
+
+        if (entry.msgid_plural && entry.msgstr?.length > 1) {
+          const msgPlurals = entry.msgstr.slice(0, quantities.length);
+
+          const plurals = Object.fromEntries(
+            msgPlurals.map((msg, index) => [
+              quantities[index],
+              { [targetLocale]: msg },
+            ])
+          ) as TranslationPluralization;
+
+          builder.addPluralEntry(key, plurals);
+        }
       }
     }
 
-    return Promise.resolve(dataset);
+    return Promise.resolve(builder.build());
   } catch (error) {
     throw new ParsingError(`Failed to parse PO input: ${String(error)}`, {
       cause: error as Error,
@@ -53,7 +65,7 @@ export const parsePo: ParserFn = (input, { targetLocale }) => {
 };
 
 export const parsePoAggregated: AggregateParserFn = async (inputs, options) => {
-  const aggregatedDataset: TranslationDataset = {};
+  const builder = new DatasetBuilder();
 
   for (const [locale, content] of Object.entries(inputs)) {
     const dataset = await parsePo(content, {
@@ -61,8 +73,8 @@ export const parsePoAggregated: AggregateParserFn = async (inputs, options) => {
       targetLocale: locale as Locale,
     });
 
-    merge(aggregatedDataset, dataset);
+    builder.merge(dataset);
   }
 
-  return Promise.resolve(aggregatedDataset);
+  return Promise.resolve(builder.build());
 };

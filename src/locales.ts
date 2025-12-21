@@ -191,13 +191,9 @@ export function toISO639_1LanguageCode(locale: Locale): ISO639_1LanguageCode {
  * @param languageCode - The `ISO 639-1` language code (e.g., `"en"`).
  * @returns The corresponding Locale (e.g., `en_US`), or null if not found.
  */
-export function iso639_1ToLocale(
-  languageCode: ISO639_1LanguageCode
-): Locale | null {
-  const matchingLocale = Locales.find(loc =>
-    loc.startsWith(`${languageCode}_`)
-  );
-  return matchingLocale || null;
+export function iso639_1ToLocale(languageCode: ISO639_1LanguageCode): Locale {
+  // Will always find something, as ISO639_1 type is derived from Locales
+  return Locales.find((loc: Locale) => loc.startsWith(`${languageCode}_`))!;
 }
 
 /**
