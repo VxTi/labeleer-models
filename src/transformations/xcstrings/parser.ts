@@ -4,11 +4,11 @@ import {
   type XCStringsLocalizationEntryDecoder,
   XCStringsDatasetDecoder,
 } from './common';
+import { LocaleDecoder } from '@/common/decoders';
 import { DatasetBuilder } from '@/dataset-builder';
 import type { ParserFn } from '@/definitions';
 import { ParsingError } from '@/errors';
 import { type Locale } from '@/locales';
-import { LocaleDecoder } from '@/transformations/common/decoders';
 import { tryParseJson } from '@/util/parsing';
 
 export const parseXcstrings: ParserFn = async dataset => {

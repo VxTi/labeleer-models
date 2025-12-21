@@ -1,6 +1,6 @@
+import { JsonTranslationDatasetDecoder } from '@/common/decoders';
 import type { ParserFn } from '@/definitions';
 import { ParsingError } from '@/errors';
-import { JsonTranslationDatasetDecoder } from '@/transformations/common/decoders';
 
 export const parseJson: ParserFn = async input => {
   const json = safeParseJson(input);

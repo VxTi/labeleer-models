@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { LocaleDecoder } from '../common/decoders';
+import { LocaleDecoder } from '@/common/decoders';
 
 export const XLIFF21UnitDecoder = z.object({
   '@_id': z.string(),

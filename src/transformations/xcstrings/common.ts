@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { LocaleDecoder } from '@/transformations/common/decoders';
+import { LocaleDecoder } from '@/common/decoders';
 
 export const DEFAULT_XCSTRINGS_FILE_NAME = 'translations';
 
