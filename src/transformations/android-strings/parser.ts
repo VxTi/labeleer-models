@@ -7,13 +7,13 @@ import {
 import { DatasetBuilder } from '@/dataset-builder';
 import type {
   AggregateParserFn,
-  MaybeArray,
   ParserFn,
   TranslationDataset,
   TranslationPluralization,
 } from '@/definitions';
 import { ParsingError } from '@/errors';
 import type { Locale } from '@/locales';
+import { extractArray } from '@/util/data-extraction';
 
 export const parseAndroidStrings: ParserFn = (input, { referenceLocale }) => {
   try {
@@ -95,10 +95,4 @@ function extractPluralsFromEntry(
       { [baseLocale]: value },
     ])
   );
-}
-
-function extractArray<T>(arr: MaybeArray<T> | undefined): T[] {
-  if (!arr) return [];
-
-  return Array.isArray(arr) ? arr : [arr];
 }

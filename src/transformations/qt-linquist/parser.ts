@@ -4,6 +4,7 @@ import { DatasetBuilder } from '@/dataset-builder';
 import type { ParserFn } from '@/definitions';
 import { ParsingError } from '@/errors';
 import { type Locale } from '@/locales';
+import { extractArray } from '@/util/data-extraction';
 
 export const parseTs: ParserFn = (input, { referenceLocale }) => {
   try {
@@ -26,9 +27,7 @@ export const parseTs: ParserFn = (input, { referenceLocale }) => {
 
     const datasetBuilder = new DatasetBuilder();
 
-    const messages: LinquistTsMessage[] = Array.isArray(TS.context.message)
-      ? TS.context.message
-      : [TS.context.message];
+    const messages: LinquistTsMessage[] = extractArray(TS.context.message);
 
     messages.forEach((msg: LinquistTsMessage) => {
       const key = msg['@_key'];
