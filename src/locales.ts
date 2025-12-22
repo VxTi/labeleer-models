@@ -262,9 +262,8 @@ export function getLocaleName(locale: Locale): string {
     const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
 
     const language: string | undefined = languageNames.of(lang);
-    const regionName: string | undefined = region
-      ? regionNames.of(region)
-      : undefined;
+    const regionName: string | undefined =
+      region ? regionNames.of(region) : undefined;
 
     if (!language) {
       return locale;

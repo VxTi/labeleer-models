@@ -33,11 +33,11 @@ export async function parseDataset<TFormat extends SupportedFormat>(
 }
 
 type InferParsingOptions<TFormat extends SupportedFormat> =
-  (typeof parserMap)[TFormat] extends ParserFn<infer TInferredOptions>
-    ? ParsingOptions<TInferredOptions>
-    : TFormat extends AggregateParserFn<infer TInferredOptions>
-      ? ParsingOptions<TInferredOptions>
-      : never;
+  (typeof parserMap)[TFormat] extends ParserFn<infer TInferredOptions> ?
+    ParsingOptions<TInferredOptions>
+  : TFormat extends AggregateParserFn<infer TInferredOptions> ?
+    ParsingOptions<TInferredOptions>
+  : never;
 
 const parserMap = {
   [SupportedFormat.JSON]: parseJson,

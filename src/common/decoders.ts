@@ -24,11 +24,9 @@ export const LocaleDecoder = z
     { message: 'Invalid locale format' }
   )
   .transform(val =>
-    isBCP47Locale(val)
-      ? toPOSIX(val)
-      : isISO639_1LanguageCode(val)
-        ? iso639_1ToLocale(val)
-        : (val as Locale)
+    isBCP47Locale(val) ? toPOSIX(val)
+    : isISO639_1LanguageCode(val) ? iso639_1ToLocale(val)
+    : (val as Locale)
   );
 
 export const TranslationKeyDecoder = z

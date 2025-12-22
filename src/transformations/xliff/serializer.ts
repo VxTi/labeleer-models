@@ -82,18 +82,18 @@ function constructXliff21Fragment(
       '@_version': '2.1',
       '@_xmlns': 'urn:oasis:names:tc:xliff:document:2.1',
       '@_srcLang': toISO639_1LanguageCode(sourceLocale),
-      ...(targetLocale
-        ? { '@_trgLang': toISO639_1LanguageCode(targetLocale) }
-        : {}),
+      ...(targetLocale ?
+        { '@_trgLang': toISO639_1LanguageCode(targetLocale) }
+      : {}),
       file: {
         '@_id': 'f1',
         unit: Object.entries(dataset).map(([key, entry]) => ({
           '@_id': key,
           segment: {
             source: entry.translations?.[sourceLocale] || '',
-            ...(targetLocale
-              ? { target: entry.translations?.[targetLocale] || '' }
-              : {}),
+            ...(targetLocale ?
+              { target: entry.translations?.[targetLocale] || '' }
+            : {}),
           },
         })),
       },

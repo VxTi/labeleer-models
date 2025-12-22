@@ -11,11 +11,11 @@ export type LinquistTsMessage = z.infer<typeof TSLinquistMessageDecoder>;
 
 export const TSLinquistDatasetDecoder = z.object({
   TS: z.object({
-    '@_language': z
-      .string()
-      .transform(val =>
-        isLocale(val) ? val : isBCP47Locale(val) ? toPOSIX(val) : undefined
-      ),
+    '@_language': z.string().transform(val =>
+      isLocale(val) ? val
+      : isBCP47Locale(val) ? toPOSIX(val)
+      : undefined
+    ),
     context: z.object({
       message: z.union([
         z.array(TSLinquistMessageDecoder),
