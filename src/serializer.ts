@@ -49,11 +49,8 @@ export async function serializeDataset<TFormat extends SupportedFormat>(
 }
 
 type InferSerializationOptions<T extends SupportedFormat> =
-  (typeof serializerMap)[T] extends SerializerFn<
-    infer InferSerializationOptions
-  >
-    ? InferSerializationOptions
-    : never;
+  (typeof serializerMap)[T] extends SerializerFn<infer TOptions> ? TOptions
+  : never;
 
 const serializerMap = {
   [SupportedFormat.APPLE_STRINGS]: serializeAppleStrings,
