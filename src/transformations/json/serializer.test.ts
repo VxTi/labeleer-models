@@ -5,11 +5,8 @@ import { mockSerializationOptions } from '@/__testutils__/mock-serialization-opt
 import { DEFAULT_JSON_FILE_NAME } from '@/transformations';
 
 describe('json serialization', () => {
-  it('should serialize a simple JSON dataset', async () => {
-    const serialized = await serializeJson(
-      mockDataset(),
-      mockSerializationOptions()
-    );
+  it('should serialize a simple JSON dataset', () => {
+    const serialized = serializeJson(mockDataset(), mockSerializationOptions());
     expect(serialized).toBeDefined();
     expect(serialized).toHaveLength(1);
     expect(serialized[0]?.data).toContain('hello');

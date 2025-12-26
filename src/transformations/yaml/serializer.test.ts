@@ -1,11 +1,10 @@
 import { describe, it, expect } from 'vitest';
 import { serializeYaml } from './serializer';
-import { mockDataset } from '@/__testutils__/mock-dataset';
-import { mockSerializationOptions } from '@/__testutils__/mock-serialization-options';
+import { mockDataset, mockSerializationOptions } from '@/__testutils__';
 
 describe('yaml serialization', () => {
-  it('should serialize a simple YAML dataset', async () => {
-    const serialized = await serializeYaml(
+  it('should serialize a simple YAML dataset', () => {
+    const serialized = serializeYaml(
       mockDataset({
         pluralForm: {
           plurals: {

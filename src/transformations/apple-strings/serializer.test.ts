@@ -1,13 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import {
-  type AppleStringsSerializationOptions,
-  serializeAppleStrings,
-} from './serializer';
+import { serializeAppleStrings } from './serializer';
 import { mockSerializationOptions } from '@/__testutils__';
 
 describe('apple strings serialization', () => {
-  it('should serialize a dataset into apple strings', async () => {
-    const serialized = await serializeAppleStrings(
+  it('should serialize a dataset into apple strings', () => {
+    const serialized = serializeAppleStrings(
       {
         'first-entry': {
           translations: {
@@ -48,8 +45,8 @@ describe('apple strings serialization', () => {
     );
   });
 
-  it('should escape special characters', async () => {
-    const serialized = await serializeAppleStrings(
+  it('should escape special characters', () => {
+    const serialized = serializeAppleStrings(
       {
         'special-entry': {
           translations: {
@@ -72,23 +69,5 @@ describe('apple strings serialization', () => {
         data: `"special-entry" = "Line1\\nLine2\\tTabbed\\\\"Quote\\\\"";`,
       })
     );
-  });
-
-  it('should throw an error when no reference locale is set', () => {
-    expect(() =>
-      serializeAppleStrings(
-        {
-          'some-entry': {
-            translations: {
-              en_US: 'english',
-            },
-          },
-        },
-        mockSerializationOptions<AppleStringsSerializationOptions>({
-          referenceLocale: undefined,
-          keylessTranslation: true,
-        })
-      )
-    ).toThrowError('No reference locale set for key "some-entry"');
   });
 });

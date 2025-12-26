@@ -33,7 +33,7 @@ export async function serializeDataset<TFormat extends SupportedFormat>(
   const serializerFn = serializerMap[format] as SerializerFn<
     InferSerializationOptions<TFormat>
   >;
-  const output: SerializationResult[] = await serializerFn(dataset, options);
+  const output: SerializationResult[] = serializerFn(dataset, options);
 
   // Alright, we'll have to make a zip of it
   const zip = new JSZip();

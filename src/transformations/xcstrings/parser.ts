@@ -11,12 +11,12 @@ import { ParsingError } from '@/errors';
 import { type Locale } from '@/locales';
 import { tryParseJson } from '@/util/parsing';
 
-export const parseXcstrings: ParserFn = async dataset => {
+export const parseXcstrings: ParserFn = dataset => {
   const json = tryParseJson(dataset);
   if (!json) {
     throw new ParsingError('Invalid JSON format for xcstrings dataset');
   }
-  const decoded = await XCStringsDatasetDecoder.safeParseAsync(json);
+  const decoded = XCStringsDatasetDecoder.safeParse(json);
 
   if (!decoded.success) {
     throw new ParsingError(

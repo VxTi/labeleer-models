@@ -1,17 +1,16 @@
 import { describe, expect, it } from 'vitest';
-import { mockDataset } from '../../__testutils__/mock-dataset';
-import { mockSerializationOptions } from '../../__testutils__/mock-serialization-options';
 import { serializeTs } from './serializer';
+import { mockDataset, mockSerializationOptions } from '@/__testutils__';
 
 describe('serialization', () => {
-  it('should serialize a simple Qt Linguist XML dataset', async () => {
+  it('should serialize a simple Qt Linguist XML dataset', () => {
     const dataset = mockDataset();
     const options = mockSerializationOptions({
       locales: ['en_US', 'nl_NL', 'en_AU'],
       referenceLocale: 'en_US',
     });
 
-    const serialized = await serializeTs(dataset, options);
+    const serialized = serializeTs(dataset, options);
 
     expect(serialized).toBeDefined();
     expect(serialized).toHaveLength(2);
@@ -67,14 +66,14 @@ describe('serialization', () => {
       `);
   });
 
-  it('should serialize a Qt dataset even if there is just a single locale', async () => {
+  it('should serialize a Qt dataset even if there is just a single locale', () => {
     const dataset = mockDataset();
     const options = mockSerializationOptions({
       locales: ['en_US'],
       referenceLocale: 'en_US',
     });
 
-    const serialized = await serializeTs(dataset, options);
+    const serialized = serializeTs(dataset, options);
 
     expect(serialized).toBeDefined();
     expect(serialized).toHaveLength(1);

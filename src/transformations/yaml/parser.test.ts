@@ -2,7 +2,7 @@ import { describe, expect, it } from 'vitest';
 import { parseYaml } from './parser';
 
 describe('yaml parsing', () => {
-  it('should parse a simple dataset', async () => {
+  it('should parse a simple dataset', () => {
     const input = `
     first-entry:
       translations:
@@ -10,7 +10,7 @@ describe('yaml parsing', () => {
         nl_NL: 'hallo wereld'
     `;
 
-    const parsed = await parseYaml(input, { referenceLocale: 'en_US' });
+    const parsed = parseYaml(input, { referenceLocale: 'en_US' });
     expect(parsed).toBeDefined();
     expect(parsed).toMatchInlineSnapshot(`
       {

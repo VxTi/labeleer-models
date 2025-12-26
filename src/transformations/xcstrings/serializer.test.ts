@@ -1,11 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { mockDataset } from '../../__testutils__/mock-dataset';
-import { mockSerializationOptions } from '../../__testutils__/mock-serialization-options';
 import { serializeXcstrings } from './serializer';
+import { mockDataset, mockSerializationOptions } from '@/__testutils__';
 import { DEFAULT_XCSTRINGS_FILE_NAME } from '@/transformations';
 
 describe('xcstrings serialization', () => {
-  it('should serialize a simple dataset into xcstrings', async () => {
+  it('should serialize a simple dataset into xcstrings', () => {
     const dataset = mockDataset({
       strict: {
         translations: {
@@ -26,10 +25,7 @@ describe('xcstrings serialization', () => {
       },
     });
 
-    const result = await serializeXcstrings(
-      dataset,
-      mockSerializationOptions()
-    );
+    const result = serializeXcstrings(dataset, mockSerializationOptions());
 
     expect(result).toBeDefined();
     expect(result).toHaveLength(1);

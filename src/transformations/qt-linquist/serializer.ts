@@ -6,7 +6,7 @@ import type {
 } from '@/definitions';
 import { type Locale, toBCP47 } from '@/locales';
 
-export const serializeTs: SerializerFn = async (input, config) => {
+export const serializeTs: SerializerFn = (input, config) => {
   const nonReferenceLanguages = config.locales.filter(
     loc => loc !== config.referenceLocale
   );
@@ -26,14 +26,12 @@ export const serializeTs: SerializerFn = async (input, config) => {
     return [fragment];
   }
 
-  return Promise.resolve(
-    nonReferenceLanguages.map(locale =>
-      constructTsSerializationFragment(
-        builder,
-        input,
-        locale,
-        config.referenceLocale
-      )
+  return nonReferenceLanguages.map(locale =>
+    constructTsSerializationFragment(
+      builder,
+      input,
+      locale,
+      config.referenceLocale
     )
   );
 };

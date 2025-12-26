@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest';
-import { mockParsingOptions } from '../../__testutils__/mock-parsing-options';
 import { parseAndroidStrings } from './parser';
+import { mockParsingOptions } from '@/__testutils__';
 
 describe('android strings parsing', () => {
-  it('should parse a simple android strings XML dataset', async () => {
+  it('should parse a simple android strings XML dataset', () => {
     const input = `<?xml version="1.0" encoding="utf-8"?>
         <resources>
           <string name="first-label">Hello</string>
           <string name="second-label">again</string>
         </resources>`;
 
-    const parsed = await parseAndroidStrings(input, {
+    const parsed = parseAndroidStrings(input, {
       referenceLocale: 'en_US',
     });
     expect(parsed).toBeDefined();
@@ -30,7 +30,7 @@ describe('android strings parsing', () => {
     `);
   });
 
-  it('should parse an android dataset with plurals', async () => {
+  it('should parse an android dataset with plurals', () => {
     const input = `<?xml version="1.0" encoding="utf-8"?>
 <resources>
   <string name="first-label">Hello</string>
@@ -43,7 +43,7 @@ describe('android strings parsing', () => {
   </plurals>
 </resources>`;
 
-    const parsed = await parseAndroidStrings(
+    const parsed = parseAndroidStrings(
       input,
       mockParsingOptions({
         referenceLocale: 'en_US',

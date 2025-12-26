@@ -42,7 +42,7 @@ export const parseXliff: ParserFn = input => {
       });
     }
 
-    return Promise.resolve(datasetBuilder.build());
+    return datasetBuilder.build();
   } catch (e) {
     throw new ParsingError(
       `Failed to parse XLIFF 2.1 content: ${(e as Error).message}`

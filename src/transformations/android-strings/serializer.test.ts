@@ -1,20 +1,16 @@
 import { describe, expect, it } from 'vitest';
-import { mockDataset } from '../../__testutils__/mock-dataset';
-import { mockSerializationOptions } from '../../__testutils__/mock-serialization-options';
-import type {
-  SerializationResult,
-  TranslationDataset,
-} from '../../definitions';
 import { serializeAndroidStrings } from './serializer';
+import { mockDataset, mockSerializationOptions } from '@/__testutils__';
+import type { SerializationResult, TranslationDataset } from '@/definitions';
 
 describe('android strings serialization', () => {
-  it('should serialize a simple Android Strings dataset', async () => {
+  it('should serialize a simple Android Strings dataset', () => {
     const options = mockSerializationOptions({
       locales: ['en_US', 'nl_NL'],
     });
     const dataset = mockDataset();
 
-    const serialized = (await serializeAndroidStrings(dataset, options)) as
+    const serialized = serializeAndroidStrings(dataset, options) as
       | SerializationResult[]
       | undefined;
     expect(serialized).toBeDefined();
@@ -49,7 +45,7 @@ describe('android strings serialization', () => {
     `);
   });
 
-  it('should serialize an android strings dataset with pluralization', async () => {
+  it('should serialize an android strings dataset with pluralization', () => {
     const options = mockSerializationOptions({
       locales: ['en_US'],
       referenceLocale: 'en_US',
@@ -69,7 +65,7 @@ describe('android strings serialization', () => {
       },
     };
 
-    const serialized = (await serializeAndroidStrings(input, options)) as
+    const serialized = serializeAndroidStrings(input, options) as
       | SerializationResult[]
       | undefined;
     expect(serialized).toBeDefined();

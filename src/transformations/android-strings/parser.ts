@@ -24,20 +24,20 @@ export const parseAndroidStrings: ParserFn = (input, { referenceLocale }) => {
 
     const transformed = transformToDataset(xmlObj, referenceLocale);
 
-    return Promise.resolve(transformed);
+    return transformed;
   } catch (e) {
     throw new ParsingError(`Failed to parse Android Strings XML: ${String(e)}`);
   }
 };
 
-export const parseAndroidStringsAggregated: AggregateParserFn = async (
+export const parseAndroidStringsAggregated: AggregateParserFn = (
   inputs,
   options
 ) => {
   const builder = new DatasetBuilder();
 
   for (const [locale, content] of Object.entries(inputs)) {
-    const dataset = await parseAndroidStrings(content, {
+    const dataset = parseAndroidStrings(content, {
       ...options,
       referenceLocale: locale as Locale,
     });
@@ -45,7 +45,7 @@ export const parseAndroidStringsAggregated: AggregateParserFn = async (
     builder.merge(dataset);
   }
 
-  return Promise.resolve(builder.build());
+  return builder.build();
 };
 
 function transformToDataset(

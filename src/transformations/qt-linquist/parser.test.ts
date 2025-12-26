@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { mockParsingOptions } from '../../__testutils__/mock-parsing-options';
 import { parseTs } from './parser';
+import { mockParsingOptions } from '@/__testutils__';
 
 describe('qt linquist parsing', () => {
-  it('should parse a simple Qt Linguist XML dataset', async () => {
+  it('should parse a simple Qt Linguist XML dataset', () => {
     const dataset = `<?xml version="1.0" encoding="utf-8"?>
         <TS version="2.1" language="nl-NL">
           <context>
@@ -19,7 +19,7 @@ describe('qt linquist parsing', () => {
           </context>
         </TS>`;
 
-    const parsed = await parseTs(
+    const parsed = parseTs(
       dataset,
       mockParsingOptions({ referenceLocale: 'en_US' })
     );
@@ -42,7 +42,7 @@ describe('qt linquist parsing', () => {
     `);
   });
 
-  it('should parse a TS set even if there are no translations other than the reference', async () => {
+  it('should parse a TS set even if there are no translations other than the reference', () => {
     const dataset = `<?xml version="1.0" encoding="utf-8"?>
         <TS version="2.1" language="en-US">
           <context>
@@ -55,7 +55,7 @@ describe('qt linquist parsing', () => {
             </message>
           </context>
         </TS>`;
-    const parsed = await parseTs(dataset, mockParsingOptions());
+    const parsed = parseTs(dataset, mockParsingOptions());
 
     expect(parsed).toBeDefined();
     expect(parsed).toMatchInlineSnapshot(`

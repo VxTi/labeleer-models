@@ -13,7 +13,7 @@ import type {
 } from '@/definitions';
 import type { Locale } from '@/locales';
 
-export const serializeXcstrings: SerializerFn = async (dataset, options) => {
+export const serializeXcstrings: SerializerFn = (dataset, options) => {
   const xcstrings: XCStringsDataset = {
     sourceLanguage: options.referenceLocale,
     strings: {},
@@ -66,12 +66,12 @@ export const serializeXcstrings: SerializerFn = async (dataset, options) => {
 
   const data = JSON.stringify(xcstrings, null, 2);
 
-  return Promise.resolve([
+  return [
     {
       filename: DEFAULT_XCSTRINGS_FILE_NAME,
       data,
     },
-  ]);
+  ];
 };
 
 function quantityToXcstringsType(

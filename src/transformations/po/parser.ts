@@ -45,7 +45,7 @@ export const parsePo: ParserFn = (input, { targetLocale }) => {
       });
     });
 
-    return Promise.resolve(builder.build());
+    return builder.build();
   } catch (error) {
     throw new ParsingError(`Failed to parse PO input: ${String(error)}`, {
       cause: error as Error,
@@ -53,11 +53,11 @@ export const parsePo: ParserFn = (input, { targetLocale }) => {
   }
 };
 
-export const parsePoAggregated: AggregateParserFn = async (inputs, options) => {
+export const parsePoAggregated: AggregateParserFn = (inputs, options) => {
   const builder = new DatasetBuilder();
 
   for (const [locale, content] of Object.entries(inputs)) {
-    const dataset = await parsePo(content, {
+    const dataset = parsePo(content, {
       ...options,
       targetLocale: locale as Locale,
     });
@@ -65,7 +65,7 @@ export const parsePoAggregated: AggregateParserFn = async (inputs, options) => {
     builder.merge(dataset);
   }
 
-  return Promise.resolve(builder.build());
+  return builder.build();
 };
 
 function extractPlurals(

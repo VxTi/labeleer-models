@@ -1,10 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { mockSerializationOptions } from '../../__testutils__/mock-serialization-options';
 import { serializePo } from './serializer';
+import { mockSerializationOptions } from '@/__testutils__';
 
 describe('po serialization', () => {
-  it('should serialize PO files correctly', async () => {
-    const serialized = await serializePo(
+  it('should serialize PO files correctly', () => {
+    const serialized = serializePo(
       {
         regular: {
           translations: {

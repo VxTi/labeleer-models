@@ -61,7 +61,7 @@ export type ParsingOptions<TAdditionalOptions extends object> = {
 export type ParserFn<T extends object = {}> = (
   input: string,
   options: ParsingOptions<T>
-) => Promise<TranslationDataset>;
+) => TranslationDataset;
 
 /**
  * A function that takes multiple string inputs mapped by identifiers,
@@ -71,7 +71,7 @@ export type ParserFn<T extends object = {}> = (
 export type AggregateParserFn<T extends object = {}> = (
   inputs: Partial<Record<Locale, string>>,
   options: ParsingOptions<T>
-) => Promise<TranslationDataset>;
+) => TranslationDataset;
 
 /**
  * Options for serialization functions
@@ -119,6 +119,6 @@ export interface SerializationResult {
 export type SerializerFn<TAdditionalOptions extends object = object> = (
   dataset: TranslationDataset,
   options: SerializationOptions<TAdditionalOptions>
-) => Promise<SerializationResult[]>;
+) => SerializationResult[];
 
 export type MaybeArray<T> = Array<T> | T;

@@ -1,10 +1,10 @@
 import { describe, it, expect } from 'vitest';
-import { mockParsingOptions } from '../../__testutils__/mock-parsing-options';
-import { type Locale } from '../../locales';
 import { parseAppleStrings, parseAppleStringsAggregated } from './parser';
+import { mockParsingOptions } from '@/__testutils__';
+import { type Locale } from '@/locales';
 
 describe('apple strings parsing', () => {
-  it('should aggregate several apple strings datasets', async () => {
+  it('should aggregate several apple strings datasets', () => {
     const inputs: Partial<Record<Locale, string>> = {
       en_US: `
 "first-entry" = "english";
@@ -14,7 +14,7 @@ describe('apple strings parsing', () => {
 "second-entry" = "dutch \\"second\\"";`,
     };
 
-    const aggregated = await parseAppleStringsAggregated(
+    const aggregated = parseAppleStringsAggregated(
       inputs,
       mockParsingOptions()
     );
@@ -54,11 +54,11 @@ describe('apple strings parsing', () => {
     `);
   });
 
-  it('should parse a simple apple strings dataset', async () => {
+  it('should parse a simple apple strings dataset', () => {
     const input = `
 "first-entry" = "dutch";
 "second-entry" = "dutch \\"second\\"";`;
-    const parsed = await parseAppleStrings(
+    const parsed = parseAppleStrings(
       input,
       mockParsingOptions({ targetLocale: 'en_US' })
     );
@@ -88,14 +88,14 @@ describe('apple strings parsing', () => {
     ).toThrowError('Locale is required for parsing Apple .strings files.');
   });
 
-  it('should skip comments and invalid lines', async () => {
+  it('should skip comments and invalid lines', () => {
     const input = `
 // This is a comment
 "valid-entry" = "value";
 // Another comment
 invalid line
 "another-valid-entry" = "another value";`;
-    const parsed = await parseAppleStrings(
+    const parsed = parseAppleStrings(
       input,
       mockParsingOptions({ targetLocale: 'en_US' })
     );

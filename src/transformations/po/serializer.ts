@@ -17,7 +17,7 @@ export const serializePo: SerializerFn = (input, options) => {
     constructPoSerializationFragment(input, locale)
   );
 
-  return Promise.resolve(fragments);
+  return fragments;
 };
 
 function constructPoSerializationFragment(

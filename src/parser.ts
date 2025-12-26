@@ -24,12 +24,12 @@ import {
  * @param options - Parsing options including referenceLocale and targetLocale.
  * @returns The parsed TranslationDataset.
  */
-export async function parseDataset<TFormat extends SupportedFormat>(
+export function parseDataset<TFormat extends SupportedFormat>(
   dataset: string,
   fileFormat: TFormat,
   options: InferParsingOptions<TFormat>
-): Promise<TranslationDataset> {
-  return await parserMap[fileFormat](dataset, options);
+): TranslationDataset {
+  return parserMap[fileFormat](dataset, options);
 }
 
 type InferParsingOptions<TFormat extends SupportedFormat> =

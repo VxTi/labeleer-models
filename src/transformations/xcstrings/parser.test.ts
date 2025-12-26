@@ -3,7 +3,7 @@ import { parseXcstrings } from './parser';
 import { mockParsingOptions } from '@/__testutils__';
 
 describe('xcstrings parsing', () => {
-  it('should parse a simple xcstrings file', async () => {
+  it('should parse a simple xcstrings file', () => {
     const dataset = `{
         "sourceLanguage": "en_US",
         "strings": {
@@ -70,7 +70,7 @@ describe('xcstrings parsing', () => {
         },
         "version": "1.0"
       }`;
-    const parsed = await parseXcstrings(dataset, mockParsingOptions());
+    const parsed = parseXcstrings(dataset, mockParsingOptions());
     expect(parsed).toEqual({
       'first-entry': {
         translations: {

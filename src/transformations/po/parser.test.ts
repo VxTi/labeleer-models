@@ -3,7 +3,7 @@ import { parsePoAggregated } from './parser';
 import { mockParsingOptions } from '@/__testutils__';
 
 describe('po parsing', () => {
-  it('should parse PO files correctly', async () => {
+  it('should parse PO files correctly', () => {
     const input = `msgid ""
         msgstr ""
         "Content-Type: text/plain; charset=utf-8\\n"
@@ -17,10 +17,7 @@ describe('po parsing', () => {
 
         msgid "second-entry"
         msgstr "hello"`;
-    const parsed = await parsePoAggregated(
-      { en_US: input },
-      mockParsingOptions()
-    );
+    const parsed = parsePoAggregated({ en_US: input }, mockParsingOptions());
 
     expect(parsed).toBeDefined();
     expect(parsed).toMatchInlineSnapshot(`

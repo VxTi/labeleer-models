@@ -1,11 +1,10 @@
 import { describe, expect, it } from 'vitest';
-import { mockDataset } from '../../__testutils__/mock-dataset';
-import { mockSerializationOptions } from '../../__testutils__/mock-serialization-options';
 import { serializeXliff } from './serializer';
+import { mockDataset, mockSerializationOptions } from '@/__testutils__';
 
 describe('XLIFF 2.1 Serialization', () => {
-  it('serializes dataset for a single locale (reference only)', async () => {
-    const result = await serializeXliff(
+  it('serializes dataset for a single locale (reference only)', () => {
+    const result = serializeXliff(
       mockDataset({
         strict: { translations: { en_US: 'must exist' } },
       }),
@@ -43,8 +42,8 @@ describe('XLIFF 2.1 Serialization', () => {
     `);
   });
 
-  it('serializes dataset with source and target languages', async () => {
-    const result = await serializeXliff(
+  it('serializes dataset with source and target languages', () => {
+    const result = serializeXliff(
       mockDataset(),
       mockSerializationOptions({
         referenceLocale: 'en_US',
@@ -76,10 +75,10 @@ describe('XLIFF 2.1 Serialization', () => {
     `);
   });
 
-  it('serializes multiple locale fragments', async () => {
+  it('serializes multiple locale fragments', () => {
     const dataset = mockDataset();
 
-    const result = await serializeXliff(dataset, {
+    const result = serializeXliff(dataset, {
       referenceLocale: 'en_US',
       locales: ['en_US', 'fr_FR', 'es_ES'],
     });

@@ -1,14 +1,13 @@
 import JSZip from 'jszip';
 import { describe, it, expect } from 'vitest';
-import { mockDataset } from './__testutils__/mock-dataset';
-import { mockSerializationOptions } from './__testutils__/mock-serialization-options';
 import { SupportedFormat } from './file-formats';
 import { serializeDataset } from './serializer';
+import { mockDataset, mockSerializationOptions } from '@/__testutils__';
 
 describe('serializer', () => {
   describe('Android Strings', () => {
     it('should serialize Android strings correctly', async () => {
-      const result = await serializeDataset(
+      const result = serializeDataset(
         mockDataset(),
         SupportedFormat.ANDROID_STRINGS,
         mockSerializationOptions({
@@ -42,7 +41,7 @@ describe('serializer', () => {
 
   describe('Apple Strings', () => {
     it('should serialize Apple strings correctly', async () => {
-      const result = await serializeDataset(
+      const result = serializeDataset(
         mockDataset(),
         SupportedFormat.APPLE_STRINGS,
         mockSerializationOptions({
@@ -63,7 +62,7 @@ describe('serializer', () => {
 
   describe('Qt Linquist TS', () => {
     it('should serialize TS files correctly', async () => {
-      const result = await serializeDataset(
+      const result = serializeDataset(
         mockDataset(),
         SupportedFormat.TS,
         mockSerializationOptions({

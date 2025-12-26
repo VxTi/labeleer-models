@@ -8,7 +8,7 @@ import type {
 } from '@/definitions';
 import { type Locale, toISO639_1LanguageCode } from '@/locales';
 
-export const serializeXliff: SerializerFn = async (input, config) => {
+export const serializeXliff: SerializerFn = (input, config) => {
   const builder = new XMLBuilder({
     ignoreAttributes: false,
     format: true,
@@ -43,7 +43,7 @@ export const serializeXliff: SerializerFn = async (input, config) => {
     );
   });
 
-  return Promise.resolve(fragments);
+  return fragments;
 };
 
 function serializeSingular(

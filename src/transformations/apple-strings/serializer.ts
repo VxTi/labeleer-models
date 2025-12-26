@@ -6,11 +6,9 @@ import type {
 import type { Locale } from '@/locales';
 
 export const serializeAppleStrings: SerializerFn = (input, options) => {
-  const fragments = options.locales.map(loc =>
+  return options.locales.map(loc =>
     constructAppleStringsSerializationFragment(input, loc)
   );
-
-  return Promise.resolve(fragments);
 };
 
 function constructAppleStringsSerializationFragment(

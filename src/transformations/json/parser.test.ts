@@ -1,9 +1,9 @@
 import { describe, expect, it } from 'vitest';
-import { mockParsingOptions } from '../../__testutils__/mock-parsing-options';
 import { parseJson } from './parser';
+import { mockParsingOptions } from '@/__testutils__';
 
 describe('json parsing', () => {
-  it('should parse a simple JSON dataset', async () => {
+  it('should parse a simple JSON dataset', () => {
     const dataset = `{
     "first-entry": {
     "translations": {
@@ -19,7 +19,7 @@ describe('json parsing', () => {
   }
   }`;
 
-    const parsed = await parseJson(dataset, mockParsingOptions());
+    const parsed = parseJson(dataset, mockParsingOptions());
     expect(parsed).toBeDefined();
     expect(parsed).toEqual(
       expect.objectContaining({

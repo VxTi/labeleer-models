@@ -26,17 +26,17 @@ export const parseAppleStrings: ParserFn = (input, { targetLocale }) => {
     });
   }
 
-  return Promise.resolve(builder.build());
+  return builder.build();
 };
 
-export const parseAppleStringsAggregated: AggregateParserFn = async (
+export const parseAppleStringsAggregated: AggregateParserFn = (
   inputs,
   options
 ) => {
   const builder = new DatasetBuilder();
 
   for (const [locale, content] of Object.entries(inputs)) {
-    const dataset = await parseAppleStrings(content, {
+    const dataset = parseAppleStrings(content, {
       ...options,
       targetLocale: locale as Locale,
     });
@@ -44,5 +44,5 @@ export const parseAppleStringsAggregated: AggregateParserFn = async (
     builder.merge(dataset);
   }
 
-  return Promise.resolve(builder.build());
+  return builder.build();
 };
