@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { quantities } from '@/constants';
+import { Plurality } from '@/definitions';
 
 const ASXmlSingularEntryDecoder = z.object({
   '#text': z.string(),
@@ -9,7 +9,7 @@ const ASXmlSingularEntryDecoder = z.object({
 export type ASXmlSingularEntry = z.infer<typeof ASXmlSingularEntryDecoder>;
 
 export const ASXmlPluralEntryDecoder = z.object({
-  '@_quantity': z.enum(quantities),
+  '@_quantity': z.enum(Plurality),
   '#text': z.string(),
 });
 

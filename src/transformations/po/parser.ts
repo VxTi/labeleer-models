@@ -1,13 +1,14 @@
 import { type GetTextTranslation, po } from 'gettext-parser';
-import { quantities } from '@/constants';
 import { DatasetBuilder } from '@/dataset-builder';
-import type {
-  AggregateParserFn,
-  ParserFn,
-  TranslationPluralization,
+import {
+  type AggregateParserFn,
+  type ParserFn,
+  Plurality,
+  type TranslationPluralization,
 } from '@/definitions';
 import { ParsingError } from '@/errors';
 import type { Locale } from '@/locales';
+import { entries } from '@/util/data-extraction';
 
 /**
  * Parses a PO file input into a TranslationDataset.
@@ -56,10 +57,10 @@ export const parsePo: ParserFn = (input, { targetLocale }) => {
 export const parsePoAggregated: AggregateParserFn = (inputs, options) => {
   const builder = new DatasetBuilder();
 
-  for (const [locale, content] of Object.entries(inputs)) {
+  for (const [locale, content] of entries(inputs)) {
     const dataset = parsePo(content, {
       ...options,
-      targetLocale: locale as Locale,
+      targetLocale: locale,
     });
 
     builder.merge(dataset);
@@ -78,15 +79,17 @@ function extractPlurals(
     return;
   }
 
+  const allPlurals = Object.values(Plurality);
+
   const msgPlurals = entry.msgstr.slice(
     0,
-    Math.min(entry.msgstr.length, quantities.length)
+    Math.min(entry.msgstr.length, allPlurals.length)
   );
 
   msgPlurals.forEach((plural, index) => {
     if (plural.trim().length === 0) return;
 
-    plurals[quantities[index]] = { [targetLocale]: plural };
+    plurals[allPlurals[index]] = { [targetLocale]: plural };
   });
 
   return plurals;

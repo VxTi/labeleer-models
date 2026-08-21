@@ -1,16 +1,18 @@
-import type { TranslationDataset } from '../definitions';
+import { Plurality, type TranslationDataset } from '@/definitions';
 
 export function mockDataset(
   updates: Partial<TranslationDataset> = {}
 ): TranslationDataset {
   return {
     'first-entry': {
+      plurals: {},
       translations: {
         en_US: 'hello',
         nl_NL: 'world',
       },
     },
     'second-entry': {
+      plurals: {},
       translations: {
         en_US: 'hello',
         nl_NL: 'again',
@@ -20,20 +22,19 @@ export function mockDataset(
   };
 }
 
-export function mockPluralDataset(
-  updates: Partial<TranslationDataset> = {}
-): TranslationDataset {
+export function mockPluralDataset(updates: Partial<TranslationDataset> = {}) {
   return {
     'plural-entry': {
       plurals: {
-        one: {
+        [Plurality.ONE]: {
           en_US: 'One thing',
         },
-        other: {
+        [Plurality.OTHER]: {
           en_US: 'Many things',
         },
       },
+      translations: {},
     },
     ...updates,
-  };
+  } satisfies TranslationDataset;
 }

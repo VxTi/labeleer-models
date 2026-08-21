@@ -140,8 +140,12 @@ const rtlLanguages = new Set([
 
 export type InferBCP47Locale<T extends string> =
   T extends `${infer Lang}_${infer Region}` ? `${Lang}-${Region}` : never;
+
 export type InferISO639_1LanguageCode<T extends string> =
   T extends `${infer Lang}_${infer _Region}` ? Lang : never;
+
+export type InferISO639_1RegionCode<T extends string> =
+  T extends `${infer _Lang}_${infer Region}` ? Region : never;
 
 /**
  * @see [POSIX Locale](https://pubs.opengroup.org/onlinepubs/9699919799/basedefs/V1_chap07.html)
@@ -157,6 +161,8 @@ export type BCP47Locale = InferBCP47Locale<Locale>;
  * @see [ISO 639-1](https://en.wikipedia.org/wiki/ISO_639-1)
  */
 export type ISO639_1LanguageCode = InferISO639_1LanguageCode<Locale>;
+
+export type CountryCode = InferISO639_1RegionCode<Locale>;
 
 /**
  * Checks whether the provided value is a valid `ISO 639-1` language code.
@@ -280,19 +286,11 @@ export function getLocaleName(locale: Locale): string {
  * @param locale - The locale string (e.g., `"en_US"` or `"fr-FR"`).
  * @returns The `ISO 3166-1 alpha-2` country/region code (e.g., `"US"` or `"FR"`), or null if not found.
  */
-export function getCountryFromLocale(locale: Locale): string | null {
+export function getCountryFromLocale(locale: Locale): CountryCode | null {
   const parts = locale.split(/[_-]/);
-  return parts.length === 2 ? parts[1] : null;
-}
+  if (parts.length !== 2) return null;
 
-/**
- * Extracts the language code from a given locale string.
- *
- * @param locale - The locale string (e.g., `"en_US"` or `"fr-FR"`).
- * @returns The `ISO 639-1` language code (e.g., `"en"` or `"fr"`), or `undefined` if not found.
- */
-export function getLanguageFromLocale(locale: string): string | undefined {
-  return locale.split(/[_-]/).at(0);
+  return parts[1] as CountryCode;
 }
 
 /**

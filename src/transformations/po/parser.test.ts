@@ -34,8 +34,10 @@ describe('po parsing', () => {
               "en_US": "0 hellos",
             },
           },
+          "translations": {},
         },
         "second-entry": {
+          "plurals": {},
           "translations": {
             "en_US": "hello",
           },

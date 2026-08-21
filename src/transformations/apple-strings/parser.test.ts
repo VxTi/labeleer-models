@@ -66,11 +66,13 @@ describe('apple strings parsing', () => {
     expect(parsed).toMatchInlineSnapshot(`
       {
         "first-entry": {
+          "plurals": {},
           "translations": {
             "en_US": "dutch",
           },
         },
         "second-entry": {
+          "plurals": {},
           "translations": {
             "en_US": "dutch \\"second\\"",
           },
@@ -103,11 +105,13 @@ invalid line
     expect(parsed).toMatchInlineSnapshot(`
       {
         "another-valid-entry": {
+          "plurals": {},
           "translations": {
             "en_US": "another value",
           },
         },
         "valid-entry": {
+          "plurals": {},
           "translations": {
             "en_US": "value",
           },

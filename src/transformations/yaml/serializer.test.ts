@@ -1,22 +1,24 @@
 import { describe, it, expect } from 'vitest';
 import { serializeYaml } from './serializer';
-import { mockDataset, mockSerializationOptions } from '@/__testutils__';
+import { mockSerializationOptions } from '@/__testutils__';
+import { Plurality, type TranslationDataset } from '@/definitions';
 
 describe('yaml serialization', () => {
   it('should serialize a simple YAML dataset', () => {
     const serialized = serializeYaml(
-      mockDataset({
+      {
         pluralForm: {
+          translations: {},
           plurals: {
-            one: {
+            [Plurality.ONE]: {
               en_US: 'hello',
             },
-            other: {
+            [Plurality.OTHER]: {
               nl_NL: 'world',
             },
           },
         },
-      }),
+      } as TranslationDataset,
       mockSerializationOptions()
     );
 
@@ -24,15 +26,8 @@ describe('yaml serialization', () => {
     expect(serialized).toMatchInlineSnapshot(`
       [
         {
-          "data": "first-entry:
-        translations:
-          en_US: hello
-          nl_NL: world
-      second-entry:
-        translations:
-          en_US: hello
-          nl_NL: again
-      pluralForm:
+          "data": "pluralForm:
+        translations: {}
         plurals:
           one:
             en_US: hello

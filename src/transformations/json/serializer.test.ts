@@ -15,12 +15,14 @@ describe('json serialization', () => {
     expect(serialized[0]?.data).toMatchInlineSnapshot(`
       "{
         "first-entry": {
+          "plurals": {},
           "translations": {
             "en_US": "hello",
             "nl_NL": "world"
           }
         },
         "second-entry": {
+          "plurals": {},
           "translations": {
             "en_US": "hello",
             "nl_NL": "again"

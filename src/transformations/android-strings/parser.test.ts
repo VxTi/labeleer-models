@@ -17,11 +17,13 @@ describe('android strings parsing', () => {
     expect(parsed).toMatchInlineSnapshot(`
       {
         "first-label": {
+          "plurals": {},
           "translations": {
             "en_US": "Hello",
           },
         },
         "second-label": {
+          "plurals": {},
           "translations": {
             "en_US": "again",
           },
@@ -73,6 +75,7 @@ describe('android strings parsing', () => {
     expect(parsed).toMatchInlineSnapshot(`
       {
         "first-label": {
+          "plurals": {},
           "translations": {
             "en_US": "Hello",
           },
@@ -92,8 +95,10 @@ describe('android strings parsing', () => {
               "en_US": "Zero",
             },
           },
+          "translations": {},
         },
         "second-label": {
+          "plurals": {},
           "translations": {
             "en_US": "again",
           },

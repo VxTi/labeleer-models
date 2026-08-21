@@ -2,12 +2,12 @@ import { XMLBuilder } from 'fast-xml-parser';
 import merge from 'lodash-es/merge';
 import type { ASSerializationOutputSet, ASXmlPluralEntry } from './common';
 import { DatasetBuilder } from '@/dataset-builder';
-import type {
-  PluralizationQuantity,
-  SerializationResult,
-  SerializerFn,
-  TranslationDataset,
-  TranslationPluralization,
+import {
+  type Plurality,
+  type SerializationResult,
+  type SerializerFn,
+  type TranslationDataset,
+  type TranslationPluralization,
 } from '@/definitions';
 import { SerializationError } from '@/errors';
 import { type Locale, toISO639_1LanguageCode } from '@/locales';
@@ -64,7 +64,7 @@ function buildXmlDataset(
     Object.entries(entry.plurals ?? {}).forEach(([quantity, pluralEntry]) => {
       const value = pluralEntry[locale];
       pluralItems.push({
-        '@_quantity': quantity as PluralizationQuantity,
+        '@_quantity': quantity as Plurality,
         '#text': value ?? '',
       });
     });
@@ -101,7 +101,7 @@ function constructPerLanguageDatasets(
         pluralEntries.map(([qt, pluralEntry]) => {
           const pluralValue = pluralEntry[locale] ?? '';
 
-          return [qt as PluralizationQuantity, { [locale]: pluralValue }];
+          return [qt as Plurality, { [locale]: pluralValue }];
         })
       );
 

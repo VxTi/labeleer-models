@@ -1,12 +1,3 @@
-export const quantities = [
-  'zero',
-  'one',
-  'two',
-  'few',
-  'many',
-  'other',
-] as const;
-
 export const MIN_TRANSLATION_KEY_LENGTH = 4;
 export const MAX_TRANSLATION_KEY_LENGTH = 512;
 export const MAX_TRANSLATION_DESCRIPTION_LENGTH = 1000;

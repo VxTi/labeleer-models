@@ -27,12 +27,14 @@ describe('qt linquist parsing', () => {
     expect(parsed).toMatchInlineSnapshot(`
       {
         "first-entry": {
+          "plurals": {},
           "translations": {
             "en_US": "hello",
             "nl_NL": "world",
           },
         },
         "second-entry": {
+          "plurals": {},
           "translations": {
             "en_US": "hello",
             "nl_NL": "again",
@@ -61,11 +63,13 @@ describe('qt linquist parsing', () => {
     expect(parsed).toMatchInlineSnapshot(`
       {
         "first-entry": {
+          "plurals": {},
           "translations": {
             "en_US": "",
           },
         },
         "second-entry": {
+          "plurals": {},
           "translations": {
             "en_US": "",
           },

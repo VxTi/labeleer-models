@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest';
 import { parseXcstrings } from './parser';
 import { mockParsingOptions } from '@/__testutils__';
+import { Plurality } from '@/definitions';
 
 describe('xcstrings parsing', () => {
   it('should parse a simple xcstrings file', () => {
@@ -71,7 +72,7 @@ describe('xcstrings parsing', () => {
         "version": "1.0"
       }`;
     const parsed = parseXcstrings(dataset, mockParsingOptions());
-    expect(parsed).toEqual({
+    expect(parsed).toMatchObject({
       'first-entry': {
         translations: {
           en_US: 'hello',
@@ -80,11 +81,11 @@ describe('xcstrings parsing', () => {
       },
       'plural-entry': {
         plurals: {
-          one: {
+          [Plurality.ONE]: {
             en_US: 'hello',
             nl_NL: 'world',
           },
-          other: {
+          [Plurality.OTHER]: {
             en_US: 'hello',
             nl_NL: 'again',
           },

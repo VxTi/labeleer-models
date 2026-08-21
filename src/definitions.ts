@@ -1,38 +1,46 @@
 import type { Locale } from './locales';
-import type { quantities } from '@/constants';
 
 /**
  * An entry in a translation dataset,
  * containing translations for multiple locales,
  * along with optional metadata such as tags and description.
  */
-export type TranslationEntry = {
-  translations?: TranslationLocalizedEntries;
+export type TranslationEntry<TPlural extends true | false = true> = {
+  translations: TranslationLocalizedEntries;
   tags?: string[];
   description?: string;
-  plurals?: TranslationPluralization;
-};
+} & (TPlural extends true ? { plurals: TranslationPluralization }
+: { plurals?: undefined });
+
+export enum Plurality {
+  ZERO = 'zero',
+  ONE = 'one',
+  TWO = 'two',
+  FEW = 'few',
+  MANY = 'many',
+  OTHER = 'other',
+}
 
 /**
  * Pluralization entries for different quantities,
  * each containing localized translations.
  */
-export type TranslationPluralization = {
-  [K in PluralizationQuantity]?: TranslationLocalizedEntries;
-};
-
-/**
- * The possible quantities for pluralization.
- */
-export type PluralizationQuantity = (typeof quantities)[number];
+export type TranslationPluralization = Partial<
+  Record<Plurality, TranslationLocalizedEntries>
+>;
 
 export type TranslationLocalizedEntries = Partial<Record<Locale, string>>;
+
+export type TranslationKey<T extends string> = T;
 
 /**
  * A dataset of translation entries,
  * where each key is a unique identifier for a translation entry.
  */
-export type TranslationDataset = Record<string, TranslationEntry>;
+export type TranslationDataset<TKey extends string = string> = Record<
+  TranslationKey<TKey>,
+  TranslationEntry
+>;
 
 /**
  * Extensible options for parsing functions

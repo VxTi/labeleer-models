@@ -23,6 +23,7 @@ describe('XLIFF 2.1 Parsing', () => {
     expect(result).toMatchInlineSnapshot(`
       {
         "hello": {
+          "plurals": {},
           "translations": {
             "de_DE": "Hallo",
             "en_US": "Hello",
@@ -51,6 +52,7 @@ describe('XLIFF 2.1 Parsing', () => {
     expect(result).toMatchInlineSnapshot(`
       {
         "greeting": {
+          "plurals": {},
           "translations": {
             "en_US": "Hello world",
           },

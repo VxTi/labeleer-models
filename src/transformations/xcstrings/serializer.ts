@@ -5,11 +5,11 @@ import {
   type XCStringsPluralVariations,
   type XCStringsTranslationEntry,
 } from './common';
-import type {
-  PluralizationQuantity,
-  SerializerFn,
-  TranslationLocalizedEntries,
-  TranslationPluralization,
+import {
+  Plurality,
+  type SerializerFn,
+  type TranslationLocalizedEntries,
+  type TranslationPluralization,
 } from '@/definitions';
 import type { Locale } from '@/locales';
 
@@ -43,7 +43,7 @@ export const serializeXcstrings: SerializerFn = (dataset, options) => {
 
       Object.entries(pluralTranslations).forEach(([qt, entry]) => {
         const variation: XCStringsPluralVariations = quantityToXcstringsType(
-          qt as PluralizationQuantity
+          qt as Plurality
         );
         merge(stringUnit.localizations, {
           [locale]: {
@@ -75,12 +75,12 @@ export const serializeXcstrings: SerializerFn = (dataset, options) => {
 };
 
 function quantityToXcstringsType(
-  quantity: PluralizationQuantity
+  pluralForm: Plurality
 ): XCStringsPluralVariations {
-  switch (quantity) {
-    case 'zero':
-    case 'one':
-      return quantity;
+  switch (pluralForm) {
+    case Plurality.ZERO:
+    case Plurality.ONE:
+      return pluralForm;
     default:
       return 'other';
   }
