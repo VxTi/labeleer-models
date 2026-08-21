@@ -25,13 +25,13 @@ describe('po parsing', () => {
         "first-entry": {
           "plurals": {
             "one": {
+              "en_US": "0 hellos",
+            },
+            "other": {
               "en_US": "1 hello",
             },
             "two": {
               "en_US": "2 hellos",
-            },
-            "zero": {
-              "en_US": "0 hellos",
             },
           },
           "translations": {},

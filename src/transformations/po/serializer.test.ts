@@ -12,6 +12,7 @@ describe('po serialization', () => {
           },
         },
         'something-plural': {
+          translations: {},
           plurals: {
             zero: {
               en_US: 'There are no items',
@@ -45,14 +46,16 @@ describe('po serialization', () => {
       msgstr ""
       "Content-Type: text/plain; charset=utf-8\\n"
       "Content-Transfer-Encoding: 8bit\\n"
+      "Language: en\\n"
+      "Plural-Forms: nplurals=2; plural=(n != 1);\\n"
 
       msgid "regular"
       msgstr "hello world!"
 
       msgid "something-plural"
       msgid_plural "There are {count} items"
-      msgstr[0] "There are no items"
-      msgstr[1] "There is one item"
+      msgstr[0] "There is one item"
+      msgstr[1] "There are {count} items"
       "
     `);
   });

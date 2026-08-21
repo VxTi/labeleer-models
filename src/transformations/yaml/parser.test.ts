@@ -15,6 +15,7 @@ describe('yaml parsing', () => {
     expect(parsed).toMatchInlineSnapshot(`
       {
         "first-entry": {
+          "plurals": {},
           "translations": {
             "en_US": "hello world",
             "nl_NL": "hallo wereld",

@@ -9,13 +9,13 @@ import type {
   SerializerFn,
   TranslationDataset,
 } from '@/definitions';
-import type { Locale } from '@/locales';
+import { type Locale, toISO639_1LanguageCode } from '@/locales';
 
 export const serializePo: SerializerFn = (input, options) => {
-  const { locales } = options;
+  const { locales, referenceLocale } = options;
 
   const fragments: SerializationResult[] = locales.map((locale: Locale) =>
-    constructPoSerializationFragment(input, locale)
+    constructPoSerializationFragment(input, locale, referenceLocale)
   );
 
   return fragments;
@@ -23,7 +23,8 @@ export const serializePo: SerializerFn = (input, options) => {
 
 function constructPoSerializationFragment(
   input: TranslationDataset,
-  locale: Locale
+  locale: Locale,
+  referenceLocale: Locale
 ): SerializationResult {
   // TODO: Add support for more headers (e.g., Project-Id-Version, POT-Creation-Date, etc.)
   // And also different encoding types
@@ -32,6 +33,11 @@ function constructPoSerializationFragment(
     headers: {
       'Content-Type': 'text/plain; charset=UTF-8',
       'Content-Transfer-Encoding': '8bit',
+      Language: toISO639_1LanguageCode(locale),
+      // gettext needs Plural-Forms to interpret msgstr[n]. We emit the common
+      // two-form rule (as used by English/Germanic languages); consequently
+      // only the `one`/`other` forms are exported.
+      'Plural-Forms': 'nplurals=2; plural=(n != 1);',
     },
     translations: { '': {} },
   };
@@ -57,18 +63,14 @@ function constructPoSerializationFragment(
       poEntry.comments.reference = entry.tags.join('\n');
     }
 
-    if ('plurals' in entry) {
-      const zero = entry.plurals.zero?.[locale];
-      const one = entry.plurals.one?.[locale];
-      const other = entry.plurals.other?.[locale];
+    const one = entry.plurals?.one?.[locale];
+    const other = entry.plurals?.other?.[locale];
 
-      if (other) {
-        poEntry.msgid_plural = other;
-        poEntry.msgstr = [
-          zero || poEntry.msgstr[0] || '',
-          one || poEntry.msgstr[1] || '',
-        ];
-      }
+    if (one !== undefined || other !== undefined) {
+      // `msgid_plural` is the source-language plural form; `msgstr[0]`/`[1]`
+      // are the target's singular (`one`) and plural (`other`) translations.
+      poEntry.msgid_plural = entry.plurals?.other?.[referenceLocale] ?? key;
+      poEntry.msgstr = [one ?? '', other ?? ''];
     }
 
     output.translations[''][key] = poEntry;

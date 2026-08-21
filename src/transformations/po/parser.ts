@@ -76,6 +76,24 @@ export const parsePoAggregated: AggregateParserFn = (inputs, options) => {
   return builder.build();
 };
 
+/**
+ * Maps gettext `msgstr[n]` indices to CLDR plural categories. gettext's index
+ * 0 is the singular (`one`) and index 1 the plural (`other`); the remaining
+ * categories cover languages that declare more than two plural forms.
+ *
+ * The true index→category mapping is language-specific (defined by each file's
+ * `Plural-Forms` rule); absent a plural-rules table this canonical order is a
+ * pragmatic, deterministic approximation.
+ */
+const PO_PLURAL_ORDER: Plurality[] = [
+  Plurality.ONE,
+  Plurality.OTHER,
+  Plurality.TWO,
+  Plurality.FEW,
+  Plurality.MANY,
+  Plurality.ZERO,
+];
+
 function extractPlurals(
   targetLocale: Locale,
   entry: GetTextTranslation
@@ -86,17 +104,10 @@ function extractPlurals(
     return;
   }
 
-  const allPlurals = Object.values(Plurality);
-
-  const msgPlurals = entry.msgstr.slice(
-    0,
-    Math.min(entry.msgstr.length, allPlurals.length)
-  );
-
-  msgPlurals.forEach((plural, index) => {
+  entry.msgstr.slice(0, PO_PLURAL_ORDER.length).forEach((plural, index) => {
     if (plural.trim().length === 0) return;
 
-    plurals[allPlurals[index]] = { [targetLocale]: plural };
+    plurals[PO_PLURAL_ORDER[index]] = { [targetLocale]: plural };
   });
 
   return plurals;

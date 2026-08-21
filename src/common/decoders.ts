@@ -42,8 +42,13 @@ export const TranslationKeyDecoder = z
 export const JsonTranslationDatasetDecoder = z.record(
   TranslationKeyDecoder,
   z.object({
-    plurals: z.record(z.enum(Plurality), z.record(LocaleDecoder, z.string())),
-    translations: z.record(LocaleDecoder, z.string()),
+    // `plurals`/`translations` default to empty so hand-authored JSON/YAML may
+    // omit them while parsed entries still satisfy the TranslationEntry shape.
+    // `partialRecord` keeps plural categories optional (not all-or-nothing).
+    plurals: z
+      .partialRecord(z.enum(Plurality), z.record(LocaleDecoder, z.string()))
+      .default({}),
+    translations: z.partialRecord(LocaleDecoder, z.string()).default({}),
     description: z.optional(
       z
         .string()

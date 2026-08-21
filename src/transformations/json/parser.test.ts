@@ -24,12 +24,14 @@ describe('json parsing', () => {
     expect(parsed).toEqual(
       expect.objectContaining({
         'first-entry': {
+          plurals: {},
           translations: {
             en_US: 'hello',
             nl_NL: 'world',
           },
         },
         'second-entry': {
+          plurals: {},
           translations: {
             en_US: 'hello',
             nl_NL: 'again',
