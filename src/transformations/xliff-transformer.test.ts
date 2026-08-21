@@ -1,10 +1,76 @@
+import { XLIFFDatasetTransformer } from '@/transformations/xliff-transformer';
 import { describe, expect, it } from 'vitest';
-import { serializeXliff } from './serializer';
-import { mockDataset, mockSerializationOptions } from '@/__testutils__';
+import {
+  mockDataset,
+  mockSerializationOptions,
+  mockParsingOptions,
+} from '@/__testutils__';
+
+const transformer = new XLIFFDatasetTransformer();
+
+describe('XLIFF 2.1 Parsing', () => {
+  it('parses a minimal XLIFF 2.1 document', () => {
+    const xml = `
+      <?xml version="1.0" encoding="UTF-8"?>
+      <xliff version="2.1" xmlns="urn:oasis:names:tc:xliff:document:2.1" srcLang="en" trgLang="de">
+        <file id="f1">
+          <unit id="hello">
+            <segment>
+              <source>Hello</source>
+              <target>Hallo</target>
+            </segment>
+          </unit>
+        </file>
+      </xliff>
+    `;
+
+    const result = transformer.parse(xml, mockParsingOptions());
+
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "hello": {
+          "plurals": {},
+          "translations": {
+            "de_DE": "Hallo",
+            "en_US": "Hello",
+          },
+        },
+      }
+    `);
+  });
+
+  it('parses XLIFF 2.1 without target language', () => {
+    const xml = `
+      <?xml version="1.0" encoding="UTF-8"?>
+      <xliff version="2.1" xmlns="urn:oasis:names:tc:xliff:document:2.1" srcLang="en">
+        <file id="f1">
+          <unit id="greeting">
+            <segment>
+              <source>Hello world</source>
+            </segment>
+          </unit>
+        </file>
+      </xliff>
+    `;
+
+    const result = transformer.parse(xml, mockParsingOptions());
+
+    expect(result).toMatchInlineSnapshot(`
+      {
+        "greeting": {
+          "plurals": {},
+          "translations": {
+            "en_US": "Hello world",
+          },
+        },
+      }
+    `);
+  });
+});
 
 describe('XLIFF 2.1 Serialization', () => {
   it('serializes dataset for a single locale (reference only)', () => {
-    const result = serializeXliff(
+    const result = transformer.serialize(
       mockDataset({
         strict: { translations: { en_US: 'must exist' } },
       }),
@@ -43,7 +109,7 @@ describe('XLIFF 2.1 Serialization', () => {
   });
 
   it('serializes dataset with source and target languages', () => {
-    const result = serializeXliff(
+    const result = transformer.serialize(
       mockDataset(),
       mockSerializationOptions({
         referenceLocale: 'en_US',
@@ -78,7 +144,7 @@ describe('XLIFF 2.1 Serialization', () => {
   it('serializes multiple locale fragments', () => {
     const dataset = mockDataset();
 
-    const result = serializeXliff(dataset, {
+    const result = transformer.serialize(dataset, {
       referenceLocale: 'en_US',
       locales: ['en_US', 'fr_FR', 'es_ES'],
     });

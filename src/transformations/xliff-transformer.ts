@@ -1,0 +1,197 @@
+import { LocaleDecoder } from '@/common';
+import { DatasetBuilder } from '@/dataset-builder';
+import {
+  type ParsingOptions,
+  type SerializationOptions,
+  type SerializationResult,
+  type TranslationDataset,
+} from '@/definitions';
+import { ParsingError } from '@/errors';
+import { LanguageFileFormat } from '@/file-formats';
+import { type Locale, toISO639_1LanguageCode } from '@/locales';
+import { ILanguageFileTransformer } from '@/transformer';
+import { entries } from '@/util/data-extraction';
+import { XMLBuilder, XMLParser } from 'fast-xml-parser';
+import * as z from 'zod';
+
+export class XLIFFDatasetTransformer extends ILanguageFileTransformer<
+  LanguageFileFormat.XLIFF,
+  ['.xliff']
+> {
+  public constructor() {
+    super(LanguageFileFormat.XLIFF, ['.xliff']);
+  }
+
+  public parse(
+    input: string,
+    _options: ParsingOptions<object>
+  ): TranslationDataset {
+    try {
+      const parser = new XMLParser({ ignoreAttributes: false });
+
+      const xmlObj: unknown = parser.parse(input);
+      const parsed = XLIFF21Decoder.safeParse(xmlObj);
+
+      if (!parsed.success) {
+        throw new Error(
+          `The XLIFF 2.1 file structure is invalid: ${parsed.error.message}`
+        );
+      }
+
+      const xliff = parsed.data.xliff;
+
+      const srcLang: Locale = xliff['@_srcLang'];
+      const tgtLang: Locale | undefined = xliff['@_trgLang'] ?? undefined;
+
+      const units = xliff.file.unit;
+      const arr = Array.isArray(units) ? units : [units];
+
+      const datasetBuilder = new DatasetBuilder();
+
+      for (const unit of arr) {
+        const key = unit['@_id'];
+        const seg = unit.segment;
+        const source = seg.source ?? '';
+        const target = seg.target ?? '';
+
+        datasetBuilder.addTranslation(key, {
+          [srcLang]: source,
+          ...(tgtLang ? { [tgtLang]: target } : {}),
+        });
+      }
+
+      return datasetBuilder.build();
+    } catch (e) {
+      throw new ParsingError(
+        `Failed to parse XLIFF 2.1 content: ${(e as Error).message}`
+      );
+    }
+  }
+
+  public serialize(
+    input: TranslationDataset,
+    options: SerializationOptions
+  ): SerializationResult[] {
+    const { locales, referenceLocale } = options;
+    const builder = new XMLBuilder({
+      ignoreAttributes: false,
+      format: true,
+      suppressEmptyNode: true,
+    });
+
+    const nonReferenceLocales: Locale[] = locales.filter(
+      (loc: Locale) => loc !== referenceLocale
+    );
+
+    // If there are no non-reference locales, create a single fragment with only the source language.
+    if (nonReferenceLocales.length === 0) {
+      return serializeSingular(input, builder, options);
+    }
+
+    const fragments: SerializationResult[] = [];
+    nonReferenceLocales.forEach((locale: Locale) => {
+      const dataset: TranslationDataset = {};
+
+      entries(input).forEach(([key, entry]) => {
+        dataset[key] = {
+          plurals: {},
+          translations: {
+            [referenceLocale]: entry.translations[referenceLocale] || '',
+            [locale]: entry.translations[locale] || '',
+          },
+        };
+      });
+
+      fragments.push(
+        constructXliff21Fragment(builder, dataset, locale, referenceLocale)
+      );
+    });
+
+    return fragments;
+  }
+}
+
+function serializeSingular(
+  input: TranslationDataset,
+  xmlBuilder: XMLBuilder,
+  options: SerializationOptions
+): SerializationResult[] {
+  const datasetBuilder = new DatasetBuilder();
+
+  entries(input).forEach(([key, entry]) => {
+    const locale: Locale = options.referenceLocale;
+    const value: string = entry.translations[options.referenceLocale] || '';
+
+    datasetBuilder.addTranslation(key, { [locale]: value });
+  });
+
+  const fragment = constructXliff21Fragment(
+    xmlBuilder,
+    datasetBuilder.build(),
+    undefined,
+    options.referenceLocale
+  );
+
+  return [fragment];
+}
+
+// XLIFF 2.1 builder
+function constructXliff21Fragment(
+  builder: XMLBuilder,
+  dataset: TranslationDataset,
+  targetLocale: Locale | undefined,
+  sourceLocale: Locale
+): SerializationResult {
+  const xliffObj = {
+    xliff: {
+      '@_version': '2.1',
+      // XLIFF 2.1 reuses the XLIFF 2.0 core namespace URI; there is no
+      // ":2.1" core namespace. See the OASIS XLIFF 2.1 specification.
+      '@_xmlns': 'urn:oasis:names:tc:xliff:document:2.0',
+      '@_srcLang': toISO639_1LanguageCode(sourceLocale),
+      ...(targetLocale ?
+        { '@_trgLang': toISO639_1LanguageCode(targetLocale) }
+      : {}),
+      file: {
+        '@_id': 'f1',
+        unit: Object.entries(dataset).map(([key, entry]) => ({
+          '@_id': key,
+          segment: {
+            source: entry.translations[sourceLocale] || '',
+            ...(targetLocale ?
+              { target: entry.translations[targetLocale] || '' }
+            : {}),
+          },
+        })),
+      },
+    },
+  };
+
+  const xmlContent = builder.build(xliffObj);
+
+  return {
+    filename: targetLocale ?? sourceLocale,
+    data: `<?xml version="1.0" encoding="UTF-8"?>\n${xmlContent}`,
+  };
+}
+
+export const XLIFF21UnitDecoder = z.object({
+  '@_id': z.string(),
+  segment: z.object({
+    source: z.string().optional(),
+    target: z.string().optional(),
+  }),
+});
+
+export const XLIFF21Decoder = z.object({
+  xliff: z.object({
+    '@_version': z.string(),
+    '@_xmlns': z.string(),
+    '@_srcLang': LocaleDecoder,
+    '@_trgLang': LocaleDecoder.optional(),
+    file: z.object({
+      '@_id': z.string().optional(),
+      unit: z.union([XLIFF21UnitDecoder, z.array(XLIFF21UnitDecoder)]),
+    }),
+  }),
+});
