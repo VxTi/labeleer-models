@@ -1,5 +1,6 @@
 {
   "compilerOptions": {
+    "rootDir": "./src",
     "skipLibCheck": true,
     "module": "ESNext",
     "moduleResolution": "bundler",
@@ -25,10 +26,10 @@
     }
   },
   "include": [
-    "src/**/*",
-    "eslint.config.ts",
-    "vite.config.ts",
-    "prettier.config.ts"
+    "./src/**/*",
+    "./eslint.config.ts",
+    "./vite.config.ts",
+    "./prettier.config.ts"
   ],
-  "exclude": ["dist", "node_modules"]
+  "exclude": ["./dist", "./node_modules"]
 }
