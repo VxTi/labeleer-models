@@ -5,14 +5,14 @@ import { mockParsingOptions } from '@/__testutils__';
 describe('qt linquist parsing', () => {
   it('should parse a simple Qt Linguist XML dataset', () => {
     const dataset = `<?xml version="1.0" encoding="utf-8"?>
-        <TS version="2.1" language="nl-NL">
+        <TS version="2.1" sourcelanguage="en_US" language="nl_NL">
           <context>
             <name>Labeleer Translations</name>
-            <message key="first-entry">
+            <message id="first-entry">
               <source>hello</source>
               <translation>world</translation>
             </message>
-            <message key="second-entry">
+            <message id="second-entry">
               <source>hello</source>
               <translation>again</translation>
             </message>
@@ -46,14 +46,14 @@ describe('qt linquist parsing', () => {
 
   it('should parse a TS set even if there are no translations other than the reference', () => {
     const dataset = `<?xml version="1.0" encoding="utf-8"?>
-        <TS version="2.1" language="en-US">
+        <TS version="2.1" sourcelanguage="en_US" language="en_US">
           <context>
             <name>Labeleer Translations</name>
-            <message key="first-entry">
+            <message id="first-entry">
               <source>hello</source>
             </message>
-            <message key="second-entry">
-              <source>hello</source>
+            <message id="second-entry">
+              <source>world</source>
             </message>
           </context>
         </TS>`;
@@ -65,13 +65,13 @@ describe('qt linquist parsing', () => {
         "first-entry": {
           "plurals": {},
           "translations": {
-            "en_US": "",
+            "en_US": "hello",
           },
         },
         "second-entry": {
           "plurals": {},
           "translations": {
-            "en_US": "",
+            "en_US": "world",
           },
         },
       }

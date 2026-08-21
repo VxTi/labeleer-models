@@ -10,7 +10,11 @@ import type {
   TranslationPluralization,
 } from '@/definitions';
 import { SerializationError } from '@/errors';
-import { type Locale, toISO639_1LanguageCode } from '@/locales';
+import {
+  getCountryFromLocale,
+  type Locale,
+  toISO639_1LanguageCode,
+} from '@/locales';
 
 export const serializeAndroidStrings: SerializerFn = (input, config) => {
   try {
@@ -26,7 +30,7 @@ export const serializeAndroidStrings: SerializerFn = (input, config) => {
     for (const [locale, dataset] of entries(perLanguageDatasets)) {
       const data = buildXmlDataset(builder, dataset, locale);
 
-      const filename = `values-${toISO639_1LanguageCode(locale)}/strings`;
+      const filename = `${androidValuesDirectory(locale, config.locales)}/strings`;
 
       outputFragments.push({ filename, data });
     }
@@ -55,17 +59,17 @@ function buildXmlDataset(
     if (translation) {
       outputIr.resources.string.push({
         '@_name': key,
-        '#text': translation,
+        '#text': escapeAndroidText(translation),
       });
     }
 
     const pluralItems: ASXmlPluralEntry[] = [];
 
-    entries(entry.plurals).forEach(([quantity, pluralEntry]) => {
+    entries(entry.plurals ?? {}).forEach(([quantity, pluralEntry]) => {
       const value = pluralEntry[locale];
       pluralItems.push({
         '@_quantity': quantity,
-        '#text': value ?? '',
+        '#text': escapeAndroidText(value ?? ''),
       });
     });
 
@@ -82,6 +86,45 @@ function buildXmlDataset(
 }
 
 /**
+ * Escapes Android string-resource special characters. XML entities (`<`, `>`,
+ * `&`) are handled by the XML builder; here we handle Android's own escapes:
+ * the backslash, apostrophe and double-quote (which aapt would otherwise
+ * reject or strip), plus newline and tab.
+ *
+ * @see https://developer.android.com/guide/topics/resources/string-resource#escaping_quotes
+ */
+function escapeAndroidText(input: string): string {
+  return input
+    .replace(/\\/g, '\\\\')
+    .replace(/"/g, '\\"')
+    .replace(/'/g, "\\'")
+    .replace(/\n/g, '\\n')
+    .replace(/\t/g, '\\t');
+}
+
+/**
+ * Resolves the Android resource directory for a locale. Uses the plain
+ * language qualifier (`values-en`) unless multiple requested locales share the
+ * same language, in which case the region qualifier is added (`values-en-rGB`)
+ * to avoid collisions.
+ *
+ * @see https://developer.android.com/guide/topics/resources/providing-resources#AlternativeResources
+ */
+function androidValuesDirectory(locale: Locale, locales: Locale[]): string {
+  const language = toISO639_1LanguageCode(locale);
+
+  const sharesLanguage =
+    locales.filter(other => toISO639_1LanguageCode(other) === language).length >
+    1;
+
+  const region = getCountryFromLocale(locale);
+
+  return sharesLanguage && region ?
+      `values-${language}-r${region}`
+    : `values-${language}`;
+}
+
+/**
  * Constructs per-language datasets from a combined dataset.
  * This is necessary because Android Strings XML files are per-language.
  */
@@ -95,7 +138,7 @@ function constructPerLanguageDatasets(
     locales.forEach((locale: Locale) => {
       const builder = new DatasetBuilder();
 
-      const pluralEntries = entries(entry.plurals);
+      const pluralEntries = entries(entry.plurals ?? {});
 
       const plurals: TranslationPluralization = Object.fromEntries(
         pluralEntries.map(([qt, pluralEntry]) => {

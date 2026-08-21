@@ -32,13 +32,36 @@ export const parseAppleStrings: ParserFn = (input, { targetLocale }) => {
 
     const [, key, value] = match;
 
-    builder.addTranslation(key, {
-      [targetLocale]: value,
+    builder.addTranslation(unescapeText(key), {
+      [targetLocale]: unescapeText(value),
     });
   }
 
   return builder.build();
 };
+
+/**
+ * Reverses the escaping applied to Apple `.strings` literals, resolving
+ * `\n`, `\t`, `\r`, `\"`, `\\` and `\Uxxxx` unicode escapes.
+ */
+function unescapeText(input: string): string {
+  return input.replace(/\\([Uu][0-9A-Fa-f]{4}|.)/g, (_, escape: string) => {
+    if (escape[0] === 'U' || escape[0] === 'u') {
+      return String.fromCharCode(parseInt(escape.slice(1), 16));
+    }
+
+    switch (escape) {
+      case 'n':
+        return '\n';
+      case 't':
+        return '\t';
+      case 'r':
+        return '\r';
+      default:
+        return escape;
+    }
+  });
+}
 
 export const parseAppleStringsAggregated: AggregateParserFn = (
   inputs,

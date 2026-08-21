@@ -3,7 +3,7 @@ import type {
   SerializerFn,
   TranslationDataset,
 } from '@/definitions';
-import type { Locale } from '@/locales';
+import { type Locale, toBCP47 } from '@/locales';
 import { entries } from '@/util/data-extraction';
 
 export const serializeAppleStrings: SerializerFn = (input, options) => {
@@ -28,10 +28,21 @@ function constructAppleStringsSerializationFragment(
 
   return {
     data,
-    filename: targetLocale,
+    // Apple `.strings` files live in BCP 47 named `.lproj` directories
+    // (e.g. `en.lproj`, `en-GB.lproj`).
+    filename: toBCP47(targetLocale),
   };
 }
 
+/**
+ * Escapes a string for an Apple `.strings` literal. The backslash must be
+ * escaped first so the escapes introduced afterwards are not re-escaped.
+ */
 function escapeText(input: string): string {
-  return input.replace(/"/g, '\\"').replace(/\n/g, '\\n').replace(/\t/g, '\\t');
+  return input
+    .replace(/\\/g, '\\\\')
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, '\\n')
+    .replace(/\r/g, '\\r')
+    .replace(/\t/g, '\\t');
 }

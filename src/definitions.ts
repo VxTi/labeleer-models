@@ -5,7 +5,7 @@ import type { Locale } from './locales';
  * containing translations for multiple locales,
  * along with optional metadata such as tags and description.
  */
-export type TranslationEntry<TPlural extends true | false = true> = {
+export type TranslationEntry<TPlural extends true | false = boolean> = {
   translations: TranslationLocalizedEntries;
   tags?: string[];
   description?: string;

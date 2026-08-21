@@ -78,7 +78,7 @@ function transformToDataset(
     datasetBuilder.addTranslationForLocale(
       entry['@_name'],
       locale,
-      entry['#text']
+      unescapeAndroidText(entry['#text'])
     );
   });
 
@@ -98,9 +98,26 @@ function extractPluralsFromEntry(
   return Object.fromEntries<TranslationPluralization>(
     plurals.item.map(({ '@_quantity': key, '#text': value }) => [
       key,
-      { [baseLocale]: value },
+      { [baseLocale]: unescapeAndroidText(value) },
     ])
   );
+}
+
+/**
+ * Reverses Android string-resource escaping: `\\`, `\'`, `\"` and the
+ * `\n`/`\t` control escapes. XML entities are already resolved by the parser.
+ */
+function unescapeAndroidText(input: string): string {
+  return input.replace(/\\(.)/g, (_, escaped: string) => {
+    switch (escaped) {
+      case 'n':
+        return '\n';
+      case 't':
+        return '\t';
+      default:
+        return escaped;
+    }
+  });
 }
 
 export class AndroidStringsDatasetTransformer extends ILanguageFileTransformer<LanguageFileFormat.ANDROID_STRINGS> {

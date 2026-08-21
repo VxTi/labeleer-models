@@ -82,7 +82,9 @@ function constructXliff21Fragment(
   const xliffObj = {
     xliff: {
       '@_version': '2.1',
-      '@_xmlns': 'urn:oasis:names:tc:xliff:document:2.1',
+      // XLIFF 2.1 reuses the XLIFF 2.0 core namespace URI; there is no
+      // ":2.1" core namespace. See the OASIS XLIFF 2.1 specification.
+      '@_xmlns': 'urn:oasis:names:tc:xliff:document:2.0',
       '@_srcLang': toISO639_1LanguageCode(sourceLocale),
       ...(targetLocale ?
         { '@_trgLang': toISO639_1LanguageCode(targetLocale) }

@@ -57,6 +57,7 @@ describe('android strings serialization', () => {
         },
       },
       strict: {
+        translations: {},
         plurals: {
           one: {
             en_US: 'one strict',
@@ -85,5 +86,43 @@ describe('android strings serialization', () => {
         "filename": "values-en/strings",
       }
     `);
+  });
+
+  it('escapes Android special characters (apostrophe, quote, backslash)', () => {
+    const input: TranslationDataset = {
+      greeting: {
+        translations: { en_US: `it's a "quote" with a \\ backslash` },
+        plurals: {},
+      },
+    };
+
+    const serialized = serializeAndroidStrings(
+      input,
+      mockSerializationOptions({ locales: ['en_US'], referenceLocale: 'en_US' })
+    );
+
+    // The backslash escape guards Android's parser; the XML builder then
+    // entity-encodes the quote/apostrophe. aapt XML-decodes `\&apos;` back to
+    // `\'` (Android-safe) — a bare `&apos;` would decode to an unescaped `'`.
+    const data = serialized[0]?.data ?? '';
+    expect(data).toContain('it\\&apos;s');
+    expect(data).toContain('\\&quot;quote\\&quot;');
+    expect(data).toContain('\\\\ backslash');
+  });
+
+  it('adds region qualifiers when locales share a language', () => {
+    const serialized = serializeAndroidStrings(
+      mockDataset(),
+      mockSerializationOptions({
+        locales: ['en_US', 'en_GB'],
+        referenceLocale: 'en_US',
+      })
+    );
+
+    const filenames = serialized.map(fragment => fragment.filename).sort();
+    expect(filenames).toEqual([
+      'values-en-rGB/strings',
+      'values-en-rUS/strings',
+    ]);
   });
 });

@@ -32,18 +32,26 @@ export const parseTs: ParserFn = (input, { referenceLocale }) => {
     }
 
     const TS = parsed.data.TS;
-    const translateTo: Locale | undefined = TS['@_language'];
+
+    // `sourcelanguage` is the source; fall back to the caller's reference
+    // locale for files that omit it. `language` is the target.
+    const sourceLocale: Locale = TS['@_sourcelanguage'] ?? referenceLocale;
+    const targetLocale: Locale | undefined = TS['@_language'];
 
     const datasetBuilder = new DatasetBuilder();
 
     const messages: LinquistTsMessage[] = extractArray(TS.context.message);
 
     messages.forEach((msg: LinquistTsMessage) => {
-      const key = msg['@_key'];
+      // Qt keys ID-based messages off the `id` attribute; otherwise the
+      // source text is the identity.
+      const key = msg['@_id'] ?? msg.source;
 
       datasetBuilder.addTranslation(key, {
-        [referenceLocale]: msg.source || '',
-        ...(translateTo ? { [translateTo]: msg.translation || '' } : {}),
+        [sourceLocale]: msg.source || '',
+        ...(targetLocale && targetLocale !== sourceLocale ?
+          { [targetLocale]: msg.translation || '' }
+        : {}),
       });
     });
 

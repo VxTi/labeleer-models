@@ -29,8 +29,8 @@ describe('apple strings parsing', () => {
       },
       'second-entry': {
         translations: expect.objectContaining({
-          en_US: 'english \\"second\\"',
-          nl_NL: 'dutch \\"second\\"',
+          en_US: 'english "second"',
+          nl_NL: 'dutch "second"',
         }),
       },
     });
@@ -46,8 +46,8 @@ describe('apple strings parsing', () => {
         "second-entry": {
           "plurals": {},
           "translations": {
-            "en_US": "english \\"second\\"",
-            "nl_NL": "dutch \\"second\\"",
+            "en_US": "english "second"",
+            "nl_NL": "dutch "second"",
           },
         },
       }
@@ -74,7 +74,7 @@ describe('apple strings parsing', () => {
         "second-entry": {
           "plurals": {},
           "translations": {
-            "en_US": "dutch \\"second\\"",
+            "en_US": "dutch "second"",
           },
         },
       }

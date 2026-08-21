@@ -32,12 +32,12 @@ describe('apple strings serialization', () => {
     expect(serialized).toEqual(
       expect.arrayContaining([
         expect.objectContaining({
-          filename: 'en_US',
+          filename: 'en-US',
           data: `"first-entry" = "english";
 "second-entry" = "english \\"second\\"";`,
         }),
         expect.objectContaining({
-          filename: 'nl_NL',
+          filename: 'nl-NL',
           data: `"first-entry" = "dutch";
 "second-entry" = "dutch \\"second\\"";`,
         }),
@@ -65,8 +65,8 @@ describe('apple strings serialization', () => {
     expect(serialized).toHaveLength(1);
     expect(serialized[0]).toEqual(
       expect.objectContaining({
-        filename: 'en_US',
-        data: `"special-entry" = "Line1\\nLine2\\tTabbed\\\\"Quote\\\\"";`,
+        filename: 'en-US',
+        data: `"special-entry" = "Line1\\nLine2\\tTabbed\\\\\\"Quote\\\\\\"";`,
       })
     );
   });
