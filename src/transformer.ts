@@ -22,18 +22,22 @@ import { entries } from '@/util/data-extraction';
  * {@link ParserSetBuilder}) to look them up by format or file extension.
  *
  * @typeParam TFormat - The file format this transformer handles.
+ * @typeParam TFileExtensions - A list of at least 1 file extension for this format
  * @typeParam TParseOptions - Additional, format-specific parsing options.
  * @typeParam TSerializeOptions - Additional, format-specific serialization options.
  */
 export abstract class ILanguageFileTransformer<
   TFormat extends LanguageFileFormat = LanguageFileFormat,
+  TFileExtensions extends [string, ...string[]] = [string],
   TParseOptions extends object = object,
   TSerializeOptions extends object = object,
 > {
   public readonly fileFormat: TFormat;
+  public readonly fileExtensions: TFileExtensions;
 
-  public constructor(fileFormat: TFormat) {
+  public constructor(fileFormat: TFormat, fileExtensions: TFileExtensions) {
     this.fileFormat = fileFormat;
+    this.fileExtensions = fileExtensions;
   }
 
   /**

@@ -1,0 +1,327 @@
+import { DatasetBuilder } from '@/dataset-builder';
+import {
+  Plurality,
+  type ParsingOptions,
+  type SerializationOptions,
+  type SerializationResult,
+  type TranslationDataset,
+  type TranslationPluralization,
+} from '@/definitions';
+import { ParsingError, SerializationError } from '@/errors';
+import { LanguageFileFormat } from '@/file-formats';
+import {
+  getCountryFromLocale,
+  type Locale,
+  toISO639_1LanguageCode,
+} from '@/locales';
+import { ILanguageFileTransformer } from '@/transformer';
+import { entries, extractArray } from '@/util/data-extraction';
+import { XMLBuilder, XMLParser } from 'fast-xml-parser';
+import * as z from 'zod';
+import merge from 'lodash-es/merge';
+
+export class AndroidStringsDatasetTransformer extends ILanguageFileTransformer<
+  LanguageFileFormat.ANDROID_STRINGS,
+  ['.xml']
+> {
+  public constructor() {
+    super(LanguageFileFormat.ANDROID_STRINGS, ['.xml']);
+  }
+
+  public parse(
+    input: string,
+    options: ParsingOptions<object>
+  ): TranslationDataset {
+    try {
+      const parser = new XMLParser({
+        ignoreAttributes: false,
+      });
+      const xmlObj: unknown = parser.parse(input);
+
+      return transformToDataset(xmlObj, options.referenceLocale);
+    } catch (e) {
+      throw new ParsingError(
+        `Failed to parse Android Strings XML: ${String(e)}`
+      );
+    }
+  }
+
+  public override parseAggregate(
+    inputs: Partial<Record<Locale, string>>,
+    options: ParsingOptions<object>
+  ): TranslationDataset {
+    const builder = new DatasetBuilder();
+
+    for (const [referenceLocale, content] of entries(inputs)) {
+      const dataset = this.parse(content, {
+        ...options,
+        referenceLocale,
+      });
+
+      builder.merge(dataset);
+    }
+
+    return builder.build();
+  }
+
+  public serialize(
+    dataset: TranslationDataset,
+    options: SerializationOptions
+  ): SerializationResult[] {
+    try {
+      const perLanguageDatasets: Partial<Record<Locale, TranslationDataset>> =
+        constructPerLanguageDatasets(dataset, options.locales);
+
+      const builder = new XMLBuilder({
+        format: true,
+        ignoreAttributes: false,
+      });
+      const outputFragments: SerializationResult[] = [];
+
+      for (const [locale, dataset] of entries(perLanguageDatasets)) {
+        const data = buildXmlDataset(builder, dataset, locale);
+
+        const filename = `${androidValuesDirectory(locale, options.locales)}/strings`;
+
+        outputFragments.push({ filename, data });
+      }
+
+      return outputFragments;
+    } catch (e) {
+      throw new SerializationError(
+        'Something went wrong whilst attempting to serialize Android Strings XML: ',
+        { cause: e }
+      );
+    }
+  }
+}
+
+function buildXmlDataset(
+  builder: XMLBuilder,
+  dataset: TranslationDataset,
+  locale: Locale
+): string {
+  const outputIr: ASSerializationOutputSet = {
+    resources: { string: [], plurals: [] },
+  };
+
+  entries(dataset).forEach(([key, entry]) => {
+    const translation = entry.translations[locale];
+
+    if (translation) {
+      outputIr.resources.string.push({
+        '@_name': key,
+        '#text': escapeAndroidText(translation),
+      });
+    }
+
+    const pluralItems: ASXmlPluralEntry[] = [];
+
+    entries(entry.plurals ?? {}).forEach(([quantity, pluralEntry]) => {
+      const value = pluralEntry[locale];
+      pluralItems.push({
+        '@_quantity': quantity,
+        '#text': escapeAndroidText(value ?? ''),
+      });
+    });
+
+    if (pluralItems.length > 0) {
+      outputIr.resources.plurals.push({
+        '@_name': key,
+        item: pluralItems,
+      });
+    }
+  });
+
+  const output = builder.build(outputIr);
+  return `<?xml version="1.0" encoding="utf-8"?>\n${output}`;
+}
+
+/**
+ * Escapes Android string-resource special characters. XML entities (`<`, `>`,
+ * `&`) are handled by the XML builder; here we handle Android's own escapes:
+ * the backslash, apostrophe and double-quote (which aapt would otherwise
+ * reject or strip), plus newline and tab.
+ *
+ * @see https://developer.android.com/guide/topics/resources/string-resource#escaping_quotes
+ */
+function escapeAndroidText(input: string): string {
+  return input
+    .replace(/\\/g, '\\\\')
+    .replace(/"/g, '\\"')
+    .replace(/'/g, "\\'")
+    .replace(/\n/g, '\\n')
+    .replace(/\t/g, '\\t');
+}
+
+/**
+ * Resolves the Android resource directory for a locale. Uses the plain
+ * language qualifier (`values-en`) unless multiple requested locales share the
+ * same language, in which case the region qualifier is added (`values-en-rGB`)
+ * to avoid collisions.
+ *
+ * @see https://developer.android.com/guide/topics/resources/providing-resources#AlternativeResources
+ */
+function androidValuesDirectory(locale: Locale, locales: Locale[]): string {
+  const language = toISO639_1LanguageCode(locale);
+
+  const sharesLanguage =
+    locales.filter(other => toISO639_1LanguageCode(other) === language).length >
+    1;
+
+  const region = getCountryFromLocale(locale);
+
+  return sharesLanguage && region ?
+      `values-${language}-r${region}`
+    : `values-${language}`;
+}
+
+/**
+ * Constructs per-language datasets from a combined dataset.
+ * This is necessary because Android Strings XML files are per-language.
+ */
+function constructPerLanguageDatasets(
+  input: TranslationDataset,
+  locales: Locale[]
+): Partial<Record<Locale, TranslationDataset>> {
+  const perLanguageDatasets: Partial<Record<Locale, TranslationDataset>> = {};
+
+  Object.entries(input).forEach(([key, entry]) => {
+    locales.forEach((locale: Locale) => {
+      const builder = new DatasetBuilder();
+
+      const pluralEntries = entries(entry.plurals ?? {});
+
+      const plurals: TranslationPluralization = Object.fromEntries(
+        pluralEntries.map(([qt, pluralEntry]) => {
+          const pluralValue = pluralEntry[locale] ?? '';
+
+          return [qt, { [locale]: pluralValue }];
+        })
+      );
+
+      if (pluralEntries.length > 0) {
+        builder.addPluralEntry(key, plurals);
+      } else {
+        builder.addTranslation(key, {
+          [locale]: entry.translations[locale] ?? '',
+        });
+      }
+
+      perLanguageDatasets[locale] ??= {};
+      merge(perLanguageDatasets[locale], builder.build());
+    });
+  });
+
+  return perLanguageDatasets;
+}
+
+function transformToDataset(
+  xmlObj: unknown,
+  locale: Locale
+): TranslationDataset {
+  const ir = ASXmlDecoder.safeParse(xmlObj);
+  if (!ir.success) {
+    throw new ParsingError('Invalid Android Strings XML structure.', {
+      cause: ir.error,
+    });
+  }
+
+  const datasetBuilder = new DatasetBuilder();
+
+  const singularTranslations: ASXmlSingularEntry[] = extractArray(
+    ir.data.resources.string
+  );
+  const pluralTranslations: ASXmlPluralList[] = extractArray(
+    ir.data.resources.plurals
+  );
+
+  singularTranslations.forEach((entry: ASXmlSingularEntry) => {
+    datasetBuilder.addTranslationForLocale(
+      entry['@_name'],
+      locale,
+      unescapeAndroidText(entry['#text'])
+    );
+  });
+
+  pluralTranslations.forEach((entry: ASXmlPluralList) => {
+    const key = entry['@_name'];
+
+    datasetBuilder.addPluralEntry(key, extractPluralsFromEntry(entry, locale));
+  });
+
+  return datasetBuilder.build();
+}
+
+function extractPluralsFromEntry(
+  plurals: ASXmlPluralList,
+  baseLocale: Locale
+): TranslationPluralization {
+  return Object.fromEntries<TranslationPluralization>(
+    plurals.item.map(({ '@_quantity': key, '#text': value }) => [
+      key,
+      { [baseLocale]: unescapeAndroidText(value) },
+    ])
+  );
+}
+
+/**
+ * Reverses Android string-resource escaping: `\\`, `\'`, `\"` and the
+ * `\n`/`\t` control escapes. XML entities are already resolved by the parser.
+ */
+function unescapeAndroidText(input: string): string {
+  return input.replace(/\\(.)/g, (_, escaped: string) => {
+    switch (escaped) {
+      case 'n':
+        return '\n';
+      case 't':
+        return '\t';
+      default:
+        return escaped;
+    }
+  });
+}
+
+const ASXmlSingularEntryDecoder = z.object({
+  '#text': z.string(),
+  '@_name': z.string(),
+});
+
+export type ASXmlSingularEntry = z.infer<typeof ASXmlSingularEntryDecoder>;
+
+export const ASXmlPluralEntryDecoder = z.object({
+  '@_quantity': z.enum(Plurality),
+  '#text': z.string(),
+});
+
+export type ASXmlPluralEntry = z.infer<typeof ASXmlPluralEntryDecoder>;
+
+export const ASXmlPluralListDecoder = z.object({
+  '@_name': z.string(),
+  item: z.array(ASXmlPluralEntryDecoder),
+});
+
+export type ASXmlPluralList = z.infer<typeof ASXmlPluralListDecoder>;
+
+export const ASXmlDecoder = z.object({
+  resources: z.object({
+    // When the user only has a single resource entry, fast-xml-parser
+    // will parse it as an object instead of an array.
+    string: z.optional(
+      z.union([z.array(ASXmlSingularEntryDecoder), ASXmlSingularEntryDecoder])
+    ),
+    plurals: z.optional(
+      z.union([z.array(ASXmlPluralListDecoder), ASXmlPluralListDecoder])
+    ),
+  }),
+});
+
+export interface ASSerializationOutputSet {
+  resources: {
+    string: ASXmlSingularEntry[];
+    plurals: {
+      '@_name': string;
+      item: ASXmlPluralEntry[];
+    }[];
+  };
+}
