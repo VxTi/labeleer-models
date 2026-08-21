@@ -5,7 +5,10 @@ import type {
   SerializerFn,
   TranslationDataset,
 } from './definitions';
-import { getFileExtensionsFromFormat, SupportedFormat } from './file-formats';
+import {
+  getFileExtensionsFromFormat,
+  LanguageFileFormat,
+} from './file-formats';
 import {
   serializeTs,
   serializeXcstrings,
@@ -25,7 +28,7 @@ import {
  * @param options - Serialization options including referenceLocale and locales.
  * @returns The serialized output as an ArrayBuffer, containing the serialized data (Zipped file).
  */
-export async function serializeDataset<TFormat extends SupportedFormat>(
+export async function serializeDataset<TFormat extends LanguageFileFormat>(
   dataset: TranslationDataset,
   format: TFormat,
   options: SerializationOptions<InferSerializationOptions<TFormat>>
@@ -48,17 +51,17 @@ export async function serializeDataset<TFormat extends SupportedFormat>(
   return await zip.generateAsync({ type: 'arraybuffer' });
 }
 
-type InferSerializationOptions<T extends SupportedFormat> =
+type InferSerializationOptions<T extends LanguageFileFormat> =
   (typeof serializerMap)[T] extends SerializerFn<infer TOptions> ? TOptions
   : never;
 
 const serializerMap = {
-  [SupportedFormat.APPLE_STRINGS]: serializeAppleStrings,
-  [SupportedFormat.TS]: serializeTs,
-  [SupportedFormat.XLIFF]: serializeXliff,
-  [SupportedFormat.ANDROID_STRINGS]: serializeAndroidStrings,
-  [SupportedFormat.PO]: serializePo,
-  [SupportedFormat.YAML]: serializeYaml,
-  [SupportedFormat.JSON]: serializeJson,
-  [SupportedFormat.XCSTRINGS]: serializeXcstrings,
+  [LanguageFileFormat.APPLE_STRINGS]: serializeAppleStrings,
+  [LanguageFileFormat.TS]: serializeTs,
+  [LanguageFileFormat.XLIFF]: serializeXliff,
+  [LanguageFileFormat.ANDROID_STRINGS]: serializeAndroidStrings,
+  [LanguageFileFormat.PO]: serializePo,
+  [LanguageFileFormat.YAML]: serializeYaml,
+  [LanguageFileFormat.JSON]: serializeJson,
+  [LanguageFileFormat.XCSTRINGS]: serializeXcstrings,
 } as const;

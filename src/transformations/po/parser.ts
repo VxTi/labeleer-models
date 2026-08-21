@@ -1,13 +1,20 @@
 import { type GetTextTranslation, po } from 'gettext-parser';
+import { serializePo } from './serializer';
 import { DatasetBuilder } from '@/dataset-builder';
 import {
   type AggregateParserFn,
   type ParserFn,
+  type ParsingOptions,
   Plurality,
+  type SerializationOptions,
+  type SerializationResult,
+  type TranslationDataset,
   type TranslationPluralization,
 } from '@/definitions';
 import { ParsingError } from '@/errors';
+import { LanguageFileFormat } from '@/file-formats';
 import type { Locale } from '@/locales';
+import { ILanguageFileTransformer } from '@/transformer';
 import { entries } from '@/util/data-extraction';
 
 /**
@@ -93,4 +100,35 @@ function extractPlurals(
   });
 
   return plurals;
+}
+
+export class PoDatasetTransformer extends ILanguageFileTransformer<LanguageFileFormat.PO> {
+  public constructor() {
+    super(LanguageFileFormat.PO);
+  }
+
+  public parse(
+    input: string,
+    options: ParsingOptions<object>
+  ): TranslationDataset {
+    return parsePo(input, options);
+  }
+
+  /**
+   * PO files are single-locale, keyed off {@link ParsingOptions.targetLocale},
+   * so each aggregated input is parsed against its own locale.
+   */
+  public override parseAggregate(
+    inputs: Partial<Record<Locale, string>>,
+    options: ParsingOptions<object>
+  ): TranslationDataset {
+    return parsePoAggregated(inputs, options);
+  }
+
+  public serialize(
+    dataset: TranslationDataset,
+    options: SerializationOptions
+  ): SerializationResult[] {
+    return serializePo(dataset, options);
+  }
 }

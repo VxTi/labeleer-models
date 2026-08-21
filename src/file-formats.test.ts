@@ -4,21 +4,21 @@ import {
   getFormatForExtension,
   isCompressedFormat,
   supportedFileExtensions,
-  SupportedFormat,
+  LanguageFileFormat,
 } from './file-formats';
 
 describe('getFormatForExtension', () => {
   it.each`
     extension       | format
-    ${'.yaml'}      | ${SupportedFormat.YAML}
-    ${'.yml'}       | ${SupportedFormat.YAML}
-    ${'.xliff'}     | ${SupportedFormat.XLIFF}
-    ${'.xlf'}       | ${SupportedFormat.XLIFF}
-    ${'.xml'}       | ${SupportedFormat.ANDROID_STRINGS}
-    ${'.json'}      | ${SupportedFormat.JSON}
-    ${'.po'}        | ${SupportedFormat.PO}
-    ${'.pot'}       | ${SupportedFormat.PO}
-    ${'.xcstrings'} | ${SupportedFormat.XCSTRINGS}
+    ${'.yaml'}      | ${LanguageFileFormat.YAML}
+    ${'.yml'}       | ${LanguageFileFormat.YAML}
+    ${'.xliff'}     | ${LanguageFileFormat.XLIFF}
+    ${'.xlf'}       | ${LanguageFileFormat.XLIFF}
+    ${'.xml'}       | ${LanguageFileFormat.ANDROID_STRINGS}
+    ${'.json'}      | ${LanguageFileFormat.JSON}
+    ${'.po'}        | ${LanguageFileFormat.PO}
+    ${'.pot'}       | ${LanguageFileFormat.PO}
+    ${'.xcstrings'} | ${LanguageFileFormat.XCSTRINGS}
   `(
     'should return the correct file format for the provided',
     ({ extension, format }) => {
@@ -49,14 +49,14 @@ describe('supportedFileExtensions', () => {
 describe('getFileExtensionsFromFormat', () => {
   it.each`
     extension   | format
-    ${'.yaml'}  | ${SupportedFormat.YAML}
-    ${'.yml'}   | ${SupportedFormat.YAML}
-    ${'.xliff'} | ${SupportedFormat.XLIFF}
-    ${'.xlf'}   | ${SupportedFormat.XLIFF}
-    ${'.xml'}   | ${SupportedFormat.ANDROID_STRINGS}
-    ${'.json'}  | ${SupportedFormat.JSON}
-    ${'.po'}    | ${SupportedFormat.PO}
-    ${'.pot'}   | ${SupportedFormat.PO}
+    ${'.yaml'}  | ${LanguageFileFormat.YAML}
+    ${'.yml'}   | ${LanguageFileFormat.YAML}
+    ${'.xliff'} | ${LanguageFileFormat.XLIFF}
+    ${'.xlf'}   | ${LanguageFileFormat.XLIFF}
+    ${'.xml'}   | ${LanguageFileFormat.ANDROID_STRINGS}
+    ${'.json'}  | ${LanguageFileFormat.JSON}
+    ${'.po'}    | ${LanguageFileFormat.PO}
+    ${'.pot'}   | ${LanguageFileFormat.PO}
   `(
     'should return the correct file extensions for the provided format',
     ({ extension, format }) => {
@@ -68,14 +68,14 @@ describe('getFileExtensionsFromFormat', () => {
 
 describe('isCompressedFormat', () => {
   it.each`
-    format                             | compression
-    ${SupportedFormat.JSON}            | ${false}
-    ${SupportedFormat.YAML}            | ${false}
-    ${SupportedFormat.TS}              | ${true}
-    ${SupportedFormat.PO}              | ${true}
-    ${SupportedFormat.ANDROID_STRINGS} | ${true}
-    ${SupportedFormat.APPLE_STRINGS}   | ${true}
-    ${SupportedFormat.XLIFF}           | ${true}
+    format                                | compression
+    ${LanguageFileFormat.JSON}            | ${false}
+    ${LanguageFileFormat.YAML}            | ${false}
+    ${LanguageFileFormat.TS}              | ${true}
+    ${LanguageFileFormat.PO}              | ${true}
+    ${LanguageFileFormat.ANDROID_STRINGS} | ${true}
+    ${LanguageFileFormat.APPLE_STRINGS}   | ${true}
+    ${LanguageFileFormat.XLIFF}           | ${true}
   `(
     'should return true for formats that require compression ($format = $compression)',
     ({ format, compression }) => {

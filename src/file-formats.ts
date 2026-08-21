@@ -4,7 +4,7 @@ import uniq from 'lodash-es/uniq';
  * Enum representing the supported export formats for localization files.
  * Each format corresponds to a specific file type used in localization workflows.
  */
-export enum SupportedFormat {
+export enum LanguageFileFormat {
   JSON = 'json',
   YAML = 'yaml',
   TS = 'ts',
@@ -19,11 +19,11 @@ export enum SupportedFormat {
  * Formats that require compression when exporting multiple locale files.
  */
 export const compressedFormats = [
-  SupportedFormat.XLIFF,
-  SupportedFormat.APPLE_STRINGS,
-  SupportedFormat.ANDROID_STRINGS,
-  SupportedFormat.TS,
-  SupportedFormat.PO,
+  LanguageFileFormat.XLIFF,
+  LanguageFileFormat.APPLE_STRINGS,
+  LanguageFileFormat.ANDROID_STRINGS,
+  LanguageFileFormat.TS,
+  LanguageFileFormat.PO,
 ] as const;
 
 /**
@@ -35,29 +35,33 @@ export type CompressedFormat = (typeof compressedFormats)[number];
  * Type guard to check if a format requires compression.
  */
 export function isCompressedFormat(
-  format: SupportedFormat
+  format: LanguageFileFormat
 ): format is CompressedFormat {
   return compressedFormats.includes(format as CompressedFormat);
 }
 
-const formatExtensionRegistry: Record<SupportedFormat, [string, ...string[]]> =
-  {
-    [SupportedFormat.JSON]: ['.json'],
-    [SupportedFormat.YAML]: ['.yaml', '.yml'],
-    [SupportedFormat.TS]: ['.ts'],
-    [SupportedFormat.PO]: ['.po', '.pot'],
-    [SupportedFormat.ANDROID_STRINGS]: ['.xml'],
-    [SupportedFormat.APPLE_STRINGS]: ['.strings'],
-    [SupportedFormat.XLIFF]: ['.xliff', '.xlf'],
-    [SupportedFormat.XCSTRINGS]: ['.xcstrings'],
-  };
+const formatExtensionRegistry: Record<
+  LanguageFileFormat,
+  [string, ...string[]]
+> = {
+  [LanguageFileFormat.JSON]: ['.json'],
+  [LanguageFileFormat.YAML]: ['.yaml', '.yml'],
+  [LanguageFileFormat.TS]: ['.ts'],
+  [LanguageFileFormat.PO]: ['.po', '.pot'],
+  [LanguageFileFormat.ANDROID_STRINGS]: ['.xml'],
+  [LanguageFileFormat.APPLE_STRINGS]: ['.strings'],
+  [LanguageFileFormat.XLIFF]: ['.xliff', '.xlf'],
+  [LanguageFileFormat.XCSTRINGS]: ['.xcstrings'],
+};
 
 /**
  * Returns the file extensions associated with a given export format.
  * @param format - The SupportedFormat for which to retrieve extensions.
  * @returns An array of file extensions corresponding to the format.
  */
-export function getFileExtensionsFromFormat(format: SupportedFormat): string[] {
+export function getFileExtensionsFromFormat(
+  format: LanguageFileFormat
+): string[] {
   return formatExtensionRegistry[format];
 }
 
@@ -69,10 +73,10 @@ export function getFileExtensionsFromFormat(format: SupportedFormat): string[] {
  */
 export function getFormatForExtension(
   extension: string
-): SupportedFormat | undefined {
+): LanguageFileFormat | undefined {
   return Object.entries(formatExtensionRegistry).find(([, extensions]) =>
     extensions.some(ext => extension.endsWith(ext))
-  )?.[0] as SupportedFormat | undefined;
+  )?.[0] as LanguageFileFormat | undefined;
 }
 
 /**

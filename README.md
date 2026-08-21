@@ -22,7 +22,7 @@ This package exposes two main functions: `parseDataset` and `serializeDataset`.
 You can parse a string containing a translation dataset into a standardized `TranslationDataset` object.
 
 ```typescript
-import { parseDataset, SupportedFormat } from '@labeleer/translation-dataset-transformers';
+import { parseDataset, LanguageFileFormat } from '@labeleer/translation-dataset-transformers';
 
 const jsonString = `{
   "hello_world": {
@@ -36,7 +36,7 @@ const jsonString = `{
 
 const dataset = await parseDataset(
     jsonString,
-    SupportedFormat.JSON,
+    LanguageFileFormat.JSON,
     { referenceLocale: 'en_US' }
   );
 
@@ -57,7 +57,7 @@ const dataset = await parseDataset(
 You can serialize a `TranslationDataset` object into a string for a specified file format.
 
 ```typescript
-import { serializeDataset, SupportedFormat, TranslationDataset } from '@labeleer/translation-dataset-transformers';
+import { serializeDataset, LanguageFileFormat, TranslationDataset } from '@labeleer/translation-dataset-transformers';
 
 const dataset: TranslationDataset = {
   "hello_world": {
@@ -70,7 +70,7 @@ const dataset: TranslationDataset = {
 
 const jsonString = await serializeDataset(
   dataset,
-  SupportedFormat.JSON,
+  LanguageFileFormat.JSON,
   { referenceLocale: 'en', locales: [ 'en_US', 'nl_NL' ] }
 );
 
@@ -104,14 +104,14 @@ The following file formats are supported for both parsing and serialization:
 ### `parseDataset(dataset: string, fileFormat: SupportedFormat, options: ParsingOptions): Promise<TranslationDataset>`
 
 - `dataset`: The string content of the file to parse.
-- `fileFormat`: The format of the dataset, from `SupportedFormat`.
+- `fileFormat`: The format of the dataset, from `LanguageFileFormat`.
 - `options`: An object with parsing options, including `referenceLocale` and an optional `targetLocale`.
 
 ###
 `serializeDataset(dataset: TranslationDataset, format: SupportedFormat, options: SerializationOptions): Promise<string>`
 
 - `dataset`: The `TranslationDataset` object to serialize.
-- `format`: The target format for serialization, from `SupportedFormat`.
+- `format`: The target format for serialization, from `LanguageFileFormat`.
 - `options`: An object with serialization options, including `referenceLocale` and a list of `locales` to include.
 
 ### `TranslationDataset`

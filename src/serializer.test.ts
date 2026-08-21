@@ -1,6 +1,6 @@
 import JSZip from 'jszip';
 import { describe, it, expect } from 'vitest';
-import { SupportedFormat } from './file-formats';
+import { LanguageFileFormat } from './file-formats';
 import { serializeDataset } from './serializer';
 import { mockDataset, mockSerializationOptions } from '@/__testutils__';
 
@@ -9,7 +9,7 @@ describe('serializer', () => {
     it('should serialize Android strings correctly', async () => {
       const result = serializeDataset(
         mockDataset(),
-        SupportedFormat.ANDROID_STRINGS,
+        LanguageFileFormat.ANDROID_STRINGS,
         mockSerializationOptions({
           locales: ['en_US', 'nl_NL', 'fr_FR'],
         })
@@ -43,7 +43,7 @@ describe('serializer', () => {
     it('should serialize Apple strings correctly', async () => {
       const result = serializeDataset(
         mockDataset(),
-        SupportedFormat.APPLE_STRINGS,
+        LanguageFileFormat.APPLE_STRINGS,
         mockSerializationOptions({
           locales: ['en_US', 'nl_NL', 'fr_FR'],
           keylessTranslation: false,
@@ -64,7 +64,7 @@ describe('serializer', () => {
     it('should serialize TS files correctly', async () => {
       const result = serializeDataset(
         mockDataset(),
-        SupportedFormat.TS,
+        LanguageFileFormat.TS,
         mockSerializationOptions({
           referenceLocale: 'en_US',
           locales: ['en_US', 'nl_NL', 'fr_FR'],

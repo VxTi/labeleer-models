@@ -1,7 +1,16 @@
 import { parse } from 'yaml';
+import { serializeYaml } from './serializer';
 import { JsonTranslationDatasetDecoder } from '@/common/decoders';
-import type { ParserFn } from '@/definitions';
+import type {
+  ParserFn,
+  ParsingOptions,
+  SerializationOptions,
+  SerializationResult,
+  TranslationDataset,
+} from '@/definitions';
 import { ParsingError } from '@/errors';
+import { LanguageFileFormat } from '@/file-formats';
+import { ILanguageFileTransformer } from '@/transformer';
 
 export const parseYaml: ParserFn = input => {
   try {
@@ -22,3 +31,23 @@ export const parseYaml: ParserFn = input => {
     });
   }
 };
+
+export class YamlDatasetTransformer extends ILanguageFileTransformer<LanguageFileFormat.YAML> {
+  public constructor() {
+    super(LanguageFileFormat.YAML);
+  }
+
+  public parse(
+    input: string,
+    options: ParsingOptions<object>
+  ): TranslationDataset {
+    return parseYaml(input, options);
+  }
+
+  public serialize(
+    dataset: TranslationDataset,
+    options: SerializationOptions
+  ): SerializationResult[] {
+    return serializeYaml(dataset, options);
+  }
+}

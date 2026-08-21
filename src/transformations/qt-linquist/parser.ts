@@ -1,9 +1,18 @@
 import { XMLParser } from 'fast-xml-parser';
 import { type LinquistTsMessage, TSLinquistDatasetDecoder } from './common';
+import { serializeTs } from './serializer';
 import { DatasetBuilder } from '@/dataset-builder';
-import type { ParserFn } from '@/definitions';
+import type {
+  ParserFn,
+  ParsingOptions,
+  SerializationOptions,
+  SerializationResult,
+  TranslationDataset,
+} from '@/definitions';
 import { ParsingError } from '@/errors';
+import { LanguageFileFormat } from '@/file-formats';
 import { type Locale } from '@/locales';
+import { ILanguageFileTransformer } from '@/transformer';
 import { extractArray } from '@/util/data-extraction';
 
 export const parseTs: ParserFn = (input, { referenceLocale }) => {
@@ -46,3 +55,23 @@ export const parseTs: ParserFn = (input, { referenceLocale }) => {
     );
   }
 };
+
+export class TsDatasetTransformer extends ILanguageFileTransformer<LanguageFileFormat.TS> {
+  public constructor() {
+    super(LanguageFileFormat.TS);
+  }
+
+  public parse(
+    input: string,
+    options: ParsingOptions<object>
+  ): TranslationDataset {
+    return parseTs(input, options);
+  }
+
+  public serialize(
+    dataset: TranslationDataset,
+    options: SerializationOptions
+  ): SerializationResult[] {
+    return serializeTs(dataset, options);
+  }
+}

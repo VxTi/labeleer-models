@@ -4,7 +4,7 @@ import type {
   ParsingOptions,
   TranslationDataset,
 } from './definitions';
-import { SupportedFormat } from './file-formats';
+import { LanguageFileFormat } from './file-formats';
 import {
   parseAndroidStrings,
   parseAppleStrings,
@@ -24,7 +24,7 @@ import {
  * @param options - Parsing options including referenceLocale and targetLocale.
  * @returns The parsed TranslationDataset.
  */
-export function parseDataset<TFormat extends SupportedFormat>(
+export function parseDataset<TFormat extends LanguageFileFormat>(
   dataset: string,
   fileFormat: TFormat,
   options: InferParsingOptions<TFormat>
@@ -32,7 +32,7 @@ export function parseDataset<TFormat extends SupportedFormat>(
   return parserMap[fileFormat](dataset, options);
 }
 
-type InferParsingOptions<TFormat extends SupportedFormat> =
+type InferParsingOptions<TFormat extends LanguageFileFormat> =
   (typeof parserMap)[TFormat] extends ParserFn<infer TInferredOptions> ?
     ParsingOptions<TInferredOptions>
   : TFormat extends AggregateParserFn<infer TInferredOptions> ?
@@ -40,12 +40,36 @@ type InferParsingOptions<TFormat extends SupportedFormat> =
   : never;
 
 const parserMap = {
-  [SupportedFormat.JSON]: parseJson,
-  [SupportedFormat.YAML]: parseYaml,
-  [SupportedFormat.PO]: parsePo,
-  [SupportedFormat.ANDROID_STRINGS]: parseAndroidStrings,
-  [SupportedFormat.XLIFF]: parseXliff,
-  [SupportedFormat.TS]: parseTs,
-  [SupportedFormat.APPLE_STRINGS]: parseAppleStrings,
-  [SupportedFormat.XCSTRINGS]: parseXcstrings,
+  [LanguageFileFormat.JSON]: parseJson,
+  [LanguageFileFormat.YAML]: parseYaml,
+  [LanguageFileFormat.PO]: parsePo,
+  [LanguageFileFormat.ANDROID_STRINGS]: parseAndroidStrings,
+  [LanguageFileFormat.XLIFF]: parseXliff,
+  [LanguageFileFormat.TS]: parseTs,
+  [LanguageFileFormat.APPLE_STRINGS]: parseAppleStrings,
+  [LanguageFileFormat.XCSTRINGS]: parseXcstrings,
 } as const;
+
+export type FileFormat = 'json' | ''
+
+export abstract class ILanguageFileTransformer<
+  TFileFormat extends LanguageFileFormat,
+> {
+  public readonly fileFormat: TFileFormat;
+
+  public constructor(fileFormat: TFileFormat) {
+    this.fileFormat = fileFormat;
+  }
+
+  public abstract canParse(extension: string): boolean;
+
+  public abstract parse(input: string): TranslationDataset;
+
+  public abstract stringify(input: TranslationDataset): string;
+}
+
+export class ParserSetBuilder {
+  private parsers: ILanguageFileTransformer<LanguageFileFormat>
+}
+
+export class ParserSet {}

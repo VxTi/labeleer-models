@@ -30,10 +30,11 @@ export const serializeXliff: SerializerFn = (input, config) => {
 
     Object.entries(input).forEach(([key, entry]) => {
       dataset[key] = {
+        plurals: {},
         translations: {
           [config.referenceLocale]:
-            entry.translations?.[config.referenceLocale] || '',
-          [locale]: entry.translations?.[locale] || '',
+            entry.translations[config.referenceLocale] || '',
+          [locale]: entry.translations[locale] || '',
         },
       };
     });
@@ -55,7 +56,7 @@ function serializeSingular(
 
   Object.entries(input).forEach(([key, entry]) => {
     const locale: Locale = options.referenceLocale;
-    const value: string = entry.translations?.[options.referenceLocale] || '';
+    const value: string = entry.translations[options.referenceLocale] || '';
 
     datasetBuilder.addTranslation(key, { [locale]: value });
   });
@@ -90,9 +91,9 @@ function constructXliff21Fragment(
         unit: Object.entries(dataset).map(([key, entry]) => ({
           '@_id': key,
           segment: {
-            source: entry.translations?.[sourceLocale] || '',
+            source: entry.translations[sourceLocale] || '',
             ...(targetLocale ?
-              { target: entry.translations?.[targetLocale] || '' }
+              { target: entry.translations[targetLocale] || '' }
             : {}),
           },
         })),

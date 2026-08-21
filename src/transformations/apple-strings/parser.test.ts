@@ -20,31 +20,31 @@ describe('apple strings parsing', () => {
     );
 
     expect(aggregated).toBeDefined();
-    expect(aggregated).toEqual(
-      expect.objectContaining({
-        'first-entry': {
-          translations: expect.objectContaining({
-            en_US: 'english',
-            nl_NL: 'dutch',
-          }),
-        },
-        'second-entry': {
-          translations: expect.objectContaining({
-            en_US: 'english \\"second\\"',
-            nl_NL: 'dutch \\"second\\"',
-          }),
-        },
-      })
-    );
+    expect(aggregated).toMatchObject({
+      'first-entry': {
+        translations: expect.objectContaining({
+          en_US: 'english',
+          nl_NL: 'dutch',
+        }),
+      },
+      'second-entry': {
+        translations: expect.objectContaining({
+          en_US: 'english \\"second\\"',
+          nl_NL: 'dutch \\"second\\"',
+        }),
+      },
+    });
     expect(aggregated).toMatchInlineSnapshot(`
       {
         "first-entry": {
+          "plurals": {},
           "translations": {
             "en_US": "english",
             "nl_NL": "dutch",
           },
         },
         "second-entry": {
+          "plurals": {},
           "translations": {
             "en_US": "english \\"second\\"",
             "nl_NL": "dutch \\"second\\"",

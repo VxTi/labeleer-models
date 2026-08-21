@@ -1,6 +1,15 @@
+import { serializeJson } from './serializer';
 import { JsonTranslationDatasetDecoder } from '@/common/decoders';
-import type { ParserFn } from '@/definitions';
+import type {
+  ParserFn,
+  ParsingOptions,
+  SerializationOptions,
+  SerializationResult,
+  TranslationDataset,
+} from '@/definitions';
 import { ParsingError } from '@/errors';
+import { LanguageFileFormat } from '@/file-formats';
+import { ILanguageFileTransformer } from '@/transformer';
 
 export const parseJson: ParserFn = input => {
   const json = safeParseJson(input);
@@ -26,5 +35,25 @@ function safeParseJson(input: string): object | undefined {
     return JSON.parse(input);
   } catch {
     return undefined;
+  }
+}
+
+export class JsonDatasetTransformer extends ILanguageFileTransformer<LanguageFileFormat.JSON> {
+  public constructor() {
+    super(LanguageFileFormat.JSON);
+  }
+
+  public parse(
+    input: string,
+    options: ParsingOptions<object>
+  ): TranslationDataset {
+    return parseJson(input, options);
+  }
+
+  public serialize(
+    dataset: TranslationDataset,
+    options: SerializationOptions
+  ): SerializationResult[] {
+    return serializeJson(dataset, options);
   }
 }
