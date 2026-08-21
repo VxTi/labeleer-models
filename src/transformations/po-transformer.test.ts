@@ -1,10 +1,60 @@
+import { mockParsingOptions, mockSerializationOptions } from '@/__testutils__';
+import { PODatasetTransformer } from '@/transformations/po-transformer';
 import { describe, expect, it } from 'vitest';
-import { serializePo } from './serializer';
-import { mockSerializationOptions } from '@/__testutils__';
+
+const transformer = new PODatasetTransformer();
+
+describe('po parsing', () => {
+  it('should parse PO files correctly', () => {
+    const input = `msgid ""
+        msgstr ""
+        "Content-Type: text/plain; charset=utf-8\\n"
+        "Content-Transfer-Encoding: 8bit\\n"
+
+        msgid "first-entry"
+        msgid_plural "first-entry-plural"
+        msgstr[0] "0 hellos"
+        msgstr[1] "1 hello"
+        msgstr[2] "2 hellos"
+
+        msgid "second-entry"
+        msgstr "hello"`;
+    const parsed = transformer.parseAggregate(
+      { en_US: input },
+      mockParsingOptions()
+    );
+
+    expect(parsed).toBeDefined();
+    expect(parsed).toMatchInlineSnapshot(`
+      {
+        "first-entry": {
+          "plurals": {
+            "one": {
+              "en_US": "0 hellos",
+            },
+            "other": {
+              "en_US": "1 hello",
+            },
+            "two": {
+              "en_US": "2 hellos",
+            },
+          },
+          "translations": {},
+        },
+        "second-entry": {
+          "plurals": {},
+          "translations": {
+            "en_US": "hello",
+          },
+        },
+      }
+    `);
+  });
+});
 
 describe('po serialization', () => {
   it('should serialize PO files correctly', () => {
-    const serialized = serializePo(
+    const serialized = transformer.serialize(
       {
         regular: {
           translations: {
