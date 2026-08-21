@@ -7,11 +7,12 @@ import {
   type XCStringsTranslationEntry,
 } from './common';
 import { Plurality, type SerializerFn } from '@/definitions';
-import type { Locale } from '@/locales';
+import { type Locale, toBCP47 } from '@/locales';
 
 export const serializeXcstrings: SerializerFn = (dataset, options) => {
   const xcstrings: XCStringsDataset = {
-    sourceLanguage: options.referenceLocale,
+    // Xcode String Catalogs use BCP 47 language identifiers (`en`, `en-GB`).
+    sourceLanguage: toBCP47(options.referenceLocale),
     strings: {},
     version: '1.0',
   };
@@ -24,8 +25,10 @@ export const serializeXcstrings: SerializerFn = (dataset, options) => {
     };
 
     options.locales.forEach((locale: Locale) => {
+      const languageTag = toBCP47(locale);
+
       if (entry.translations[locale]) {
-        stringUnit.localizations[locale] = {
+        stringUnit.localizations[languageTag] = {
           stringUnit: {
             state: 'translated',
             value: entry.translations[locale] ?? '',
@@ -33,17 +36,17 @@ export const serializeXcstrings: SerializerFn = (dataset, options) => {
         };
       }
 
-      entries(entry.plurals).forEach(([qt, entry]) => {
+      entries(entry.plurals ?? {}).forEach(([quantity, pluralEntry]) => {
         const variation: XCStringsPluralVariations =
-          quantityToXcstringsType(qt);
+          quantityToXcstringsType(quantity);
         merge(stringUnit.localizations, {
-          [locale]: {
+          [languageTag]: {
             variations: {
               plural: {
                 [variation]: {
                   stringUnit: {
                     state: 'translated',
-                    value: entry[locale] ?? '',
+                    value: pluralEntry[locale] ?? '',
                   },
                 },
               },
@@ -51,8 +54,9 @@ export const serializeXcstrings: SerializerFn = (dataset, options) => {
           },
         });
       });
-      xcstrings.strings[key] = stringUnit;
     });
+
+    xcstrings.strings[key] = stringUnit;
   });
 
   const data = JSON.stringify(xcstrings, null, 2);

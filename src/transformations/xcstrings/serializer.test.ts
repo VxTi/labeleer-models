@@ -12,6 +12,7 @@ describe('xcstrings serialization', () => {
         },
       },
       plural: {
+        translations: {},
         plurals: {
           one: {
             en_US: 'hello',
@@ -33,19 +34,19 @@ describe('xcstrings serialization', () => {
     expect(result[0]?.data).toContain('must exist');
     expect(result[0]?.data).toMatchInlineSnapshot(`
       "{
-        "sourceLanguage": "en_US",
+        "sourceLanguage": "en-US",
         "strings": {
           "first-entry": {
             "comment": "",
             "extractionState": "manual",
             "localizations": {
-              "en_US": {
+              "en-US": {
                 "stringUnit": {
                   "state": "translated",
                   "value": "hello"
                 }
               },
-              "nl_NL": {
+              "nl-NL": {
                 "stringUnit": {
                   "state": "translated",
                   "value": "world"
@@ -57,13 +58,13 @@ describe('xcstrings serialization', () => {
             "comment": "",
             "extractionState": "manual",
             "localizations": {
-              "en_US": {
+              "en-US": {
                 "stringUnit": {
                   "state": "translated",
                   "value": "hello"
                 }
               },
-              "nl_NL": {
+              "nl-NL": {
                 "stringUnit": {
                   "state": "translated",
                   "value": "again"
@@ -75,7 +76,7 @@ describe('xcstrings serialization', () => {
             "comment": "",
             "extractionState": "manual",
             "localizations": {
-              "en_US": {
+              "en-US": {
                 "stringUnit": {
                   "state": "translated",
                   "value": "must exist"
@@ -87,7 +88,7 @@ describe('xcstrings serialization', () => {
             "comment": "",
             "extractionState": "manual",
             "localizations": {
-              "en_US": {
+              "en-US": {
                 "variations": {
                   "plural": {
                     "one": {
@@ -105,7 +106,7 @@ describe('xcstrings serialization', () => {
                   }
                 }
               },
-              "nl_NL": {
+              "nl-NL": {
                 "variations": {
                   "plural": {
                     "one": {

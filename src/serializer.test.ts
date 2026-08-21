@@ -74,8 +74,8 @@ describe('serializer', () => {
 
       const zip = await JSZip.loadAsync(result);
       expect(zip.files).toMatchObject({
-        'nl-NL.ts': expect.anything(),
-        'fr-FR.ts': expect.anything(),
+        'nl_NL.ts': expect.anything(),
+        'fr_FR.ts': expect.anything(),
       });
     });
   });
