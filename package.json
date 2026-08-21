@@ -1,12 +1,11 @@
 {
   "name": "@labeleer/translation-dataset-transformers",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/index.js",
-      "types": "./dist/definitions.d.ts",
       "require": "./dist/index.js"
     }
   },
