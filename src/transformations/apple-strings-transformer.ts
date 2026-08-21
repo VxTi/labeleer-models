@@ -1,0 +1,139 @@
+import { DatasetBuilder } from '@/dataset-builder';
+import type {
+  ParsingOptions,
+  SerializationOptions,
+  SerializationResult,
+  TranslationDataset,
+} from '@/definitions';
+import { ParsingError } from '@/errors';
+import { LanguageFileFormat } from '@/file-formats';
+import { type Locale, toBCP47 } from '@/locales';
+import { ILanguageFileTransformer } from '@/transformer';
+import { entries } from '@/util/data-extraction';
+
+export class AppleStringsDatasetTransformer extends ILanguageFileTransformer<
+  LanguageFileFormat.APPLE_STRINGS,
+  ['.strings']
+> {
+  public constructor() {
+    super(LanguageFileFormat.APPLE_STRINGS, ['.strings']);
+  }
+
+  public parse(
+    input: string,
+    options: ParsingOptions<object>
+  ): TranslationDataset {
+    const { targetLocale } = options;
+    if (!targetLocale) {
+      throw new ParsingError(
+        'Locale is required for parsing Apple .strings files.'
+      );
+    }
+
+    const lines = input.split('\n');
+    const builder = new DatasetBuilder();
+
+    for (const line of lines) {
+      const match = line.match(APPLE_STRING_LINE_REGEX);
+
+      if (!match) continue;
+
+      const [, key, value] = match;
+
+      builder.addTranslation(unescapeText(key), {
+        [targetLocale]: unescapeText(value),
+      });
+    }
+
+    return builder.build();
+  }
+
+  /**
+   * Apple `.strings` files are single-locale, keyed off
+   * {@link ParsingOptions.targetLocale}, so each aggregated input is parsed
+   * against its own locale.
+   */
+  public override parseAggregate(
+    inputs: Partial<Record<Locale, string>>,
+    options: ParsingOptions<object>
+  ): TranslationDataset {
+    const builder = new DatasetBuilder();
+
+    for (const [targetLocale, content] of entries(inputs)) {
+      const dataset = this.parse(content, {
+        ...options,
+        targetLocale,
+      });
+
+      builder.merge(dataset);
+    }
+
+    return builder.build();
+  }
+
+  public serialize(
+    dataset: TranslationDataset,
+    options: SerializationOptions
+  ): SerializationResult[] {
+    return options.locales.map(loc =>
+      constructAppleStringsSerializationFragment(dataset, loc)
+    );
+  }
+}
+
+export const APPLE_STRING_LINE_REGEX =
+  /^\s*\uFEFF?"((?:[^"\\]|\\(?:U[0-9A-Fa-f]{4}|.))*)"\s*=\s*"((?:[^"\\]|\\(?:U[0-9A-Fa-f]{4}|.))*)"\s*;\s*$/;
+
+function unescapeText(input: string): string {
+  return input.replace(/\\([Uu][0-9A-Fa-f]{4}|.)/g, (_, escape: string) => {
+    if (escape[0] === 'U' || escape[0] === 'u') {
+      return String.fromCharCode(parseInt(escape.slice(1), 16));
+    }
+
+    switch (escape) {
+      case 'n':
+        return '\n';
+      case 't':
+        return '\t';
+      case 'r':
+        return '\r';
+      default:
+        return escape;
+    }
+  });
+}
+
+function constructAppleStringsSerializationFragment(
+  dataset: TranslationDataset,
+  targetLocale: Locale
+): SerializationResult {
+  const kvMapping: Record<string, string> = {};
+
+  for (const [key, entry] of entries(dataset)) {
+    kvMapping[key] = entry.translations[targetLocale] ?? '';
+  }
+
+  const data = entries(kvMapping)
+    .map(([key, value]) => `"${escapeText(key)}" = "${escapeText(value)}";`)
+    .join('\n');
+
+  return {
+    data,
+    // Apple `.strings` files live in BCP 47 named `.lproj` directories
+    // (e.g. `en.lproj`, `en-GB.lproj`).
+    filename: toBCP47(targetLocale),
+  };
+}
+
+/**
+ * Escapes a string for an Apple `.strings` literal. The backslash must be
+ * escaped first so the escapes introduced afterwards are not re-escaped.
+ */
+function escapeText(input: string): string {
+  return input
+    .replace(/\\/g, '\\\\')
+    .replace(/"/g, '\\"')
+    .replace(/\n/g, '\\n')
+    .replace(/\r/g, '\\r')
+    .replace(/\t/g, '\\t');
+}
