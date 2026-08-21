@@ -1,13 +1,13 @@
+import { entries } from '@/util/data-extraction';
 import { XMLBuilder } from 'fast-xml-parser';
 import merge from 'lodash-es/merge';
 import type { ASSerializationOutputSet, ASXmlPluralEntry } from './common';
 import { DatasetBuilder } from '@/dataset-builder';
-import {
-  type Plurality,
-  type SerializationResult,
-  type SerializerFn,
-  type TranslationDataset,
-  type TranslationPluralization,
+import type {
+  SerializationResult,
+  SerializerFn,
+  TranslationDataset,
+  TranslationPluralization,
 } from '@/definitions';
 import { SerializationError } from '@/errors';
 import { type Locale, toISO639_1LanguageCode } from '@/locales';
@@ -23,10 +23,10 @@ export const serializeAndroidStrings: SerializerFn = (input, config) => {
     });
     const outputFragments: SerializationResult[] = [];
 
-    for (const [locale, dataset] of Object.entries(perLanguageDatasets)) {
-      const data = buildXmlDataset(builder, dataset, locale as Locale);
+    for (const [locale, dataset] of entries(perLanguageDatasets)) {
+      const data = buildXmlDataset(builder, dataset, locale);
 
-      const filename = `values-${toISO639_1LanguageCode(locale as Locale)}/strings`;
+      const filename = `values-${toISO639_1LanguageCode(locale)}/strings`;
 
       outputFragments.push({ filename, data });
     }
@@ -49,8 +49,8 @@ function buildXmlDataset(
     resources: { string: [], plurals: [] },
   };
 
-  Object.entries(dataset).forEach(([key, entry]) => {
-    const translation = entry.translations?.[locale];
+  entries(dataset).forEach(([key, entry]) => {
+    const translation = entry.translations[locale];
 
     if (translation) {
       outputIr.resources.string.push({
@@ -61,10 +61,10 @@ function buildXmlDataset(
 
     const pluralItems: ASXmlPluralEntry[] = [];
 
-    Object.entries(entry.plurals ?? {}).forEach(([quantity, pluralEntry]) => {
+    entries(entry.plurals).forEach(([quantity, pluralEntry]) => {
       const value = pluralEntry[locale];
       pluralItems.push({
-        '@_quantity': quantity as Plurality,
+        '@_quantity': quantity,
         '#text': value ?? '',
       });
     });
@@ -95,13 +95,13 @@ function constructPerLanguageDatasets(
     locales.forEach((locale: Locale) => {
       const builder = new DatasetBuilder();
 
-      const pluralEntries = Object.entries(entry.plurals ?? {});
+      const pluralEntries = entries(entry.plurals);
 
       const plurals: TranslationPluralization = Object.fromEntries(
         pluralEntries.map(([qt, pluralEntry]) => {
           const pluralValue = pluralEntry[locale] ?? '';
 
-          return [qt as Plurality, { [locale]: pluralValue }];
+          return [qt, { [locale]: pluralValue }];
         })
       );
 
@@ -109,7 +109,7 @@ function constructPerLanguageDatasets(
         builder.addPluralEntry(key, plurals);
       } else {
         builder.addTranslation(key, {
-          [locale]: entry.translations?.[locale] ?? '',
+          [locale]: entry.translations[locale] ?? '',
         });
       }
 

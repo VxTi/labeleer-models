@@ -1,3 +1,4 @@
+import { entries } from '@/util/data-extraction';
 import {
   type GetTextTranslation,
   type GetTextTranslations,
@@ -35,14 +36,14 @@ function constructPoSerializationFragment(
     translations: { '': {} },
   };
 
-  for (const [key, entry] of Object.entries(input)) {
+  for (const [key, entry] of entries(input)) {
     const poEntry: GetTextTranslation = {
       msgid: key,
       msgstr: [],
     };
 
     if ('translations' in entry) {
-      poEntry.msgstr[0] = entry.translations?.[locale] || '';
+      poEntry.msgstr[0] = entry.translations[locale] || '';
     }
 
     if (entry.description) {
@@ -57,9 +58,9 @@ function constructPoSerializationFragment(
     }
 
     if ('plurals' in entry) {
-      const zero = entry.plurals?.zero?.[locale];
-      const one = entry.plurals?.one?.[locale];
-      const other = entry.plurals?.other?.[locale];
+      const zero = entry.plurals.zero?.[locale];
+      const one = entry.plurals.one?.[locale];
+      const other = entry.plurals.other?.[locale];
 
       if (other) {
         poEntry.msgid_plural = other;

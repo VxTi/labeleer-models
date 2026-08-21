@@ -1,3 +1,4 @@
+import { entries } from '@/util/data-extraction';
 import uniq from 'lodash-es/uniq';
 
 /**
@@ -74,9 +75,9 @@ export function getFileExtensionsFromFormat(
 export function getFormatForExtension(
   extension: string
 ): LanguageFileFormat | undefined {
-  return Object.entries(formatExtensionRegistry).find(([, extensions]) =>
+  return entries(formatExtensionRegistry).find(([, extensions]) =>
     extensions.some(ext => extension.endsWith(ext))
-  )?.[0] as LanguageFileFormat | undefined;
+  )?.[0];
 }
 
 /**

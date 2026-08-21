@@ -19,7 +19,7 @@ import { ParsingError } from '@/errors';
 import { LanguageFileFormat } from '@/file-formats';
 import type { Locale } from '@/locales';
 import { ILanguageFileTransformer } from '@/transformer';
-import { extractArray } from '@/util/data-extraction';
+import { entries, extractArray } from '@/util/data-extraction';
 
 export const parseAndroidStrings: ParserFn = (input, { referenceLocale }) => {
   try {
@@ -42,10 +42,10 @@ export const parseAndroidStringsAggregated: AggregateParserFn = (
 ) => {
   const builder = new DatasetBuilder();
 
-  for (const [locale, content] of Object.entries(inputs)) {
+  for (const [referenceLocale, content] of entries(inputs)) {
     const dataset = parseAndroidStrings(content, {
       ...options,
-      referenceLocale: locale as Locale,
+      referenceLocale,
     });
 
     builder.merge(dataset);

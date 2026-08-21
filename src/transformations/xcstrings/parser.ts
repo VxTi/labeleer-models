@@ -1,3 +1,4 @@
+import { entries } from '@/util/data-extraction';
 import { type z } from 'zod';
 import {
   type XCStringsAtomicLocalizationEntryDecoder,
@@ -35,38 +36,36 @@ export const parseXcstrings: ParserFn = dataset => {
 
   const datasetBuilder = new DatasetBuilder();
 
-  Object.entries(decoded.data.strings).forEach(([key, entry]) => {
-    Object.entries(entry.localizations).forEach(
-      ([unsafeLocale, localization]) => {
-        const localeParseResult = LocaleDecoder.safeParse(unsafeLocale);
+  entries(decoded.data.strings).forEach(([key, entry]) => {
+    entries(entry.localizations).forEach(([unsafeLocale, localization]) => {
+      const localeParseResult = LocaleDecoder.safeParse(unsafeLocale);
 
-        if (!localeParseResult.success) {
-          throw new ParsingError(
-            `Invalid locale code in xcstrings for key "${key}": ${unsafeLocale}`
-          );
-        }
-
-        const locale: Locale = localeParseResult.data;
-
-        if (isAtomicLocalizationEntry(localization)) {
-          datasetBuilder.addTranslation(key, {
-            [locale]: localization.stringUnit.value,
-          });
-        } else {
-          // It's a plural translation!
-          const pluralVariations = localization.variations.plural;
-          const zero = pluralVariations.zero?.stringUnit.value;
-          const one = pluralVariations.one.stringUnit.value;
-          const other = pluralVariations.other.stringUnit.value;
-
-          datasetBuilder.addPluralEntry(key, {
-            ...(zero ? { zero: { [locale]: zero } } : {}),
-            one: { [locale]: one },
-            other: { [locale]: other },
-          });
-        }
+      if (!localeParseResult.success) {
+        throw new ParsingError(
+          `Invalid locale code in xcstrings for key "${key}": ${unsafeLocale}`
+        );
       }
-    );
+
+      const locale: Locale = localeParseResult.data;
+
+      if (isAtomicLocalizationEntry(localization)) {
+        datasetBuilder.addTranslation(key, {
+          [locale]: localization.stringUnit.value,
+        });
+      } else {
+        // It's a plural translation!
+        const pluralVariations = localization.variations.plural;
+        const zero = pluralVariations.zero?.stringUnit.value;
+        const one = pluralVariations.one.stringUnit.value;
+        const other = pluralVariations.other.stringUnit.value;
+
+        datasetBuilder.addPluralEntry(key, {
+          ...(zero ? { zero: { [locale]: zero } } : {}),
+          one: { [locale]: one },
+          other: { [locale]: other },
+        });
+      }
+    });
   });
 
   return datasetBuilder.build();

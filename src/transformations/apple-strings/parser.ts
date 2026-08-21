@@ -1,3 +1,4 @@
+import { entries } from '@/util/data-extraction';
 import { APPLE_STRING_LINE_REGEX } from './common';
 import { serializeAppleStrings } from './serializer';
 import { DatasetBuilder } from '@/dataset-builder';
@@ -45,10 +46,10 @@ export const parseAppleStringsAggregated: AggregateParserFn = (
 ) => {
   const builder = new DatasetBuilder();
 
-  for (const [locale, content] of Object.entries(inputs)) {
+  for (const [targetLocale, content] of entries(inputs)) {
     const dataset = parseAppleStrings(content, {
       ...options,
-      targetLocale: locale as Locale,
+      targetLocale,
     });
 
     builder.merge(dataset);

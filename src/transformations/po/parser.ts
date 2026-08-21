@@ -34,7 +34,7 @@ export const parsePo: ParserFn = (input, { targetLocale }) => {
     const builder = new DatasetBuilder();
 
     Object.values(output.translations).forEach(context => {
-      Object.entries(context).forEach(([key, entry]) => {
+      entries(context).forEach(([key, entry]) => {
         if (!key) return; // skip empty header
 
         const plurals = extractPlurals(targetLocale, entry);

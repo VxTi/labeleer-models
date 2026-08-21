@@ -7,7 +7,7 @@ export function extractArray<T>(arr: MaybeArray<T> | undefined): T[] {
 }
 
 export function entries<TKey extends string, TValue>(
-  input: Partial<Record<TKey, TValue>>
+  input: Record<TKey, TValue> | Partial<Record<TKey, TValue>>
 ): [TKey, TValue][] {
   return Object.entries(input) as [TKey, TValue][];
 }

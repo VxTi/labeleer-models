@@ -1,3 +1,4 @@
+import { entries } from '@/util/data-extraction';
 import { XMLBuilder } from 'fast-xml-parser';
 import { DatasetBuilder } from '@/dataset-builder';
 import type {
@@ -28,7 +29,7 @@ export const serializeXliff: SerializerFn = (input, config) => {
   nonReferenceLocales.forEach((locale: Locale) => {
     const dataset: TranslationDataset = {};
 
-    Object.entries(input).forEach(([key, entry]) => {
+    entries(input).forEach(([key, entry]) => {
       dataset[key] = {
         plurals: {},
         translations: {
@@ -54,7 +55,7 @@ function serializeSingular(
 ): SerializationResult[] {
   const datasetBuilder = new DatasetBuilder();
 
-  Object.entries(input).forEach(([key, entry]) => {
+  entries(input).forEach(([key, entry]) => {
     const locale: Locale = options.referenceLocale;
     const value: string = entry.translations[options.referenceLocale] || '';
 

@@ -4,6 +4,7 @@ import type {
   TranslationDataset,
 } from '@/definitions';
 import type { Locale } from '@/locales';
+import { entries } from '@/util/data-extraction';
 
 export const serializeAppleStrings: SerializerFn = (input, options) => {
   return options.locales.map(loc =>
@@ -17,11 +18,11 @@ function constructAppleStringsSerializationFragment(
 ): SerializationResult {
   const kvMapping: Record<string, string> = {};
 
-  for (const [key, entry] of Object.entries(dataset)) {
-    kvMapping[key] = entry.translations?.[targetLocale] ?? '';
+  for (const [key, entry] of entries(dataset)) {
+    kvMapping[key] = entry.translations[targetLocale] ?? '';
   }
 
-  const data = Object.entries(kvMapping)
+  const data = entries(kvMapping)
     .map(([key, value]) => `"${escapeText(key)}" = "${escapeText(value)}";`)
     .join('\n');
 
