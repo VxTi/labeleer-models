@@ -6,5 +6,6 @@ export * from './errors';
 export * from './file-formats';
 export * from './locales';
 export * from './parser';
+export * from './transformer';
 export * from './serializer';
 export * from './common';

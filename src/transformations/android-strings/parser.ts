@@ -4,15 +4,21 @@ import {
   type ASXmlSingularEntry,
   ASXmlDecoder,
 } from './common';
+import { serializeAndroidStrings } from './serializer';
 import { DatasetBuilder } from '@/dataset-builder';
 import type {
   AggregateParserFn,
   ParserFn,
+  ParsingOptions,
+  SerializationOptions,
+  SerializationResult,
   TranslationDataset,
   TranslationPluralization,
 } from '@/definitions';
 import { ParsingError } from '@/errors';
+import { LanguageFileFormat } from '@/file-formats';
 import type { Locale } from '@/locales';
+import { ILanguageFileTransformer } from '@/transformer';
 import { extractArray } from '@/util/data-extraction';
 
 export const parseAndroidStrings: ParserFn = (input, { referenceLocale }) => {
@@ -95,4 +101,31 @@ function extractPluralsFromEntry(
       { [baseLocale]: value },
     ])
   );
+}
+
+export class AndroidStringsDatasetTransformer extends ILanguageFileTransformer<LanguageFileFormat.ANDROID_STRINGS> {
+  public constructor() {
+    super(LanguageFileFormat.ANDROID_STRINGS);
+  }
+
+  public parse(
+    input: string,
+    options: ParsingOptions<object>
+  ): TranslationDataset {
+    return parseAndroidStrings(input, options);
+  }
+
+  public override parseAggregate(
+    inputs: Partial<Record<Locale, string>>,
+    options: ParsingOptions<object>
+  ): TranslationDataset {
+    return parseAndroidStringsAggregated(inputs, options);
+  }
+
+  public serialize(
+    dataset: TranslationDataset,
+    options: SerializationOptions
+  ): SerializationResult[] {
+    return serializeAndroidStrings(dataset, options);
+  }
 }

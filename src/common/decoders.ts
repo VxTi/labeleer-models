@@ -7,12 +7,12 @@ import {
   MIN_TAG_LENGTH,
   MIN_TRANSLATION_KEY_LENGTH,
 } from '@/constants';
+import { Plurality } from '@/definitions';
 import {
   isBCP47Locale,
   isISO639_1LanguageCode,
   isLocale,
   iso639_1ToLocale,
-  type Locale,
   toPOSIX,
 } from '@/locales';
 import { sanitizeLabel } from '@/sanitizer';
@@ -26,7 +26,7 @@ export const LocaleDecoder = z
   .transform(val =>
     isBCP47Locale(val) ? toPOSIX(val)
     : isISO639_1LanguageCode(val) ? iso639_1ToLocale(val)
-    : (val as Locale)
+    : val
   );
 
 export const TranslationKeyDecoder = z
@@ -42,6 +42,7 @@ export const TranslationKeyDecoder = z
 export const JsonTranslationDatasetDecoder = z.record(
   TranslationKeyDecoder,
   z.object({
+    plurals: z.record(z.enum(Plurality), z.record(LocaleDecoder, z.string())),
     translations: z.record(LocaleDecoder, z.string()),
     description: z.optional(
       z

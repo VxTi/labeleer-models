@@ -1,9 +1,18 @@
 import { XMLParser } from 'fast-xml-parser';
+import { serializeXliff } from './serializer';
 import { DatasetBuilder } from '@/dataset-builder';
-import type { ParserFn } from '@/definitions';
+import type {
+  ParserFn,
+  ParsingOptions,
+  SerializationOptions,
+  SerializationResult,
+  TranslationDataset,
+} from '@/definitions';
 import { ParsingError } from '@/errors';
+import { LanguageFileFormat } from '@/file-formats';
 import { type Locale } from '@/locales';
 import { XLIFF21Decoder } from '@/transformations/xliff/models';
+import { ILanguageFileTransformer } from '@/transformer';
 
 export const parseXliff: ParserFn = input => {
   try {
@@ -49,3 +58,23 @@ export const parseXliff: ParserFn = input => {
     );
   }
 };
+
+export class XLIFFDatasetTransformer extends ILanguageFileTransformer<LanguageFileFormat.XLIFF> {
+  public constructor() {
+    super(LanguageFileFormat.XLIFF);
+  }
+
+  public parse(
+    input: string,
+    options: ParsingOptions<object>
+  ): TranslationDataset {
+    return parseXliff(input, options);
+  }
+
+  public serialize(
+    dataset: TranslationDataset,
+    options: SerializationOptions
+  ): SerializationResult[] {
+    return serializeXliff(dataset, options);
+  }
+}

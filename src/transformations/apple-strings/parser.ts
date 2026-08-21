@@ -1,8 +1,18 @@
 import { APPLE_STRING_LINE_REGEX } from './common';
+import { serializeAppleStrings } from './serializer';
 import { DatasetBuilder } from '@/dataset-builder';
-import type { AggregateParserFn, ParserFn } from '@/definitions';
+import type {
+  AggregateParserFn,
+  ParserFn,
+  ParsingOptions,
+  SerializationOptions,
+  SerializationResult,
+  TranslationDataset,
+} from '@/definitions';
 import { ParsingError } from '@/errors';
+import { LanguageFileFormat } from '@/file-formats';
 import type { Locale } from '@/locales';
+import { ILanguageFileTransformer } from '@/transformer';
 
 export const parseAppleStrings: ParserFn = (input, { targetLocale }) => {
   if (!targetLocale) {
@@ -46,3 +56,35 @@ export const parseAppleStringsAggregated: AggregateParserFn = (
 
   return builder.build();
 };
+
+export class AppleStringsDatasetTransformer extends ILanguageFileTransformer<LanguageFileFormat.APPLE_STRINGS> {
+  public constructor() {
+    super(LanguageFileFormat.APPLE_STRINGS);
+  }
+
+  public parse(
+    input: string,
+    options: ParsingOptions<object>
+  ): TranslationDataset {
+    return parseAppleStrings(input, options);
+  }
+
+  /**
+   * Apple `.strings` files are single-locale, keyed off
+   * {@link ParsingOptions.targetLocale}, so each aggregated input is parsed
+   * against its own locale.
+   */
+  public override parseAggregate(
+    inputs: Partial<Record<Locale, string>>,
+    options: ParsingOptions<object>
+  ): TranslationDataset {
+    return parseAppleStringsAggregated(inputs, options);
+  }
+
+  public serialize(
+    dataset: TranslationDataset,
+    options: SerializationOptions
+  ): SerializationResult[] {
+    return serializeAppleStrings(dataset, options);
+  }
+}

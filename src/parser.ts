@@ -5,7 +5,16 @@ import type {
   TranslationDataset,
 } from './definitions';
 import { LanguageFileFormat } from './file-formats';
+import { type ParserSet, ParserSetBuilder } from './transformer';
 import {
+  AndroidStringsDatasetTransformer,
+  AppleStringsDatasetTransformer,
+  JsonDatasetTransformer,
+  PoDatasetTransformer,
+  TsDatasetTransformer,
+  XCStringsDatasetTransformer,
+  XLIFFDatasetTransformer,
+  YamlDatasetTransformer,
   parseAndroidStrings,
   parseAppleStrings,
   parseJson,
@@ -50,26 +59,29 @@ const parserMap = {
   [LanguageFileFormat.XCSTRINGS]: parseXcstrings,
 } as const;
 
-export type FileFormat = 'json' | ''
-
-export abstract class ILanguageFileTransformer<
-  TFileFormat extends LanguageFileFormat,
-> {
-  public readonly fileFormat: TFileFormat;
-
-  public constructor(fileFormat: TFileFormat) {
-    this.fileFormat = fileFormat;
-  }
-
-  public abstract canParse(extension: string): boolean;
-
-  public abstract parse(input: string): TranslationDataset;
-
-  public abstract stringify(input: TranslationDataset): string;
+/**
+ * Builds a {@link ParserSet} containing a transformer for every supported
+ * {@link LanguageFileFormat}.
+ *
+ * Each call returns a fresh, independent set — mutate or extend it via a
+ * {@link ParserSetBuilder} without affecting other consumers.
+ */
+export function createDefaultParserSet(): ParserSet {
+  return new ParserSetBuilder()
+    .addAll([
+      new JsonDatasetTransformer(),
+      new YamlDatasetTransformer(),
+      new TsDatasetTransformer(),
+      new PoDatasetTransformer(),
+      new AndroidStringsDatasetTransformer(),
+      new AppleStringsDatasetTransformer(),
+      new XLIFFDatasetTransformer(),
+      new XCStringsDatasetTransformer(),
+    ])
+    .build();
 }
 
-export class ParserSetBuilder {
-  private parsers: ILanguageFileTransformer<LanguageFileFormat>
-}
-
-export class ParserSet {}
+/**
+ * A shared, ready-to-use {@link ParserSet} covering every supported format.
+ */
+export const defaultParserSet: ParserSet = createDefaultParserSet();

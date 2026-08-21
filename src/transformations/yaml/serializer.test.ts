@@ -1,7 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { serializeYaml } from './serializer';
 import { mockSerializationOptions } from '@/__testutils__';
-import { Plurality, type TranslationDataset } from '@/definitions';
+import { Plurality } from '@/definitions';
 
 describe('yaml serialization', () => {
   it('should serialize a simple YAML dataset', () => {
@@ -18,7 +18,7 @@ describe('yaml serialization', () => {
             },
           },
         },
-      } as TranslationDataset,
+      },
       mockSerializationOptions()
     );
 

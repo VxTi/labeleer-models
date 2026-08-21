@@ -5,7 +5,10 @@ import type {
   SerializationResult,
   TranslationDataset,
 } from '@/definitions';
-import { getFileExtensionsFromFormat, LanguageFileFormat } from '@/file-formats';
+import {
+  getFileExtensionsFromFormat,
+  type LanguageFileFormat,
+} from '@/file-formats';
 import type { Locale } from '@/locales';
 import { entries } from '@/util/data-extraction';
 
@@ -86,7 +89,9 @@ export abstract class ILanguageFileTransformer<
     const builder = new DatasetBuilder();
 
     for (const [locale, content] of entries(inputs)) {
-      builder.merge(this.parse(content, { ...options, referenceLocale: locale }));
+      builder.merge(
+        this.parse(content, { ...options, referenceLocale: locale })
+      );
     }
 
     return builder.build();
@@ -118,7 +123,10 @@ export type AnyLanguageFileTransformer = ILanguageFileTransformer;
  * Construct one with {@link ParserSetBuilder}.
  */
 export class ParserSet {
-  private readonly byFormat: Map<LanguageFileFormat, AnyLanguageFileTransformer>;
+  private readonly byFormat: Map<
+    LanguageFileFormat,
+    AnyLanguageFileTransformer
+  >;
 
   public constructor(transformers: Iterable<AnyLanguageFileTransformer>) {
     this.byFormat = new Map();

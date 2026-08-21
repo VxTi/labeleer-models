@@ -4,11 +4,20 @@ import {
   type XCStringsLocalizationEntryDecoder,
   XCStringsDatasetDecoder,
 } from './common';
+import { serializeXcstrings } from './serializer';
 import { LocaleDecoder } from '@/common/decoders';
 import { DatasetBuilder } from '@/dataset-builder';
-import type { ParserFn } from '@/definitions';
+import type {
+  ParserFn,
+  ParsingOptions,
+  SerializationOptions,
+  SerializationResult,
+  TranslationDataset,
+} from '@/definitions';
 import { ParsingError } from '@/errors';
+import { LanguageFileFormat } from '@/file-formats';
 import { type Locale } from '@/locales';
+import { ILanguageFileTransformer } from '@/transformer';
 import { tryParseJson } from '@/util/parsing';
 
 export const parseXcstrings: ParserFn = dataset => {
@@ -67,4 +76,24 @@ function isAtomicLocalizationEntry(
   entry: z.infer<typeof XCStringsLocalizationEntryDecoder>
 ): entry is z.infer<typeof XCStringsAtomicLocalizationEntryDecoder> {
   return typeof entry === 'object' && 'stringUnit' in entry;
+}
+
+export class XCStringsDatasetTransformer extends ILanguageFileTransformer<LanguageFileFormat.XCSTRINGS> {
+  public constructor() {
+    super(LanguageFileFormat.XCSTRINGS);
+  }
+
+  public parse(
+    input: string,
+    options: ParsingOptions<object>
+  ): TranslationDataset {
+    return parseXcstrings(input, options);
+  }
+
+  public serialize(
+    dataset: TranslationDataset,
+    options: SerializationOptions
+  ): SerializationResult[] {
+    return serializeXcstrings(dataset, options);
+  }
 }

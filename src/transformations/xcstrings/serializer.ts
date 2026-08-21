@@ -1,3 +1,4 @@
+import { entries } from '@/util/data-extraction';
 import merge from 'lodash-es/merge';
 import {
   DEFAULT_XCSTRINGS_FILE_NAME,
@@ -5,12 +6,7 @@ import {
   type XCStringsPluralVariations,
   type XCStringsTranslationEntry,
 } from './common';
-import {
-  Plurality,
-  type SerializerFn,
-  type TranslationLocalizedEntries,
-  type TranslationPluralization,
-} from '@/definitions';
+import { Plurality, type SerializerFn } from '@/definitions';
 import type { Locale } from '@/locales';
 
 export const serializeXcstrings: SerializerFn = (dataset, options) => {
@@ -20,7 +16,7 @@ export const serializeXcstrings: SerializerFn = (dataset, options) => {
     version: '1.0',
   };
 
-  Object.entries(dataset).forEach(([key, entry]) => {
+  entries(dataset).forEach(([key, entry]) => {
     const stringUnit: XCStringsTranslationEntry = {
       comment: entry.description ?? '',
       extractionState: 'manual',
@@ -28,23 +24,18 @@ export const serializeXcstrings: SerializerFn = (dataset, options) => {
     };
 
     options.locales.forEach((locale: Locale) => {
-      const regularTranslations: TranslationLocalizedEntries =
-        entry.translations ?? {};
-      const pluralTranslations: TranslationPluralization = entry.plurals ?? {};
-
-      if (regularTranslations[locale]) {
+      if (entry.translations[locale]) {
         stringUnit.localizations[locale] = {
           stringUnit: {
             state: 'translated',
-            value: regularTranslations[locale] ?? '',
+            value: entry.translations[locale] ?? '',
           },
         };
       }
 
-      Object.entries(pluralTranslations).forEach(([qt, entry]) => {
-        const variation: XCStringsPluralVariations = quantityToXcstringsType(
-          qt as Plurality
-        );
+      entries(entry.plurals).forEach(([qt, entry]) => {
+        const variation: XCStringsPluralVariations =
+          quantityToXcstringsType(qt);
         merge(stringUnit.localizations, {
           [locale]: {
             variations: {
