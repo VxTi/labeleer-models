@@ -10,7 +10,7 @@ import {
 } from './xcstrings-transformer';
 import { expect, it, describe } from 'vitest';
 
-const transformer = new XCStringsDatasetTransformer();
+const transformer = XCStringsDatasetTransformer;
 
 describe('xcstrings parsing', () => {
   it('should parse a simple xcstrings file', () => {
@@ -128,12 +128,11 @@ describe('xcstrings serialization', () => {
     });
 
     const result = transformer.serialize(dataset, mockSerializationOptions());
+    const fileName = `${DEFAULT_XCSTRINGS_FILE_NAME}.xcstrings`;
 
-    expect(result).toBeDefined();
-    expect(result).toHaveLength(1);
-    expect(result[0]?.filename).toEqual(DEFAULT_XCSTRINGS_FILE_NAME);
-    expect(result[0]?.data).toContain('must exist');
-    expect(result[0]?.data).toMatchInlineSnapshot(`
+    expect(result).toHaveProperty(fileName);
+    expect(result[fileName].content).toContain('must exist');
+    expect(result[fileName].content).toMatchInlineSnapshot(`
       "{
         "sourceLanguage": "en-US",
         "strings": {

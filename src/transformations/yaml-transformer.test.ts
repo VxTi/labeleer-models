@@ -3,7 +3,7 @@ import { describe, it, expect } from 'vitest';
 import { mockSerializationOptions } from '@/__testutils__';
 import { Plurality } from '@/definitions';
 
-const transformer = new YamlDatasetTransformer();
+const transformer = YamlDatasetTransformer;
 
 describe('yaml serialization', () => {
   it('should serialize a simple YAML dataset', () => {

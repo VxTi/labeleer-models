@@ -3,7 +3,7 @@ import { type Locale, toBCP47 } from '@/locales';
 import { AppleStringsDatasetTransformer } from '@/transformations/apple-strings-transformer';
 import { describe, expect, it } from 'vitest';
 
-const transformer = new AppleStringsDatasetTransformer();
+const transformer = AppleStringsDatasetTransformer;
 
 describe('apple strings parsing', () => {
   it('should aggregate several apple strings datasets', () => {
@@ -144,13 +144,15 @@ describe('apple strings serialization', () => {
       })
     );
 
-    expect(serialized).toBeDefined();
     expect(Object.keys(serialized)).toHaveLength(2);
-    expect(serialized['en-US'].content).toMatchInlineSnapshot(`
+    expect(serialized).toHaveProperty('en-US.strings');
+    expect(serialized).toHaveProperty('nl-NL.strings');
+
+    expect(serialized['en-US.strings'].content).toMatchInlineSnapshot(`
       ""first-entry" = "english";
       "second-entry" = "english \\"second\\"";"
     `);
-    expect(serialized['nl-NL'].content).toMatchInlineSnapshot(`
+    expect(serialized['nl-NL.strings'].content).toMatchInlineSnapshot(`
       ""first-entry" = "dutch";
       "second-entry" = "dutch \\"second\\"";"
     `);
@@ -158,7 +160,6 @@ describe('apple strings serialization', () => {
 
   it('should escape special characters', () => {
     const refLang = 'en_US';
-    const bpcRefLang = toBCP47(refLang);
     const serialized = transformer.serialize(
       {
         'special-entry': {
@@ -174,9 +175,11 @@ describe('apple strings serialization', () => {
       })
     );
 
+    const fileName = `${toBCP47(refLang)}.strings`;
+
     expect(serialized).toBeDefined();
-    expect(serialized).toHaveProperty(bpcRefLang);
-    expect(serialized[bpcRefLang].content).toMatchInlineSnapshot(
+    expect(serialized).toHaveProperty(fileName);
+    expect(serialized[fileName].content).toMatchInlineSnapshot(
       `""special-entry" = "Line1\\nLine2\\tTabbed\\\\\\"Quote\\\\\\"";"`
     );
   });

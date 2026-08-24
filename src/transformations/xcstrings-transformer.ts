@@ -126,7 +126,7 @@ export const XCStringsDatasetTransformer = makeLanguageTransformer({
     const content = JSON.stringify(xcstrings, null, 2);
 
     return {
-      [DEFAULT_XCSTRINGS_FILE_NAME]: { content },
+      [DEFAULT_XCSTRINGS_FILE_NAME + this.extensions[0]]: { content },
     };
   },
 });

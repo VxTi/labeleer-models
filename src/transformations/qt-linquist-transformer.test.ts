@@ -1,4 +1,3 @@
-import { type SerializationResult } from '@/definitions';
 import { TsDatasetTransformer } from '@/transformations/qt-linquist-transformer';
 import { describe, expect, it } from 'vitest';
 import {
@@ -7,7 +6,7 @@ import {
   mockParsingOptions,
 } from '@/__testutils__';
 
-const transformer = new TsDatasetTransformer();
+const transformer = TsDatasetTransformer;
 
 describe('serialization', () => {
   it('should serialize a simple Qt Linguist XML dataset', () => {
@@ -19,14 +18,10 @@ describe('serialization', () => {
 
     const serialized = transformer.serialize(dataset, options);
 
-    expect(serialized).toHaveProperty('nl_NL');
-    expect(serialized).toHaveProperty('en_AU');
-    expect(serialized).toMatchObject<SerializationResult>({
-      ['en_AU']: expect.anything(),
-      ['nl_NL']: expect.anything(),
-    });
+    expect(serialized).toHaveProperty('nl_NL.ts', expect.any(Object));
+    expect(serialized).toHaveProperty('en_AU.ts', expect.any(Object));
 
-    expect(serialized['nl_NL'].content).toMatchInlineSnapshot(`
+    expect(serialized['nl_NL.ts'].content).toMatchInlineSnapshot(`
       "<?xml version="1.0" encoding="utf-8"?>
       <!DOCTYPE TS>
       <TS version="2.1" sourcelanguage="en_US" language="nl_NL">
@@ -56,7 +51,7 @@ describe('serialization', () => {
     const serialized = transformer.serialize(dataset, options);
 
     expect(serialized).toBeDefined();
-    expect(serialized['en_US'].content).toMatchInlineSnapshot(`
+    expect(serialized['en_US.ts'].content).toMatchInlineSnapshot(`
       "<?xml version="1.0" encoding="utf-8"?>
       <!DOCTYPE TS>
       <TS version="2.1" sourcelanguage="en_US" language="en_US">

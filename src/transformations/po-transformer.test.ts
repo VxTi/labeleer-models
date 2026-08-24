@@ -3,7 +3,7 @@ import { type SerializationResult } from '@/definitions';
 import { PODatasetTransformer } from '@/transformations/po-transformer';
 import { describe, expect, it } from 'vitest';
 
-const transformer = new PODatasetTransformer();
+const transformer = PODatasetTransformer;
 
 describe('po parsing', () => {
   it('should parse PO files correctly', () => {

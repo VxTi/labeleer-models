@@ -1,36 +1,34 @@
-import type {
-  ParsingOptions,
-  SerializationOptions,
-  SerializationResult,
-  TranslationDataset,
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import {
+  type MakeOptional,
+  type ParsingOptions,
+  type SerializationOptions,
+  type SerializationResult,
+  type TranslationDataset,
 } from '@/definitions';
 import { type LanguageFileFormat } from '@/file-formats';
 import type { Locale } from '@/locales';
+import merge from 'lodash-es/merge';
 
 type FileExtension<T extends string = string> = `.${T}`;
+type FileExtensions = [FileExtension, ...FileExtension[]];
 
 export interface LanguageFileTransformer<
-  TFormat extends LanguageFileFormat = LanguageFileFormat,
-  TFileExtensions extends [FileExtension, ...FileExtension[]] = [
-    FileExtension,
-    ...FileExtension[],
-  ],
-  TParseOptions extends object = object,
-  TSerializeOptions extends object = object,
+  TFormat extends LanguageFileFormat,
+  TFileExtensions extends FileExtensions,
+  TParseOptions extends ParsingOptions,
+  TSerializeOptions extends object,
 > {
   readonly fileFormat: TFormat;
   readonly extensions: TFileExtensions;
 
   canParse(extension: string): extension is NoInfer<TFileExtensions>[number];
 
-  parse(
-    input: string,
-    options: ParsingOptions<TParseOptions>
-  ): TranslationDataset;
+  parse(input: string, options: TParseOptions): TranslationDataset;
 
-  parseAggregate?(
+  parseAggregate(
     inputs: Partial<Record<Locale, string>>,
-    options: ParsingOptions<TParseOptions>
+    options: TParseOptions
   ): TranslationDataset;
 
   serialize(
@@ -39,23 +37,30 @@ export interface LanguageFileTransformer<
   ): SerializationResult;
 }
 
+type SomeLanguageFileTransformer = LanguageFileTransformer<
+  LanguageFileFormat,
+  FileExtensions,
+  any,
+  any
+>;
+
 export function makeLanguageTransformer<
   TFormat extends LanguageFileFormat = LanguageFileFormat,
-  TFileExtensions extends [FileExtension, ...FileExtension[]] = [
-    FileExtension,
-    ...FileExtension[],
-  ],
-  TParseOptions extends object = object,
+  TFileExtensions extends FileExtensions = FileExtensions,
+  TParseOptions extends ParsingOptions = ParsingOptions,
   TSerializeOptions extends object = object,
 >(
-  options: Omit<
-    LanguageFileTransformer<
-      TFormat,
-      TFileExtensions,
-      TParseOptions,
-      TSerializeOptions
+  options: MakeOptional<
+    Omit<
+      LanguageFileTransformer<
+        TFormat,
+        TFileExtensions,
+        TParseOptions,
+        TSerializeOptions
+      >,
+      'canParse'
     >,
-    'canParse'
+    'parseAggregate'
   >
 ): LanguageFileTransformer<
   TFormat,
@@ -78,165 +83,126 @@ export function makeLanguageTransformer<
         );
       });
     },
+    parseAggregate(
+      inputs: Partial<Record<Locale, string>>,
+      parsingOptions: NoInfer<TParseOptions> // Inferred from main parsing function
+    ): TranslationDataset {
+      const dataset: TranslationDataset = {};
+
+      Object.entries(inputs).forEach(([locale, value]) => {
+        const parsed = options.parse(value, {
+          ...parsingOptions,
+          targetLocale: locale as Locale,
+        });
+        merge(dataset, parsed);
+      });
+
+      return dataset;
+    },
   };
 }
 
-/**
- * A transformer with its format/option type parameters erased, as stored
- * inside a {@link ParserSet}.
- */
-export type AnyLanguageFileTransformer = ILanguageFileTransformer;
+export type InferLanguageFileFormat<T extends SomeLanguageFileTransformer> =
+  T extends LanguageFileTransformer<infer Fmt, any, any, any> ? Fmt : never;
 
-/**
- * An immutable registry of {@link ILanguageFileTransformer}s keyed by format,
- * providing lookup by format or file extension and convenience delegates for
- * parsing and serialization.
- *
- * Construct one with {@link ParserSetBuilder}.
- */
-export class ParserSet {
-  private readonly byFormat: Map<
-    LanguageFileFormat,
-    AnyLanguageFileTransformer
-  >;
+export type InferParserWithFormat<
+  TTransformer extends SomeLanguageFileTransformer,
+  TFmt extends LanguageFileFormat,
+> =
+  TTransformer extends LanguageFileTransformer<infer TSomeFmt, any, any, any> ?
+    TSomeFmt extends TFmt ?
+      TTransformer
+    : never
+  : never;
 
-  public constructor(transformers: Iterable<AnyLanguageFileTransformer>) {
-    this.byFormat = new Map();
+type InferParsingOptions<T> =
+  T extends LanguageFileTransformer<any, any, infer Opt, any> ? Opt : never;
 
-    for (const transformer of transformers) {
-      this.byFormat.set(transformer.fileFormat, transformer);
-    }
-  }
+export interface ParserSet<TTransformers extends SomeLanguageFileTransformer> {
+  formats(): InferLanguageFileFormat<NoInfer<TTransformers>>[];
 
-  /**
-   * All registered transformers.
-   */
-  public get transformers(): AnyLanguageFileTransformer[] {
-    return [...this.byFormat.values()];
-  }
-
-  /**
-   * All formats covered by this set.
-   */
-  public get formats(): LanguageFileFormat[] {
-    return [...this.byFormat.keys()];
-  }
-
-  /**
-   * Whether a transformer is registered for the given format.
-   */
-  public has(format: LanguageFileFormat): boolean {
-    return this.byFormat.has(format);
-  }
-
-  /**
-   * Returns the transformer registered for a format, or `undefined`.
-   */
-  public get(
+  has(
     format: LanguageFileFormat
-  ): AnyLanguageFileTransformer | undefined {
-    return this.byFormat.get(format);
-  }
+  ): format is InferLanguageFileFormat<TTransformers>;
 
-  /**
-   * Returns the first transformer that can handle the given extension or
-   * filename, or `undefined` when none match.
-   */
-  public getByExtension(
-    extension: string
-  ): AnyLanguageFileTransformer | undefined {
-    return this.transformers.find(transformer =>
-      transformer.canParse(extension)
-    );
-  }
+  get<TFmt extends InferLanguageFileFormat<TTransformers>>(
+    format: TFmt
+  ): InferParserWithFormat<TTransformers, TFmt>;
 
-  /**
-   * Parses input using the transformer registered for the given format.
-   *
-   * @throws {Error} When no transformer is registered for the format.
-   */
-  public parse(
+  parse<TFmt extends InferLanguageFileFormat<TTransformers>>(
     input: string,
-    format: LanguageFileFormat,
-    options: ParsingOptions<object>
-  ): TranslationDataset {
-    return this.require(format).parse(input, options);
-  }
+    format: TFmt,
+    options: InferParsingOptions<
+      InferParserWithFormat<NoInfer<TTransformers>, NoInfer<TFmt>>
+    >
+  ): TranslationDataset;
 
-  /**
-   * Parses and merges multiple locale-specific inputs using the transformer
-   * registered for the given format.
-   *
-   * @throws {Error} When no transformer is registered for the format.
-   */
-  public parseAggregate(
+  parseAggregate<TFmt extends InferLanguageFileFormat<TTransformers>>(
     inputs: Partial<Record<Locale, string>>,
-    format: LanguageFileFormat,
-    options: ParsingOptions<object>
-  ): TranslationDataset {
-    return this.require(format).parseAggregate(inputs, options);
-  }
+    format: TFmt,
+    options: InferParsingOptions<InferParserWithFormat<TTransformers, TFmt>>
+  ): TranslationDataset;
 
-  /**
-   * Serializes a dataset using the transformer registered for the given format.
-   *
-   * @throws {Error} When no transformer is registered for the format.
-   */
-  public serialize(
+  serialize(
     dataset: TranslationDataset,
-    format: LanguageFileFormat,
+    format: InferLanguageFileFormat<TTransformers>,
     options: SerializationOptions
-  ): SerializationResult {
-    return this.require(format).serialize(dataset, options);
-  }
-
-  private require(format: LanguageFileFormat): AnyLanguageFileTransformer {
-    const transformer = this.byFormat.get(format);
-
-    if (!transformer) {
-      throw new Error(`No transformer registered for format "${format}".`);
-    }
-
-    return transformer;
-  }
+  ): SerializationResult;
 }
 
-/**
- * A fluent builder for assembling a {@link ParserSet} from a collection of
- * {@link ILanguageFileTransformer}s.
- *
- * Registering a transformer for a format that already has one replaces the
- * previous registration, so later `add` calls win.
- */
-export class ParserSetBuilder {
-  private readonly transformers = new Map<
-    LanguageFileFormat,
-    AnyLanguageFileTransformer
-  >();
+export function makeParserSet<
+  TTransformers extends SomeLanguageFileTransformer,
+>(transformers: TTransformers[]): ParserSet<TTransformers> {
+  const get = <TFmt extends InferLanguageFileFormat<TTransformers>>(
+    format: TFmt
+  ): InferParserWithFormat<TTransformers, TFmt> => {
+    // Normally, this would yield 'T | undefined', though
+    // since we statically know which types are possible,
+    // this *should* always return a value
+    return transformers.find(
+      tfm => tfm.fileFormat === format
+    ) as InferParserWithFormat<TTransformers, TFmt>;
+  };
 
-  /**
-   * Registers a single transformer, keyed by its {@link ILanguageFileTransformer.fileFormat}.
-   */
-  public add(transformer: AnyLanguageFileTransformer): this {
-    this.transformers.set(transformer.fileFormat, transformer);
-    return this;
-  }
+  const has = (
+    format: LanguageFileFormat
+  ): format is InferLanguageFileFormat<TTransformers> => {
+    return transformers.find(tfm => tfm.fileFormat === format) !== undefined;
+  };
 
-  /**
-   * Registers multiple transformers in order.
-   */
-  public addAll(transformers: Iterable<AnyLanguageFileTransformer>): this {
-    for (const transformer of transformers) {
-      this.add(transformer);
-    }
+  const parse = <TFmt extends InferLanguageFileFormat<TTransformers>>(
+    input: string,
+    format: TFmt,
+    options: InferParsingOptions<InferParserWithFormat<TTransformers, TFmt>>
+  ): TranslationDataset => get(format).parse(input, options);
 
-    return this;
-  }
+  const parseAggregate = <TFmt extends InferLanguageFileFormat<TTransformers>>(
+    inputs: Partial<Record<Locale, string>>,
+    format: TFmt,
+    options: InferParsingOptions<InferParserWithFormat<TTransformers, TFmt>>
+  ): TranslationDataset => {
+    return get(format).parseAggregate(inputs, options);
+  };
 
-  /**
-   * Builds an immutable {@link ParserSet} from the registered transformers.
-   */
-  public build(): ParserSet {
-    return new ParserSet(this.transformers.values());
-  }
+  const serialize = <TOpt extends TTransformers>(
+    dataset: TranslationDataset,
+    format: InferLanguageFileFormat<TOpt>,
+    options: SerializationOptions
+  ): SerializationResult => {
+    return get(format).serialize(dataset, options);
+  };
+
+  return {
+    get,
+    has,
+    parse,
+    parseAggregate,
+    serialize,
+
+    formats(): InferLanguageFileFormat<TTransformers>[] {
+      return transformers.map(
+        tfm => tfm.fileFormat
+      ) as InferLanguageFileFormat<TTransformers>[];
+    },
+  };
 }

@@ -7,20 +7,12 @@ import type {
 } from '@/definitions';
 import { ParsingError } from '@/errors';
 import { LanguageFileFormat } from '@/file-formats';
-import { ILanguageFileTransformer } from '@/transformer';
+import { makeLanguageTransformer } from '@/transformer';
 
-export class JsonDatasetTransformer extends ILanguageFileTransformer<
-  LanguageFileFormat.JSON,
-  ['.json']
-> {
-  public constructor() {
-    super(LanguageFileFormat.JSON, ['.json']);
-  }
-
-  public parse(
-    input: string,
-    _options: ParsingOptions<object>
-  ): TranslationDataset {
+export const JsonDatasetTransformer = makeLanguageTransformer({
+  fileFormat: LanguageFileFormat.JSON,
+  extensions: ['.json'],
+  parse(input: string, _options: ParsingOptions): TranslationDataset {
     const json = safeParseJson(input);
     if (!json) {
       throw new ParsingError(
@@ -36,9 +28,9 @@ export class JsonDatasetTransformer extends ILanguageFileTransformer<
       });
     }
     return result.data;
-  }
+  },
 
-  public serialize(
+  serialize(
     dataset: TranslationDataset,
     _options: SerializationOptions
   ): SerializationResult {
@@ -47,8 +39,8 @@ export class JsonDatasetTransformer extends ILanguageFileTransformer<
     return {
       [DEFAULT_JSON_FILE_NAME]: { content },
     };
-  }
-}
+  },
+});
 
 export const DEFAULT_JSON_FILE_NAME = 'labels';
 

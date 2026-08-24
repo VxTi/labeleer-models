@@ -7,7 +7,7 @@ import {
   mockParsingOptions,
 } from '@/__testutils__';
 
-const transformer = new XLIFFDatasetTransformer();
+const transformer = XLIFFDatasetTransformer;
 
 describe('XLIFF 2.1 Parsing', () => {
   it('parses a minimal XLIFF 2.1 document', () => {

@@ -15,24 +15,16 @@ import {
   type Locale,
   toISO639_1LanguageCode,
 } from '@/locales';
-import { ILanguageFileTransformer } from '@/transformer';
+import { makeLanguageTransformer } from '@/transformer';
 import { entries, extractArray } from '@/util/data-extraction';
 import { XMLBuilder, XMLParser } from 'fast-xml-parser';
 import * as z from 'zod';
 import merge from 'lodash-es/merge';
 
-export class AndroidStringsDatasetTransformer extends ILanguageFileTransformer<
-  LanguageFileFormat.ANDROID_STRINGS,
-  ['.xml']
-> {
-  public constructor() {
-    super(LanguageFileFormat.ANDROID_STRINGS, ['.xml']);
-  }
-
-  public parse(
-    input: string,
-    options: ParsingOptions<object>
-  ): TranslationDataset {
+export const AndroidStringsDatasetTransformer = makeLanguageTransformer({
+  fileFormat: LanguageFileFormat.ANDROID_STRINGS,
+  extensions: ['.xml'],
+  parse(input: string, options: ParsingOptions): TranslationDataset {
     try {
       const parser = new XMLParser({
         ignoreAttributes: false,
@@ -45,11 +37,11 @@ export class AndroidStringsDatasetTransformer extends ILanguageFileTransformer<
         `Failed to parse Android Strings XML: ${String(e)}`
       );
     }
-  }
+  },
 
-  public override parseAggregate(
+  parseAggregate(
     inputs: Partial<Record<Locale, string>>,
-    options: ParsingOptions<object>
+    options: ParsingOptions
   ): TranslationDataset {
     const builder = new DatasetBuilder();
 
@@ -63,9 +55,9 @@ export class AndroidStringsDatasetTransformer extends ILanguageFileTransformer<
     }
 
     return builder.build();
-  }
+  },
 
-  public serialize(
+  serialize(
     dataset: TranslationDataset,
     options: SerializationOptions
   ): SerializationResult {
@@ -85,7 +77,10 @@ export class AndroidStringsDatasetTransformer extends ILanguageFileTransformer<
             const dirname = androidValuesDirectory(locale, options.locales);
             const filename = [dirname, 'strings'].join('/');
 
-            return [filename, { content, isDirectory: true }];
+            return [
+              filename + this.extensions[0],
+              { content, isDirectory: true },
+            ];
           }
         )
       );
@@ -95,8 +90,8 @@ export class AndroidStringsDatasetTransformer extends ILanguageFileTransformer<
         { cause: e }
       );
     }
-  }
-}
+  },
+});
 
 function buildXmlDataset(
   builder: XMLBuilder,
@@ -174,7 +169,7 @@ function androidValuesDirectory(locale: Locale, locales: Locale[]): string {
   const region = getCountryFromLocale(locale);
 
   return sharesLanguage && region ?
-      `values-${language}-r${region}`
+      `values-${language}-${region}`
     : `values-${language}`;
 }
 

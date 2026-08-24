@@ -7,7 +7,7 @@ import {
   JsonDatasetTransformer,
 } from './json-transformer';
 
-const transformer = new JsonDatasetTransformer();
+const transformer = JsonDatasetTransformer;
 
 describe('json parsing', () => {
   it('should parse a simple JSON dataset', () => {

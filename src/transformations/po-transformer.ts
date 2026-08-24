@@ -11,7 +11,7 @@ import {
 import { ParsingError } from '@/errors';
 import { LanguageFileFormat } from '@/file-formats';
 import { type Locale, toISO639_1LanguageCode } from '@/locales';
-import { ILanguageFileTransformer } from '@/transformer';
+import { makeLanguageTransformer } from '@/transformer';
 import { entries } from '@/util/data-extraction';
 import {
   type GetTextTranslation,
@@ -19,18 +19,10 @@ import {
   po,
 } from 'gettext-parser';
 
-export class PODatasetTransformer extends ILanguageFileTransformer<
-  LanguageFileFormat.PO,
-  ['.po', '.pot']
-> {
-  public constructor() {
-    super(LanguageFileFormat.PO, ['.po', '.pot']);
-  }
-
-  public parse(
-    input: string,
-    options: ParsingOptions<object>
-  ): TranslationDataset {
+export const PODatasetTransformer = makeLanguageTransformer({
+  fileFormat: LanguageFileFormat.PO,
+  extensions: ['.po', '.pot'],
+  parse(input: string, options: ParsingOptions): TranslationDataset {
     const { targetLocale } = options;
 
     if (!targetLocale) {
@@ -66,15 +58,15 @@ export class PODatasetTransformer extends ILanguageFileTransformer<
         cause: error as Error,
       });
     }
-  }
+  },
 
   /**
    * PO files are single-locale, keyed off {@link ParsingOptions.targetLocale},
    * so each aggregated input is parsed against its own locale.
    */
-  public override parseAggregate(
+  parseAggregate(
     inputs: Partial<Record<Locale, string>>,
-    options: ParsingOptions<object>
+    options: ParsingOptions
   ): TranslationDataset {
     const builder = new DatasetBuilder();
 
@@ -88,9 +80,9 @@ export class PODatasetTransformer extends ILanguageFileTransformer<
     }
 
     return builder.build();
-  }
+  },
 
-  public serialize(
+  serialize(
     dataset: TranslationDataset,
     options: SerializationOptions
   ): SerializationResult {
@@ -107,8 +99,8 @@ export class PODatasetTransformer extends ILanguageFileTransformer<
         return [filename, { content }];
       })
     );
-  }
-}
+  },
+});
 
 /**
  * Maps gettext `msgstr[n]` indices to CLDR plural categories. gettext's index

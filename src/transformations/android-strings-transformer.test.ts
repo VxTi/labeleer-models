@@ -7,7 +7,7 @@ import { type TranslationDataset } from '@/definitions';
 import { AndroidStringsDatasetTransformer } from './android-strings-transformer';
 import { describe, expect, it } from 'vitest';
 
-const transformer = new AndroidStringsDatasetTransformer();
+const transformer = AndroidStringsDatasetTransformer;
 
 describe('android strings serialization', () => {
   it('should serialize a simple Android Strings dataset', () => {
@@ -118,8 +118,8 @@ describe('android strings serialization', () => {
 
     const filenames = Object.keys(serialized).sort();
     expect(filenames).toEqual([
-      'values-en-rGB/strings',
-      'values-en-rUS/strings',
+      'values-en-rGB/strings.xml',
+      'values-en-rUS/strings.xml',
     ]);
   });
 });

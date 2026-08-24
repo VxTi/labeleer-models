@@ -1,10 +1,13 @@
-import { type SerializationResult } from '@/definitions';
-import { defaultParserSet } from '@/parser';
+import {
+  type SerializationFile,
+  type SerializationResult,
+} from '@/definitions';
+import { defaultTransformerSet } from '@/parser';
 import { describe, it, expect } from 'vitest';
 import { LanguageFileFormat } from './file-formats';
 import { mockDataset, mockSerializationOptions } from '@/__testutils__';
 
-const transformerSet = defaultParserSet;
+const transformerSet = defaultTransformerSet;
 
 describe('serializer', () => {
   describe('Android Strings', () => {
@@ -18,21 +21,18 @@ describe('serializer', () => {
       );
 
       expect(result).toMatchObject<SerializationResult>({
-        'values-en/': expect.objectContaining({
-          filename: 'values-en/',
-          dir: true,
+        'values-en/strings.xml': expect.objectContaining<SerializationFile>({
+          content: expect.any(String),
+          isDirectory: true,
         }),
-        'values-en/strings.xml': expect.anything(),
-        'values-nl/': expect.objectContaining({
-          name: 'values-nl/',
-          dir: true,
+        'values-nl/strings.xml': expect.objectContaining<SerializationFile>({
+          content: expect.any(String),
+          isDirectory: true,
         }),
-        'values-nl/strings.xml': expect.anything(),
-        'values-fr/': expect.objectContaining({
-          name: 'values-fr/',
-          dir: true,
+        'values-fr/strings.xml': expect.objectContaining<SerializationFile>({
+          content: expect.any(String),
+          isDirectory: true,
         }),
-        'values-fr/strings.xml': expect.anything(),
       });
     });
   });
@@ -48,9 +48,9 @@ describe('serializer', () => {
         })
       );
       expect(result).toMatchObject<SerializationResult>({
-        'en-US.strings': expect.anything(),
-        'nl-NL.strings': expect.anything(),
-        'fr-FR.strings': expect.anything(),
+        'en-US.strings': expect.any(Object),
+        'nl-NL.strings': expect.any(Object),
+        'fr-FR.strings': expect.any(Object),
       });
     });
   });
@@ -66,8 +66,12 @@ describe('serializer', () => {
         })
       );
       expect(result).toMatchObject<SerializationResult>({
-        'nl_NL.ts': expect.anything(),
-        'fr_FR.ts': expect.anything(),
+        'nl_NL.ts': expect.objectContaining<SerializationFile>({
+          content: expect.any(String),
+        }),
+        'fr_FR.ts': expect.objectContaining<SerializationFile>({
+          content: expect.any(String),
+        }),
       });
     });
   });

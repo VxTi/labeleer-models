@@ -45,7 +45,7 @@ export type TranslationDataset<TKey extends string = string> = Record<
 /**
  * Extensible options for parsing functions
  */
-export type ParsingOptions<TAdditionalOptions extends object> = {
+export interface ParsingOptions {
   /**
    * The locale to prioritize when parsing translations.
    */
@@ -57,29 +57,7 @@ export type ParsingOptions<TAdditionalOptions extends object> = {
    * and/or that are missing locale information in their structure.
    */
   targetLocale?: Locale;
-} & Partial<TAdditionalOptions>;
-
-/**
- * A function that takes a string input and an optional locale,
- * and returns a TranslationDataset or undefined if parsing fails.
- *
- * Whenever a {@link Locale} is provided, the parser should prioritize
- * parsing translations relevant to that locale.
- */
-export type ParserFn<T extends object = {}> = (
-  input: string,
-  options: ParsingOptions<T>
-) => TranslationDataset;
-
-/**
- * A function that takes multiple string inputs mapped by identifiers,
- * along with optional parsing options,
- * and returns a single aggregated TranslationDataset.
- */
-export type AggregateParserFn<T extends object = {}> = (
-  inputs: Partial<Record<Locale, string>>,
-  options: ParsingOptions<T>
-) => TranslationDataset;
+}
 
 /**
  * Options for serialization functions
@@ -128,3 +106,6 @@ export type SerializerFn<TAdditionalOptions extends object = object> = (
 ) => SerializationResult[];
 
 export type MaybeArray<T> = Array<T> | T;
+
+export type MakeOptional<T extends object, K extends keyof T> = Omit<T, K> &
+  Partial<Pick<T, K>>;

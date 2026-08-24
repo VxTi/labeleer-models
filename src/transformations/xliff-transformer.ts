@@ -10,23 +10,16 @@ import {
 import { ParsingError } from '@/errors';
 import { LanguageFileFormat } from '@/file-formats';
 import { type Locale, toISO639_1LanguageCode } from '@/locales';
-import { ILanguageFileTransformer } from '@/transformer';
+import { makeLanguageTransformer } from '@/transformer';
 import { entries } from '@/util/data-extraction';
 import { XMLBuilder, XMLParser } from 'fast-xml-parser';
 import * as z from 'zod';
 
-export class XLIFFDatasetTransformer extends ILanguageFileTransformer<
-  LanguageFileFormat.XLIFF,
-  ['.xliff']
-> {
-  public constructor() {
-    super(LanguageFileFormat.XLIFF, ['.xliff']);
-  }
+export const XLIFFDatasetTransformer = makeLanguageTransformer({
+  fileFormat: LanguageFileFormat.XLIFF,
+  extensions: ['.xliff'],
 
-  public parse(
-    input: string,
-    _options: ParsingOptions<object>
-  ): TranslationDataset {
+  parse(input: string, _options: ParsingOptions): TranslationDataset {
     try {
       const parser = new XMLParser({ ignoreAttributes: false });
 
@@ -67,9 +60,8 @@ export class XLIFFDatasetTransformer extends ILanguageFileTransformer<
         `Failed to parse XLIFF 2.1 content: ${(e as Error).message}`
       );
     }
-  }
-
-  public serialize(
+  },
+  serialize(
     input: TranslationDataset,
     options: SerializationOptions
   ): SerializationResult {
@@ -116,8 +108,8 @@ export class XLIFFDatasetTransformer extends ILanguageFileTransformer<
         return [filename, { content }];
       })
     );
-  }
-}
+  },
+});
 
 function serializeSingular(
   input: TranslationDataset,

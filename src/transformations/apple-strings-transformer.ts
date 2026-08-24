@@ -1,29 +1,22 @@
 import { DatasetBuilder } from '@/dataset-builder';
-import {
-  type ParsingOptions,
-  type SerializationFileFragment,
-  type SerializationOptions,
-  type SerializationResult,
-  type TranslationDataset,
+import type {
+  ParsingOptions,
+  SerializationFileFragment,
+  SerializationOptions,
+  SerializationResult,
+  TranslationDataset,
 } from '@/definitions';
 import { ParsingError } from '@/errors';
 import { LanguageFileFormat } from '@/file-formats';
 import { type Locale, toBCP47 } from '@/locales';
-import { ILanguageFileTransformer } from '@/transformer';
+import { makeLanguageTransformer } from '@/transformer';
 import { entries } from '@/util/data-extraction';
 
-export class AppleStringsDatasetTransformer extends ILanguageFileTransformer<
-  LanguageFileFormat.APPLE_STRINGS,
-  ['.strings']
-> {
-  public constructor() {
-    super(LanguageFileFormat.APPLE_STRINGS, ['.strings']);
-  }
+export const AppleStringsDatasetTransformer = makeLanguageTransformer({
+  fileFormat: LanguageFileFormat.APPLE_STRINGS,
+  extensions: ['.strings'],
 
-  public parse(
-    input: string,
-    options: ParsingOptions<object>
-  ): TranslationDataset {
+  parse(input: string, options: ParsingOptions): TranslationDataset {
     const { targetLocale } = options;
     if (!targetLocale) {
       throw new ParsingError(
@@ -47,16 +40,16 @@ export class AppleStringsDatasetTransformer extends ILanguageFileTransformer<
     }
 
     return builder.build();
-  }
+  },
 
   /**
    * Apple `.strings` files are single-locale, keyed off
    * {@link ParsingOptions.targetLocale}, so each aggregated input is parsed
    * against its own locale.
    */
-  public override parseAggregate(
+  parseAggregate(
     inputs: Partial<Record<Locale, string>>,
-    options: ParsingOptions<object>
+    options: ParsingOptions
   ): TranslationDataset {
     const builder = new DatasetBuilder();
 
@@ -70,9 +63,9 @@ export class AppleStringsDatasetTransformer extends ILanguageFileTransformer<
     }
 
     return builder.build();
-  }
+  },
 
-  public serialize(
+  serialize(
     dataset: TranslationDataset,
     options: SerializationOptions
   ): SerializationResult {
@@ -81,11 +74,11 @@ export class AppleStringsDatasetTransformer extends ILanguageFileTransformer<
         const { filename, content } =
           constructAppleStringsSerializationFragment(dataset, loc);
 
-        return [filename, { content }];
+        return [filename + this.extensions[0], { content }];
       })
     );
-  }
-}
+  },
+});
 
 export const APPLE_STRING_LINE_REGEX =
   /^\s*\uFEFF?"((?:[^"\\]|\\(?:U[0-9A-Fa-f]{4}|.))*)"\s*=\s*"((?:[^"\\]|\\(?:U[0-9A-Fa-f]{4}|.))*)"\s*;\s*$/;

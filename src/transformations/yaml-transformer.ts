@@ -7,21 +7,13 @@ import {
 } from '@/definitions';
 import { ParsingError } from '@/errors';
 import { LanguageFileFormat } from '@/file-formats';
-import { ILanguageFileTransformer } from '@/transformer';
+import { makeLanguageTransformer } from '@/transformer';
 import YAML, { parse } from 'yaml';
 
-export class YamlDatasetTransformer extends ILanguageFileTransformer<
-  LanguageFileFormat.YAML,
-  ['.yaml']
-> {
-  public constructor() {
-    super(LanguageFileFormat.YAML, ['.yaml']);
-  }
-
-  public parse(
-    input: string,
-    _options: ParsingOptions<object>
-  ): TranslationDataset {
+export const YamlDatasetTransformer = makeLanguageTransformer({
+  fileFormat: LanguageFileFormat.YAML,
+  extensions: ['.yaml'],
+  parse(input: string, _options: ParsingOptions): TranslationDataset {
     try {
       const parsedYaml: unknown = parse(input);
 
@@ -42,9 +34,9 @@ export class YamlDatasetTransformer extends ILanguageFileTransformer<
         }
       );
     }
-  }
+  },
 
-  public serialize(
+  serialize(
     dataset: TranslationDataset,
     _options: SerializationOptions
   ): SerializationResult {
@@ -53,7 +45,7 @@ export class YamlDatasetTransformer extends ILanguageFileTransformer<
     return {
       [DEFAULT_YAML_FILE_NAME]: { content },
     };
-  }
-}
+  },
+});
 
 export const DEFAULT_YAML_FILE_NAME = 'labels';

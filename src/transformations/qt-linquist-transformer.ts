@@ -9,23 +9,15 @@ import {
 import { ParsingError } from '@/errors';
 import { LanguageFileFormat } from '@/file-formats';
 import { isBCP47Locale, isLocale, type Locale, toPOSIX } from '@/locales';
-import { ILanguageFileTransformer } from '@/transformer';
+import { makeLanguageTransformer } from '@/transformer';
 import { entries, extractArray } from '@/util/data-extraction';
 import { XMLBuilder, XMLParser } from 'fast-xml-parser';
 import * as z from 'zod';
 
-export class TsDatasetTransformer extends ILanguageFileTransformer<
-  LanguageFileFormat.TS,
-  ['.ts']
-> {
-  public constructor() {
-    super(LanguageFileFormat.TS, ['.ts']);
-  }
-
-  public parse(
-    input: string,
-    options: ParsingOptions<object>
-  ): TranslationDataset {
+export const TsDatasetTransformer = makeLanguageTransformer({
+  fileFormat: LanguageFileFormat.TS,
+  extensions: ['.ts'],
+  parse(input: string, options: ParsingOptions): TranslationDataset {
     try {
       const parser = new XMLParser({
         ignoreAttributes: false,
@@ -73,9 +65,9 @@ export class TsDatasetTransformer extends ILanguageFileTransformer<
         { cause: e }
       );
     }
-  }
+  },
 
-  public serialize(
+  serialize(
     input: TranslationDataset,
     options: SerializationOptions
   ): SerializationResult {
@@ -97,7 +89,7 @@ export class TsDatasetTransformer extends ILanguageFileTransformer<
       );
 
       return {
-        [filename]: { content },
+        [filename + this.extensions[0]]: { content },
       };
     }
 
@@ -109,11 +101,11 @@ export class TsDatasetTransformer extends ILanguageFileTransformer<
           locale,
           referenceLocale
         );
-        return [filename, { content }];
+        return [filename + this.extensions[0], { content }];
       })
     );
-  }
-}
+  },
+});
 
 function constructTsSerializationFragment(
   builder: XMLBuilder,
