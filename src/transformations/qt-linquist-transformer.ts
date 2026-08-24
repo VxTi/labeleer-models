@@ -1,6 +1,7 @@
 import { DatasetBuilder } from '@/dataset-builder';
 import {
   type ParsingOptions,
+  type SerializationFileFragment,
   type SerializationOptions,
   type SerializationResult,
   type TranslationDataset,
@@ -77,7 +78,7 @@ export class TsDatasetTransformer extends ILanguageFileTransformer<
   public serialize(
     input: TranslationDataset,
     options: SerializationOptions
-  ): SerializationResult[] {
+  ): SerializationResult {
     const { referenceLocale, locales } = options;
     const nonReferenceLanguages = locales.filter(
       loc => loc !== referenceLocale
@@ -95,11 +96,21 @@ export class TsDatasetTransformer extends ILanguageFileTransformer<
         referenceLocale
       );
 
-      return [fragment];
+      return {
+        [fragment.filename]: fragment.content,
+      };
     }
 
-    return nonReferenceLanguages.map(locale =>
-      constructTsSerializationFragment(builder, input, locale, referenceLocale)
+    return Object.fromEntries(
+      nonReferenceLanguages.map(locale => {
+        const fragment = constructTsSerializationFragment(
+          builder,
+          input,
+          locale,
+          referenceLocale
+        );
+        return [fragment.filename, fragment.content];
+      })
     );
   }
 }
@@ -109,7 +120,7 @@ function constructTsSerializationFragment(
   dataset: TranslationDataset,
   locale: Locale | undefined,
   referenceLocale: Locale
-): SerializationResult {
+): SerializationFileFragment {
   const tsObj = {
     TS: {
       '@_version': '2.1',
@@ -130,10 +141,10 @@ function constructTsSerializationFragment(
   };
 
   const body = builder.build(tsObj);
-  const data = `<?xml version="1.0" encoding="utf-8"?>\n<!DOCTYPE TS>\n${body}`;
+  const content = `<?xml version="1.0" encoding="utf-8"?>\n<!DOCTYPE TS>\n${body}`;
 
   return {
-    data,
+    content,
     filename: locale ?? referenceLocale,
   };
 }

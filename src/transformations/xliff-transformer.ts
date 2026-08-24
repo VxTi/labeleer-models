@@ -2,6 +2,7 @@ import { LocaleDecoder } from '@/common';
 import { DatasetBuilder } from '@/dataset-builder';
 import {
   type ParsingOptions,
+  type SerializationFileFragment,
   type SerializationOptions,
   type SerializationResult,
   type TranslationDataset,
@@ -71,7 +72,7 @@ export class XLIFFDatasetTransformer extends ILanguageFileTransformer<
   public serialize(
     input: TranslationDataset,
     options: SerializationOptions
-  ): SerializationResult[] {
+  ): SerializationResult {
     const { locales, referenceLocale } = options;
     const builder = new XMLBuilder({
       ignoreAttributes: false,
@@ -85,29 +86,36 @@ export class XLIFFDatasetTransformer extends ILanguageFileTransformer<
 
     // If there are no non-reference locales, create a single fragment with only the source language.
     if (nonReferenceLocales.length === 0) {
-      return serializeSingular(input, builder, options);
+      const { filename, content } = serializeSingular(input, builder, options);
+      return {
+        [filename]: content,
+      };
     }
 
-    const fragments: SerializationResult[] = [];
-    nonReferenceLocales.forEach((locale: Locale) => {
-      const dataset: TranslationDataset = {};
+    return Object.fromEntries(
+      nonReferenceLocales.map((locale: Locale) => {
+        const dataset: TranslationDataset = {};
 
-      entries(input).forEach(([key, entry]) => {
-        dataset[key] = {
-          plurals: {},
-          translations: {
-            [referenceLocale]: entry.translations[referenceLocale] || '',
-            [locale]: entry.translations[locale] || '',
-          },
-        };
-      });
+        entries(input).forEach(([key, entry]) => {
+          dataset[key] = {
+            plurals: {},
+            translations: {
+              [referenceLocale]: entry.translations[referenceLocale] || '',
+              [locale]: entry.translations[locale] || '',
+            },
+          };
+        });
 
-      fragments.push(
-        constructXliff21Fragment(builder, dataset, locale, referenceLocale)
-      );
-    });
+        const { filename, content } = constructXliff21Fragment(
+          builder,
+          dataset,
+          locale,
+          referenceLocale
+        );
 
-    return fragments;
+        return [filename, content];
+      })
+    );
   }
 }
 
@@ -115,7 +123,7 @@ function serializeSingular(
   input: TranslationDataset,
   xmlBuilder: XMLBuilder,
   options: SerializationOptions
-): SerializationResult[] {
+): SerializationFileFragment {
   const datasetBuilder = new DatasetBuilder();
 
   entries(input).forEach(([key, entry]) => {
@@ -125,14 +133,12 @@ function serializeSingular(
     datasetBuilder.addTranslation(key, { [locale]: value });
   });
 
-  const fragment = constructXliff21Fragment(
+  return constructXliff21Fragment(
     xmlBuilder,
     datasetBuilder.build(),
     undefined,
     options.referenceLocale
   );
-
-  return [fragment];
 }
 
 // XLIFF 2.1 builder
@@ -141,7 +147,7 @@ function constructXliff21Fragment(
   dataset: TranslationDataset,
   targetLocale: Locale | undefined,
   sourceLocale: Locale
-): SerializationResult {
+): SerializationFileFragment {
   const xliffObj = {
     xliff: {
       '@_version': '2.1',
@@ -167,11 +173,12 @@ function constructXliff21Fragment(
     },
   };
 
-  const xmlContent = builder.build(xliffObj);
+  const rawXmlContent = builder.build(xliffObj);
+  const content = `<?xml version="1.0" encoding="UTF-8"?>\n${rawXmlContent}`;
 
   return {
     filename: targetLocale ?? sourceLocale,
-    data: `<?xml version="1.0" encoding="UTF-8"?>\n${xmlContent}`,
+    content,
   };
 }
 

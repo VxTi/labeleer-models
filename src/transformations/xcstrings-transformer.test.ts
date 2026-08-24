@@ -4,9 +4,10 @@ import {
   mockSerializationOptions,
 } from '@/__testutils__';
 import { Plurality } from '@/definitions';
-import XCStringsDatasetTransformer, {
+import {
   DEFAULT_XCSTRINGS_FILE_NAME,
-} from '@/transformations/xcstrings-transformer';
+  XCStringsDatasetTransformer,
+} from './xcstrings-transformer';
 import { expect, it, describe } from 'vitest';
 
 const transformer = new XCStringsDatasetTransformer();

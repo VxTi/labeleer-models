@@ -47,15 +47,13 @@ export class YamlDatasetTransformer extends ILanguageFileTransformer<
   public serialize(
     dataset: TranslationDataset,
     _options: SerializationOptions
-  ): SerializationResult[] {
+  ): SerializationResult {
     const data = YAML.stringify(dataset);
 
-    return [
-      {
-        filename: DEFAULT_YAML_FILE_NAME,
-        data,
-      },
-    ];
+    return {
+      filename: DEFAULT_YAML_FILE_NAME,
+      data,
+    };
   }
 }
 

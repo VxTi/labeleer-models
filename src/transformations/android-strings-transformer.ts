@@ -67,7 +67,7 @@ export class AndroidStringsDatasetTransformer extends ILanguageFileTransformer<
   public serialize(
     dataset: TranslationDataset,
     options: SerializationOptions
-  ): SerializationResult[] {
+  ): SerializationResult {
     try {
       const perLanguageDatasets: Partial<Record<Locale, TranslationDataset>> =
         constructPerLanguageDatasets(dataset, options.locales);
@@ -76,17 +76,16 @@ export class AndroidStringsDatasetTransformer extends ILanguageFileTransformer<
         format: true,
         ignoreAttributes: false,
       });
-      const outputFragments: SerializationResult[] = [];
 
-      for (const [locale, dataset] of entries(perLanguageDatasets)) {
-        const data = buildXmlDataset(builder, dataset, locale);
+      return Object.fromEntries(
+        entries(perLanguageDatasets).map(([locale, dataset]) => {
+          const data = buildXmlDataset(builder, dataset, locale);
+          const dirname = androidValuesDirectory(locale, options.locales);
+          const filename = [dirname, 'strings'].join('/');
 
-        const filename = `${androidValuesDirectory(locale, options.locales)}/strings`;
-
-        outputFragments.push({ filename, data });
-      }
-
-      return outputFragments;
+          return [filename, data];
+        })
+      );
     } catch (e) {
       throw new SerializationError(
         'Something went wrong whilst attempting to serialize Android Strings XML: ',

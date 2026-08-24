@@ -98,24 +98,17 @@ export type SerializationOptions<TAdditionalOptions extends object = object> = {
   locales: Locale[];
 } & Partial<TAdditionalOptions>;
 
-/**
- * A fragment of serialized output,
- * which can be useful for formats that require multiple files.
- */
-export interface SerializationResult {
-  /**
-   * An optional identifier for the fragment,
-   * useful for formats that require multiple files.
-   *
-   * This will make it easier to identify the fragment later on.
-   */
+export interface SerializationFileFragment {
   filename: string;
-
-  /**
-   * The serialized content of the fragment.
-   */
-  data: string;
+  content: string;
 }
+
+/**
+ * Serialization output, keyed by file name
+ */
+export type SerializationResult = {
+  [filename: string]: string;
+};
 
 /**
  * A function that takes a TranslationDataset and optional serialization options,

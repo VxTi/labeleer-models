@@ -1,9 +1,10 @@
 import { DatasetBuilder } from '@/dataset-builder';
-import type {
-  ParsingOptions,
-  SerializationOptions,
-  SerializationResult,
-  TranslationDataset,
+import {
+  type ParsingOptions,
+  type SerializationFileFragment,
+  type SerializationOptions,
+  type SerializationResult,
+  type TranslationDataset,
 } from '@/definitions';
 import { ParsingError } from '@/errors';
 import { LanguageFileFormat } from '@/file-formats';
@@ -74,9 +75,14 @@ export class AppleStringsDatasetTransformer extends ILanguageFileTransformer<
   public serialize(
     dataset: TranslationDataset,
     options: SerializationOptions
-  ): SerializationResult[] {
-    return options.locales.map(loc =>
-      constructAppleStringsSerializationFragment(dataset, loc)
+  ): SerializationResult {
+    return Object.fromEntries(
+      options.locales.map(loc => {
+        const { filename, content } =
+          constructAppleStringsSerializationFragment(dataset, loc);
+
+        return [filename, content];
+      })
     );
   }
 }
@@ -106,19 +112,19 @@ function unescapeText(input: string): string {
 function constructAppleStringsSerializationFragment(
   dataset: TranslationDataset,
   targetLocale: Locale
-): SerializationResult {
+): SerializationFileFragment {
   const kvMapping: Record<string, string> = {};
 
   for (const [key, entry] of entries(dataset)) {
     kvMapping[key] = entry.translations[targetLocale] ?? '';
   }
 
-  const data = entries(kvMapping)
+  const content = entries(kvMapping)
     .map(([key, value]) => `"${escapeText(key)}" = "${escapeText(value)}";`)
     .join('\n');
 
   return {
-    data,
+    content,
     // Apple `.strings` files live in BCP 47 named `.lproj` directories
     // (e.g. `en.lproj`, `en-GB.lproj`).
     filename: toBCP47(targetLocale),

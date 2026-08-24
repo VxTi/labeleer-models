@@ -17,7 +17,7 @@ import {
 import { tryParseJson } from '@/util/parsing';
 import * as z from 'zod';
 
-export default class XCStringsDatasetTransformer extends ILanguageFileTransformer<
+export class XCStringsDatasetTransformer extends ILanguageFileTransformer<
   LanguageFileFormat.XCSTRINGS,
   ['.xcstrings']
 > {
@@ -81,7 +81,7 @@ export default class XCStringsDatasetTransformer extends ILanguageFileTransforme
   public serialize(
     dataset: TranslationDataset,
     options: SerializationOptions
-  ): SerializationResult[] {
+  ): SerializationResult {
     const { referenceLocale, locales } = options;
     const xcstrings: XCStringsDataset = {
       // Xcode String Catalogs use BCP 47 language identifiers (`en`, `en-GB`).
@@ -134,12 +134,10 @@ export default class XCStringsDatasetTransformer extends ILanguageFileTransforme
 
     const data = JSON.stringify(xcstrings, null, 2);
 
-    return [
-      {
-        filename: DEFAULT_XCSTRINGS_FILE_NAME,
-        data,
-      },
-    ];
+    return {
+      filename: DEFAULT_XCSTRINGS_FILE_NAME,
+      data,
+    };
   }
 }
 

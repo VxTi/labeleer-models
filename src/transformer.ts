@@ -28,7 +28,7 @@ import { entries } from '@/util/data-extraction';
  */
 export abstract class ILanguageFileTransformer<
   TFormat extends LanguageFileFormat = LanguageFileFormat,
-  TFileExtensions extends [string, ...string[]] = [string],
+  TFileExtensions extends [string, ...string[]] = [string, ...string[]],
   TParseOptions extends object = object,
   TSerializeOptions extends object = object,
 > {
@@ -110,7 +110,7 @@ export abstract class ILanguageFileTransformer<
   public abstract serialize(
     dataset: TranslationDataset,
     options: SerializationOptions<TSerializeOptions>
-  ): SerializationResult[];
+  ): SerializationResult;
 }
 
 /**
@@ -218,7 +218,7 @@ export class ParserSet {
     dataset: TranslationDataset,
     format: LanguageFileFormat,
     options: SerializationOptions
-  ): SerializationResult[] {
+  ): SerializationResult {
     return this.require(format).serialize(dataset, options);
   }
 

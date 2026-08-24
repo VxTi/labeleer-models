@@ -2,6 +2,7 @@ import { DatasetBuilder } from '@/dataset-builder';
 import {
   type ParsingOptions,
   Plurality,
+  type SerializationFileFragment,
   type SerializationOptions,
   type SerializationResult,
   type TranslationDataset,
@@ -92,14 +93,20 @@ export class PODatasetTransformer extends ILanguageFileTransformer<
   public serialize(
     dataset: TranslationDataset,
     options: SerializationOptions
-  ): SerializationResult[] {
+  ): SerializationResult {
     const { locales, referenceLocale } = options;
 
-    const fragments: SerializationResult[] = locales.map((locale: Locale) =>
-      constructPoSerializationFragment(dataset, locale, referenceLocale)
-    );
+    return Object.fromEntries(
+      locales.map((locale: Locale) => {
+        const { filename, content } = constructPoSerializationFragment(
+          dataset,
+          locale,
+          referenceLocale
+        );
 
-    return fragments;
+        return [filename, content];
+      })
+    );
   }
 }
 
@@ -144,7 +151,7 @@ function constructPoSerializationFragment(
   input: TranslationDataset,
   locale: Locale,
   referenceLocale: Locale
-): SerializationResult {
+): SerializationFileFragment {
   // TODO: Add support for more headers (e.g., Project-Id-Version, POT-Creation-Date, etc.)
   // And also different encoding types
   const output: GetTextTranslations = {
@@ -195,10 +202,10 @@ function constructPoSerializationFragment(
     output.translations[''][key] = poEntry;
   }
 
-  const data = po.compile(output).toString('utf-8');
+  const content = po.compile(output).toString('utf-8');
 
   return {
-    data,
     filename: locale,
+    content,
   };
 }
