@@ -15,7 +15,6 @@ import {
   iso639_1ToLocale,
   toPOSIX,
 } from '@/locales';
-import { sanitizeLabel } from '@/sanitizer';
 
 export const LocaleDecoder = z
   .string()
@@ -31,7 +30,6 @@ export const LocaleDecoder = z
 
 export const TranslationKeyDecoder = z
   .string()
-  .transform(input => sanitizeLabel(input))
   .refine(input => input.length > MIN_TRANSLATION_KEY_LENGTH, {
     error: `Translation label must be at least ${MIN_TRANSLATION_KEY_LENGTH} characters long`,
   })
@@ -46,7 +44,10 @@ export const JsonTranslationDatasetDecoder = z.record(
     // omit them while parsed entries still satisfy the TranslationEntry shape.
     // `partialRecord` keeps plural categories optional (not all-or-nothing).
     plurals: z
-      .partialRecord(z.enum(Plurality), z.record(LocaleDecoder, z.string()))
+      .partialRecord(
+        z.enum(Plurality),
+        z.partialRecord(LocaleDecoder, z.string())
+      )
       .default({}),
     translations: z.partialRecord(LocaleDecoder, z.string()).default({}),
     description: z.optional(

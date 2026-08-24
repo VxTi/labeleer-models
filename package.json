@@ -1,12 +1,13 @@
 {
   "name": "@labeleer/translation-dataset-transformers",
-  "version": "2.0.1",
+  "version": "2.0.2",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
     ".": {
       "import": "./dist/index.js",
-      "require": "./dist/index.js"
+      "require": "./dist/index.js",
+      "types": "./dist/index.d.ts"
     }
   },
   "private": false,
@@ -50,10 +51,10 @@
     "vitest": "^4.0.14"
   },
   "dependencies": {
-    "fast-xml-parser": "^5.3.2",
+    "fast-xml-parser": "^5.11.0",
     "gettext-parser": "^9.1.1",
     "lodash-es": "^4.18.1",
-    "yaml": "^2.8.2",
+    "yaml": "^2.9.0",
     "zod": "^4.4.3"
   }
 }

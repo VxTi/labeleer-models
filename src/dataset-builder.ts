@@ -5,7 +5,6 @@ import {
   type TranslationPluralization,
 } from '@/definitions';
 import type { Locale } from '@/locales';
-import { sanitizeLabel } from '@/sanitizer';
 /**
  * A builder class for constructing translation datasets.
  */
@@ -23,10 +22,9 @@ export class DatasetBuilder {
     key: string,
     translations: Partial<TranslationLocalizedEntries>
   ): this {
-    const sanitizedKey = sanitizeLabel(key);
-    this.ensureExistence(sanitizedKey);
+    this.ensureExistence(key);
 
-    _merge(this.dataset[sanitizedKey].translations, translations);
+    _merge(this.dataset[key].translations, translations);
 
     return this;
   }
@@ -51,10 +49,9 @@ export class DatasetBuilder {
   ): this {
     if (!pluralForms) return this;
 
-    const sanitizedKey = sanitizeLabel(key);
-    this.ensureExistence(sanitizedKey);
+    this.ensureExistence(key);
 
-    _merge(this.dataset[sanitizedKey].plurals, pluralForms);
+    _merge(this.dataset[key].plurals, pluralForms);
     return this;
   }
 
@@ -67,10 +64,9 @@ export class DatasetBuilder {
   ): this {
     if (!description) return this;
 
-    const sanitizedKey = sanitizeLabel(key);
-    this.ensureExistence(sanitizedKey);
+    this.ensureExistence(key);
 
-    this.dataset[sanitizedKey].description = description;
+    this.dataset[key].description = description;
     return this;
   }
 
@@ -80,10 +76,8 @@ export class DatasetBuilder {
   addTags(key: string, tags: string[] | undefined): this {
     if (!tags?.length) return this;
 
-    const sanitizedKey = sanitizeLabel(key);
-
-    this.ensureExistence(sanitizedKey);
-    this.dataset[sanitizedKey].tags = tags;
+    this.ensureExistence(key);
+    this.dataset[key].tags = tags;
     return this;
   }
 
