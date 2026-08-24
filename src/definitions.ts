@@ -103,11 +103,16 @@ export interface SerializationFileFragment {
   content: string;
 }
 
+export interface SerializationFile {
+  isDirectory?: boolean;
+  content: string;
+}
+
 /**
  * Serialization output, keyed by file name
  */
 export type SerializationResult = {
-  [filename: string]: string;
+  [filename: string]: SerializationFile;
 };
 
 /**

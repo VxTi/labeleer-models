@@ -81,7 +81,7 @@ export class AppleStringsDatasetTransformer extends ILanguageFileTransformer<
         const { filename, content } =
           constructAppleStringsSerializationFragment(dataset, loc);
 
-        return [filename, content];
+        return [filename, { content }];
       })
     );
   }

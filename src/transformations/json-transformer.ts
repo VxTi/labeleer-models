@@ -42,11 +42,10 @@ export class JsonDatasetTransformer extends ILanguageFileTransformer<
     dataset: TranslationDataset,
     _options: SerializationOptions
   ): SerializationResult {
-    const data = JSON.stringify(dataset, null, 2);
+    const content = JSON.stringify(dataset, null, 2);
 
     return {
-      filename: DEFAULT_JSON_FILE_NAME,
-      data,
+      [DEFAULT_JSON_FILE_NAME]: { content },
     };
   }
 }

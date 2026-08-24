@@ -1,3 +1,4 @@
+import { type SerializationResult } from '@/definitions';
 import { TsDatasetTransformer } from '@/transformations/qt-linquist-transformer';
 import { describe, expect, it } from 'vitest';
 import {
@@ -18,22 +19,15 @@ describe('serialization', () => {
 
     const serialized = transformer.serialize(dataset, options);
 
-    expect(serialized).toBeDefined();
-    expect(serialized).toHaveLength(2);
-    expect(serialized).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          filename: 'nl_NL',
-        }),
-        expect.objectContaining({
-          filename: 'en_AU',
-        }),
-      ])
-    );
-    expect(serialized).toMatchInlineSnapshot(`
-      [
-        {
-          "data": "<?xml version="1.0" encoding="utf-8"?>
+    expect(serialized).toHaveProperty('nl_NL');
+    expect(serialized).toHaveProperty('en_AU');
+    expect(serialized).toMatchObject<SerializationResult>({
+      ['en_AU']: expect.anything(),
+      ['nl_NL']: expect.anything(),
+    });
+
+    expect(serialized['nl_NL'].content).toMatchInlineSnapshot(`
+      "<?xml version="1.0" encoding="utf-8"?>
       <!DOCTYPE TS>
       <TS version="2.1" sourcelanguage="en_US" language="nl_NL">
         <context>
@@ -48,29 +42,7 @@ describe('serialization', () => {
           </message>
         </context>
       </TS>
-      ",
-          "filename": "nl_NL",
-        },
-        {
-          "data": "<?xml version="1.0" encoding="utf-8"?>
-      <!DOCTYPE TS>
-      <TS version="2.1" sourcelanguage="en_US" language="en_AU">
-        <context>
-          <name>Labeleer Translations</name>
-          <message id="first-entry">
-            <source>hello</source>
-            <translation></translation>
-          </message>
-          <message id="second-entry">
-            <source>hello</source>
-            <translation></translation>
-          </message>
-        </context>
-      </TS>
-      ",
-          "filename": "en_AU",
-        },
-      ]
+      "
     `);
   });
 
@@ -84,10 +56,8 @@ describe('serialization', () => {
     const serialized = transformer.serialize(dataset, options);
 
     expect(serialized).toBeDefined();
-    expect(serialized).toHaveLength(1);
-    expect(serialized[0]).toMatchInlineSnapshot(`
-      {
-        "data": "<?xml version="1.0" encoding="utf-8"?>
+    expect(serialized['en_US'].content).toMatchInlineSnapshot(`
+      "<?xml version="1.0" encoding="utf-8"?>
       <!DOCTYPE TS>
       <TS version="2.1" sourcelanguage="en_US" language="en_US">
         <context>
@@ -100,9 +70,7 @@ describe('serialization', () => {
           </message>
         </context>
       </TS>
-      ",
-        "filename": "en_US",
-      }
+      "
     `);
   });
 });

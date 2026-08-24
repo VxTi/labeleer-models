@@ -1,116 +1,84 @@
-import { DatasetBuilder } from '@/dataset-builder';
 import type {
   ParsingOptions,
   SerializationOptions,
   SerializationResult,
   TranslationDataset,
 } from '@/definitions';
-import {
-  getFileExtensionsFromFormat,
-  type LanguageFileFormat,
-} from '@/file-formats';
+import { type LanguageFileFormat } from '@/file-formats';
 import type { Locale } from '@/locales';
-import { entries } from '@/util/data-extraction';
 
-/**
- * A self-contained transformer for a single {@link LanguageFileFormat},
- * bundling the parsing and serialization logic for that format behind a
- * uniform, object-oriented interface.
- *
- * Concrete implementations wrap the functional `parseXxx`/`serializeXxx`
- * helpers of their format. Register instances in a {@link ParserSet} (via
- * {@link ParserSetBuilder}) to look them up by format or file extension.
- *
- * @typeParam TFormat - The file format this transformer handles.
- * @typeParam TFileExtensions - A list of at least 1 file extension for this format
- * @typeParam TParseOptions - Additional, format-specific parsing options.
- * @typeParam TSerializeOptions - Additional, format-specific serialization options.
- */
-export abstract class ILanguageFileTransformer<
+type FileExtension<T extends string = string> = `.${T}`;
+
+export interface LanguageFileTransformer<
   TFormat extends LanguageFileFormat = LanguageFileFormat,
-  TFileExtensions extends [string, ...string[]] = [string, ...string[]],
+  TFileExtensions extends [FileExtension, ...FileExtension[]] = [
+    FileExtension,
+    ...FileExtension[],
+  ],
   TParseOptions extends object = object,
   TSerializeOptions extends object = object,
 > {
-  public readonly fileFormat: TFormat;
-  public readonly fileExtensions: TFileExtensions;
+  readonly fileFormat: TFormat;
+  readonly extensions: TFileExtensions;
 
-  public constructor(fileFormat: TFormat, fileExtensions: TFileExtensions) {
-    this.fileFormat = fileFormat;
-    this.fileExtensions = fileExtensions;
-  }
+  canParse(extension: string): extension is NoInfer<TFileExtensions>[number];
 
-  /**
-   * The file extensions (including the leading dot) associated with this
-   * format, e.g. `['.yaml', '.yml']` for YAML.
-   */
-  public get extensions(): string[] {
-    return getFileExtensionsFromFormat(this.fileFormat);
-  }
-
-  /**
-   * Whether this transformer can handle a file with the given extension.
-   *
-   * Accepts bare extensions (`'json'`, `'.json'`) as well as full filenames
-   * (`'labels.json'`), and is case-insensitive.
-   */
-  public canParse(extension: string): boolean {
-    const normalized = extension.toLowerCase().trim();
-
-    return this.extensions.some(ext => {
-      const candidate = ext.toLowerCase();
-
-      return (
-        normalized === candidate ||
-        normalized === candidate.replace(/^\./, '') ||
-        normalized.endsWith(candidate)
-      );
-    });
-  }
-
-  /**
-   * Parses a single source file into a {@link TranslationDataset}.
-   */
-  public abstract parse(
+  parse(
     input: string,
     options: ParsingOptions<TParseOptions>
   ): TranslationDataset;
 
-  /**
-   * Parses and merges multiple locale-specific source files into a single
-   * {@link TranslationDataset}.
-   *
-   * The default implementation parses each input independently, treating the
-   * map key as the {@link ParsingOptions.referenceLocale} for that input, and
-   * merges the results. Formats whose {@link parse} keys off a different locale
-   * — e.g. Apple `.strings` and PO files, which use `targetLocale` — override
-   * this method.
-   */
-  public parseAggregate(
+  parseAggregate?(
     inputs: Partial<Record<Locale, string>>,
     options: ParsingOptions<TParseOptions>
-  ): TranslationDataset {
-    const builder = new DatasetBuilder();
+  ): TranslationDataset;
 
-    for (const [locale, content] of entries(inputs)) {
-      builder.merge(
-        this.parse(content, { ...options, referenceLocale: locale })
-      );
-    }
-
-    return builder.build();
-  }
-
-  /**
-   * Serializes a {@link TranslationDataset} into one or more file fragments.
-   *
-   * Multiple fragments are produced by formats that split their output per
-   * locale, such as Apple `.strings`, Android strings and XLIFF.
-   */
-  public abstract serialize(
+  serialize(
     dataset: TranslationDataset,
     options: SerializationOptions<TSerializeOptions>
   ): SerializationResult;
+}
+
+export function makeLanguageTransformer<
+  TFormat extends LanguageFileFormat = LanguageFileFormat,
+  TFileExtensions extends [FileExtension, ...FileExtension[]] = [
+    FileExtension,
+    ...FileExtension[],
+  ],
+  TParseOptions extends object = object,
+  TSerializeOptions extends object = object,
+>(
+  options: Omit<
+    LanguageFileTransformer<
+      TFormat,
+      TFileExtensions,
+      TParseOptions,
+      TSerializeOptions
+    >,
+    'canParse'
+  >
+): LanguageFileTransformer<
+  TFormat,
+  TFileExtensions,
+  TParseOptions,
+  TSerializeOptions
+> {
+  return {
+    ...options,
+    canParse(extension: string): extension is NoInfer<TFileExtensions>[number] {
+      const normalized = extension.toLowerCase().trim();
+
+      return this.extensions.some(ext => {
+        const candidate = ext.toLowerCase();
+
+        return (
+          normalized === candidate ||
+          normalized === candidate.replace(/^\./, '') ||
+          normalized.endsWith(candidate)
+        );
+      });
+    },
+  };
 }
 
 /**

@@ -1,3 +1,4 @@
+import { type SerializationResult } from '@/definitions';
 import { XLIFFDatasetTransformer } from '@/transformations/xliff-transformer';
 import { describe, expect, it } from 'vitest';
 import {
@@ -81,9 +82,9 @@ describe('XLIFF 2.1 Serialization', () => {
     );
 
     expect(result).toBeDefined();
-    expect(result).toHaveLength(1);
-    expect(result[0]?.data).toContain('must exist');
-    expect(result[0]?.data).toMatchInlineSnapshot(`
+    expect(result).toHaveProperty('en_US');
+    expect(result['en_US'].content).toContain('must exist');
+    expect(result['en_US'].content).toMatchInlineSnapshot(`
       "<?xml version="1.0" encoding="UTF-8"?>
       <xliff version="2.1" xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en">
         <file id="f1">
@@ -118,8 +119,8 @@ describe('XLIFF 2.1 Serialization', () => {
     );
 
     expect(result).toBeDefined();
-    expect(result).toHaveLength(1);
-    expect(result[0]?.data).toMatchInlineSnapshot(`
+    expect(result).toHaveProperty('de_DE');
+    expect(result['de_DE'].content).toMatchInlineSnapshot(`
       "<?xml version="1.0" encoding="UTF-8"?>
       <xliff version="2.1" xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="de">
         <file id="f1">
@@ -150,38 +151,14 @@ describe('XLIFF 2.1 Serialization', () => {
     });
 
     expect(result).toBeDefined();
-    expect(result).toHaveLength(2);
-    expect(result).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({ filename: 'fr_FR' }),
-        expect.objectContaining({ filename: 'es_ES' }),
-      ])
-    );
+    expect(result).toMatchObject<SerializationResult>({
+      fr_FR: expect.anything(),
+      es_ES: expect.anything(),
+    });
     expect(result).toMatchInlineSnapshot(`
-      [
-        {
-          "data": "<?xml version="1.0" encoding="UTF-8"?>
-      <xliff version="2.1" xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="fr">
-        <file id="f1">
-          <unit id="first-entry">
-            <segment>
-              <source>hello</source>
-              <target/>
-            </segment>
-          </unit>
-          <unit id="second-entry">
-            <segment>
-              <source>hello</source>
-              <target/>
-            </segment>
-          </unit>
-        </file>
-      </xliff>
-      ",
-          "filename": "fr_FR",
-        },
-        {
-          "data": "<?xml version="1.0" encoding="UTF-8"?>
+      {
+        "es_ES": {
+          "content": "<?xml version="1.0" encoding="UTF-8"?>
       <xliff version="2.1" xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="es">
         <file id="f1">
           <unit id="first-entry">
@@ -199,9 +176,28 @@ describe('XLIFF 2.1 Serialization', () => {
         </file>
       </xliff>
       ",
-          "filename": "es_ES",
         },
-      ]
+        "fr_FR": {
+          "content": "<?xml version="1.0" encoding="UTF-8"?>
+      <xliff version="2.1" xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="en" trgLang="fr">
+        <file id="f1">
+          <unit id="first-entry">
+            <segment>
+              <source>hello</source>
+              <target/>
+            </segment>
+          </unit>
+          <unit id="second-entry">
+            <segment>
+              <source>hello</source>
+              <target/>
+            </segment>
+          </unit>
+        </file>
+      </xliff>
+      ",
+        },
+      }
     `);
   });
 });

@@ -1,34 +1,25 @@
-import { LanguageFileFormat } from '@/file-formats';
-import { entries } from '@/util/data-extraction';
-import merge from 'lodash-es/merge';
+import { LocaleDecoder } from '@/common';
+import { DatasetBuilder } from '@/dataset-builder';
 import {
-  ILanguageFileTransformer,
-  type ParsingOptions,
+  type SerializationOptions,
   type SerializationResult,
   type TranslationDataset,
-  toBCP47,
-  DatasetBuilder,
-  ParsingError,
-  LocaleDecoder,
-  type Locale,
-  type SerializationOptions,
   Plurality,
-} from '..';
+} from '@/definitions';
+import { ParsingError } from '@/errors';
+import { LanguageFileFormat } from '@/file-formats';
+import { type Locale, toBCP47 } from '@/locales';
+import { makeLanguageTransformer } from '@/transformer';
+import { entries } from '@/util/data-extraction';
+import merge from 'lodash-es/merge';
 import { tryParseJson } from '@/util/parsing';
 import * as z from 'zod';
 
-export class XCStringsDatasetTransformer extends ILanguageFileTransformer<
-  LanguageFileFormat.XCSTRINGS,
-  ['.xcstrings']
-> {
-  public constructor() {
-    super(LanguageFileFormat.XCSTRINGS, ['.xcstrings']);
-  }
+export const XCStringsDatasetTransformer = makeLanguageTransformer({
+  fileFormat: LanguageFileFormat.XCSTRINGS,
+  extensions: ['.xcstrings'],
 
-  public parse(
-    input: string,
-    _options: ParsingOptions<object>
-  ): TranslationDataset {
+  parse(input: string): TranslationDataset {
     const json = tryParseJson(input);
     if (!json) {
       throw new ParsingError('Invalid JSON format for xcstrings dataset');
@@ -76,9 +67,9 @@ export class XCStringsDatasetTransformer extends ILanguageFileTransformer<
     });
 
     return datasetBuilder.build();
-  }
+  },
 
-  public serialize(
+  serialize(
     dataset: TranslationDataset,
     options: SerializationOptions
   ): SerializationResult {
@@ -132,14 +123,13 @@ export class XCStringsDatasetTransformer extends ILanguageFileTransformer<
       xcstrings.strings[key] = stringUnit;
     });
 
-    const data = JSON.stringify(xcstrings, null, 2);
+    const content = JSON.stringify(xcstrings, null, 2);
 
     return {
-      filename: DEFAULT_XCSTRINGS_FILE_NAME,
-      data,
+      [DEFAULT_XCSTRINGS_FILE_NAME]: { content },
     };
-  }
-}
+  },
+});
 
 function quantityToXcstringsType(
   pluralForm: Plurality

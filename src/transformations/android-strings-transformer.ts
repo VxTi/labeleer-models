@@ -6,6 +6,7 @@ import {
   type SerializationResult,
   type TranslationDataset,
   type TranslationPluralization,
+  type SerializationFile,
 } from '@/definitions';
 import { ParsingError, SerializationError } from '@/errors';
 import { LanguageFileFormat } from '@/file-formats';
@@ -78,13 +79,15 @@ export class AndroidStringsDatasetTransformer extends ILanguageFileTransformer<
       });
 
       return Object.fromEntries(
-        entries(perLanguageDatasets).map(([locale, dataset]) => {
-          const data = buildXmlDataset(builder, dataset, locale);
-          const dirname = androidValuesDirectory(locale, options.locales);
-          const filename = [dirname, 'strings'].join('/');
+        entries(perLanguageDatasets).map(
+          ([locale, dataset]): [string, SerializationFile] => {
+            const content = buildXmlDataset(builder, dataset, locale);
+            const dirname = androidValuesDirectory(locale, options.locales);
+            const filename = [dirname, 'strings'].join('/');
 
-          return [filename, data];
-        })
+            return [filename, { content, isDirectory: true }];
+          }
+        )
       );
     } catch (e) {
       throw new SerializationError(

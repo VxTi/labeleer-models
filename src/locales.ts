@@ -141,6 +141,9 @@ const rtlLanguages = new Set([
 export type InferBCP47Locale<T extends string> =
   T extends `${infer Lang}_${infer Region}` ? `${Lang}-${Region}` : never;
 
+export type InferPosixFromBCP47Locale<T extends BCP47Locale> =
+  T extends `${infer First}-${infer Second}` ? `${First}_${Second}` : never;
+
 export type InferISO639_1LanguageCode<T extends string> =
   T extends `${infer Lang}_${infer _Region}` ? Lang : never;
 
@@ -231,8 +234,10 @@ export function isBCP47Locale(value: string | undefined): value is BCP47Locale {
  * @param posixLocale - The POSIX locale string (e.g., `"en_US"`).
  * @returns The `BCP 47` locale string (e.g., `"en-US"`).
  */
-export function toBCP47(posixLocale: Locale): BCP47Locale {
-  return posixLocale.replace('_', '-') as BCP47Locale;
+export function toBCP47<TLocale extends Locale>(
+  posixLocale: TLocale
+): InferBCP47Locale<TLocale> {
+  return posixLocale.replace('_', '-') as InferBCP47Locale<TLocale>;
 }
 
 /**
@@ -242,8 +247,10 @@ export function toBCP47(posixLocale: Locale): BCP47Locale {
  * @param locale - The `BCP 47` locale string (e.g., `"en-US"`).
  * @returns The `POSIX` locale string (e.g., `"en_US"`).
  */
-export function toPOSIX(locale: BCP47Locale): Locale {
-  return locale.replace('-', '_') as Locale;
+export function toPOSIX<TBCPLocale extends BCP47Locale>(
+  locale: TBCPLocale
+): InferPosixFromBCP47Locale<TBCPLocale> {
+  return locale.replace('-', '_') as InferPosixFromBCP47Locale<TBCPLocale>;
 }
 
 /**
@@ -252,7 +259,7 @@ export function toPOSIX(locale: BCP47Locale): Locale {
 export function isLocale(value: string | undefined): value is Locale {
   if (!value) return false;
 
-  return (Locales as readonly string[]).includes(value);
+  return Locales.includes(value as Locale);
 }
 
 /**

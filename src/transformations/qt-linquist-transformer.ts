@@ -89,7 +89,7 @@ export class TsDatasetTransformer extends ILanguageFileTransformer<
     });
 
     if (nonReferenceLanguages.length === 0) {
-      const fragment = constructTsSerializationFragment(
+      const { filename, content } = constructTsSerializationFragment(
         builder,
         input,
         undefined,
@@ -97,19 +97,19 @@ export class TsDatasetTransformer extends ILanguageFileTransformer<
       );
 
       return {
-        [fragment.filename]: fragment.content,
+        [filename]: { content },
       };
     }
 
     return Object.fromEntries(
       nonReferenceLanguages.map(locale => {
-        const fragment = constructTsSerializationFragment(
+        const { filename, content } = constructTsSerializationFragment(
           builder,
           input,
           locale,
           referenceLocale
         );
-        return [fragment.filename, fragment.content];
+        return [filename, { content }];
       })
     );
   }

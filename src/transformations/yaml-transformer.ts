@@ -48,11 +48,10 @@ export class YamlDatasetTransformer extends ILanguageFileTransformer<
     dataset: TranslationDataset,
     _options: SerializationOptions
   ): SerializationResult {
-    const data = YAML.stringify(dataset);
+    const content = YAML.stringify(dataset);
 
     return {
-      filename: DEFAULT_YAML_FILE_NAME,
-      data,
+      [DEFAULT_YAML_FILE_NAME]: { content },
     };
   }
 }

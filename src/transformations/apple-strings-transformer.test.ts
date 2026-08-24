@@ -1,5 +1,5 @@
 import { mockParsingOptions, mockSerializationOptions } from '@/__testutils__';
-import { type Locale } from '@/locales';
+import { type Locale, toBCP47 } from '@/locales';
 import { AppleStringsDatasetTransformer } from '@/transformations/apple-strings-transformer';
 import { describe, expect, it } from 'vitest';
 
@@ -145,47 +145,39 @@ describe('apple strings serialization', () => {
     );
 
     expect(serialized).toBeDefined();
-    expect(Array.isArray(serialized)).toBeTruthy(); // We should output two files
-    expect(serialized).toHaveLength(2);
-    expect(serialized).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          filename: 'en-US',
-          data: `"first-entry" = "english";
-"second-entry" = "english \\"second\\"";`,
-        }),
-        expect.objectContaining({
-          filename: 'nl-NL',
-          data: `"first-entry" = "dutch";
-"second-entry" = "dutch \\"second\\"";`,
-        }),
-      ])
-    );
+    expect(Object.keys(serialized)).toHaveLength(2);
+    expect(serialized['en-US'].content).toMatchInlineSnapshot(`
+      ""first-entry" = "english";
+      "second-entry" = "english \\"second\\"";"
+    `);
+    expect(serialized['nl-NL'].content).toMatchInlineSnapshot(`
+      ""first-entry" = "dutch";
+      "second-entry" = "dutch \\"second\\"";"
+    `);
   });
 
   it('should escape special characters', () => {
+    const refLang = 'en_US';
+    const bpcRefLang = toBCP47(refLang);
     const serialized = transformer.serialize(
       {
         'special-entry': {
           translations: {
-            en_US: 'Line1\nLine2\tTabbed\\"Quote\\"',
+            [refLang]: 'Line1\nLine2\tTabbed\\"Quote\\"',
           },
         },
       },
       mockSerializationOptions({
-        referenceLocale: 'en_US',
-        locales: ['en_US'],
+        referenceLocale: refLang,
+        locales: [refLang],
         keylessTranslation: false,
       })
     );
 
     expect(serialized).toBeDefined();
-    expect(serialized).toHaveLength(1);
-    expect(serialized[0]).toEqual(
-      expect.objectContaining({
-        filename: 'en-US',
-        data: `"special-entry" = "Line1\\nLine2\\tTabbed\\\\\\"Quote\\\\\\"";`,
-      })
+    expect(serialized).toHaveProperty(bpcRefLang);
+    expect(serialized[bpcRefLang].content).toMatchInlineSnapshot(
+      `""special-entry" = "Line1\\nLine2\\tTabbed\\\\\\"Quote\\\\\\"";"`
     );
   });
 });

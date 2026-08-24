@@ -1,4 +1,5 @@
 import { mockParsingOptions, mockSerializationOptions } from '@/__testutils__';
+import { type SerializationResult } from '@/definitions';
 import { PODatasetTransformer } from '@/transformations/po-transformer';
 import { describe, expect, it } from 'vitest';
 
@@ -83,15 +84,10 @@ describe('po serialization', () => {
     );
 
     expect(serialized).toBeDefined();
-    expect(serialized).toEqual(
-      expect.arrayContaining([
-        expect.objectContaining({
-          filename: 'en_US',
-          data: expect.any(String),
-        }),
-      ])
-    );
-    expect(serialized[0]?.data).toMatchInlineSnapshot(`
+    expect(serialized).toMatchObject<SerializationResult>({
+      ['en_US']: expect.objectContaining({ content: expect.any(String) }),
+    });
+    expect(serialized['en_US'].content).toMatchInlineSnapshot(`
       "msgid ""
       msgstr ""
       "Content-Type: text/plain; charset=utf-8\\n"

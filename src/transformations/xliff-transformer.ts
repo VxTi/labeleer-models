@@ -88,7 +88,7 @@ export class XLIFFDatasetTransformer extends ILanguageFileTransformer<
     if (nonReferenceLocales.length === 0) {
       const { filename, content } = serializeSingular(input, builder, options);
       return {
-        [filename]: content,
+        [filename]: { content },
       };
     }
 
@@ -113,7 +113,7 @@ export class XLIFFDatasetTransformer extends ILanguageFileTransformer<
           referenceLocale
         );
 
-        return [filename, content];
+        return [filename, { content }];
       })
     );
   }

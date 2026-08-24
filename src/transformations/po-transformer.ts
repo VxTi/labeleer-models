@@ -104,7 +104,7 @@ export class PODatasetTransformer extends ILanguageFileTransformer<
           referenceLocale
         );
 
-        return [filename, content];
+        return [filename, { content }];
       })
     );
   }

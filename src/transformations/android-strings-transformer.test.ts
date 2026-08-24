@@ -18,29 +18,15 @@ describe('android strings serialization', () => {
 
     const serialized = transformer.serialize(dataset, options);
 
-    expect(serialized).toBeDefined();
-    expect(serialized).toHaveLength(2);
-    expect(serialized).toEqual(
-      expect.arrayContaining([
-        {
-          data: expect.anything(),
-          filename: 'values-en/strings',
-        },
-        {
-          data: expect.anything(),
-          filename: 'values-nl/strings',
-        },
-      ])
+    expect(serialized).toHaveProperty(
+      'values-en/strings',
+      expect.objectContaining({ content: expect.any(String) })
     );
-    expect(serialized[0]?.data).toMatchInlineSnapshot(`
-      "<?xml version="1.0" encoding="utf-8"?>
-      <resources>
-        <string name="first-entry">hello</string>
-        <string name="second-entry">hello</string>
-      </resources>
-      "
-    `);
-    expect(serialized[1]?.data).toMatchInlineSnapshot(`
+    expect(serialized).toHaveProperty(
+      'values-nl/strings',
+      expect.objectContaining({ content: expect.any(String) })
+    );
+    expect(serialized['values-nl/strings'].content).toMatchInlineSnapshot(`
       "<?xml version="1.0" encoding="utf-8"?>
       <resources>
         <string name="first-entry">world</string>
@@ -48,46 +34,53 @@ describe('android strings serialization', () => {
       </resources>
       "
     `);
+    expect(serialized['values-en/strings'].content).toMatchInlineSnapshot(`
+      "<?xml version="1.0" encoding="utf-8"?>
+      <resources>
+        <string name="first-entry">hello</string>
+        <string name="second-entry">hello</string>
+      </resources>
+      "
+    `);
   });
 
   it('should serialize an android strings dataset with pluralization', () => {
+    const refLocale = 'en_US';
     const options = mockSerializationOptions({
-      locales: ['en_US'],
-      referenceLocale: 'en_US',
+      locales: [refLocale],
+      referenceLocale: refLocale,
     });
     const input: TranslationDataset = {
       regular: {
         translations: {
-          en_US: 'a regular string',
+          [refLocale]: 'a regular string',
         },
       },
       strict: {
         translations: {},
         plurals: {
           one: {
-            en_US: 'one strict',
+            [refLocale]: 'one strict',
           },
         },
       },
     };
 
     const serialized = transformer.serialize(input, options);
-    expect(serialized).toBeDefined();
-    expect(serialized).toHaveLength(1);
-    expect(serialized[0].data).toContain('a regular string');
-    expect(serialized[0].data).toContain('one strict');
-    expect(serialized[0]).toMatchInlineSnapshot(`
-      {
-        "data": "<?xml version="1.0" encoding="utf-8"?>
+
+    const fileName = 'values-en/strings';
+    expect(serialized).toHaveProperty(fileName);
+    expect(serialized[fileName].content).toContain('a regular string');
+    expect(serialized[fileName].content).toContain('one strict');
+    expect(serialized[fileName].content).toMatchInlineSnapshot(`
+      "<?xml version="1.0" encoding="utf-8"?>
       <resources>
         <string name="regular">a regular string</string>
         <plurals name="strict">
           <item quantity="one">one strict</item>
         </plurals>
       </resources>
-      ",
-        "filename": "values-en/strings",
-      }
+      "
     `);
   });
 
@@ -107,10 +100,11 @@ describe('android strings serialization', () => {
     // The backslash escape guards Android's parser; the XML builder then
     // entity-encodes the quote/apostrophe. aapt XML-decodes `\&apos;` back to
     // `\'` (Android-safe) — a bare `&apos;` would decode to an unescaped `'`.
-    const data = serialized[0]?.data ?? '';
-    expect(data).toContain('it\\&apos;s');
-    expect(data).toContain('\\&quot;quote\\&quot;');
-    expect(data).toContain('\\\\ backslash');
+    const fileName = 'values-en/strings';
+    expect(serialized).toHaveProperty(fileName);
+    expect(serialized[fileName].content).toContain('it\\&apos;s');
+    expect(serialized[fileName].content).toContain('\\&quot;quote\\&quot;');
+    expect(serialized[fileName].content).toContain('\\\\ backslash');
   });
 
   it('adds region qualifiers when locales share a language', () => {
@@ -122,7 +116,7 @@ describe('android strings serialization', () => {
       })
     );
 
-    const filenames = serialized.map(fragment => fragment.filename).sort();
+    const filenames = Object.keys(serialized).sort();
     expect(filenames).toEqual([
       'values-en-rGB/strings',
       'values-en-rUS/strings',
