@@ -24,6 +24,8 @@ import merge from 'lodash-es/merge';
 export const AndroidStringsDatasetTransformer = makeLanguageTransformer({
   fileFormat: LanguageFileFormat.ANDROID_STRINGS,
   extensions: ['.xml'],
+  formatKey,
+
   parse(input: string, options: ParsingOptions): TranslationDataset {
     try {
       const parser = new XMLParser({
@@ -93,6 +95,20 @@ export const AndroidStringsDatasetTransformer = makeLanguageTransformer({
   },
 });
 
+/**
+ * Android resource entry names must be valid Java identifiers: they may
+ * contain only letters, digits and underscores, and may not begin with a
+ * digit. Keys arrive already sanitized to `[a-zA-Z0-9._-]`, so here we only
+ * collapse the remaining `.`/`-` separators to `_` and guard a leading digit.
+ *
+ * @see https://developer.android.com/guide/topics/resources/string-resource
+ */
+function formatKey(key: string): string {
+  const identifier = key.replace(/[.-]+/g, '_');
+
+  return /^\d/.test(identifier) ? `_${identifier}` : identifier;
+}
+
 function buildXmlDataset(
   builder: XMLBuilder,
   dataset: TranslationDataset,
@@ -104,10 +120,11 @@ function buildXmlDataset(
 
   entries(dataset).forEach(([key, entry]) => {
     const translation = entry.translations[locale];
+    const formattedKey = formatKey(key);
 
     if (translation) {
       outputIr.resources.string.push({
-        '@_name': key,
+        '@_name': formattedKey,
         '#text': escapeAndroidText(translation),
       });
     }
@@ -124,7 +141,7 @@ function buildXmlDataset(
 
     if (pluralItems.length > 0) {
       outputIr.resources.plurals.push({
-        '@_name': key,
+        '@_name': formattedKey,
         item: pluralItems,
       });
     }

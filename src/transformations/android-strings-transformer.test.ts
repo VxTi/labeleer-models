@@ -19,26 +19,26 @@ describe('android strings serialization', () => {
     const serialized = transformer.serialize(dataset, options);
 
     expect(serialized).toHaveProperty(
-      'values-en/strings',
+      'values-en/strings.xml',
       expect.objectContaining({ content: expect.any(String) })
     );
     expect(serialized).toHaveProperty(
-      'values-nl/strings',
+      'values-nl/strings.xml',
       expect.objectContaining({ content: expect.any(String) })
     );
-    expect(serialized['values-nl/strings'].content).toMatchInlineSnapshot(`
+    expect(serialized['values-nl/strings.xml'].content).toMatchInlineSnapshot(`
       "<?xml version="1.0" encoding="utf-8"?>
       <resources>
-        <string name="first-entry">world</string>
-        <string name="second-entry">again</string>
+        <string name="first_entry">world</string>
+        <string name="second_entry">again</string>
       </resources>
       "
     `);
-    expect(serialized['values-en/strings'].content).toMatchInlineSnapshot(`
+    expect(serialized['values-en/strings.xml'].content).toMatchInlineSnapshot(`
       "<?xml version="1.0" encoding="utf-8"?>
       <resources>
-        <string name="first-entry">hello</string>
-        <string name="second-entry">hello</string>
+        <string name="first_entry">hello</string>
+        <string name="second_entry">hello</string>
       </resources>
       "
     `);
@@ -68,7 +68,7 @@ describe('android strings serialization', () => {
 
     const serialized = transformer.serialize(input, options);
 
-    const fileName = 'values-en/strings';
+    const fileName = 'values-en/strings.xml';
     expect(serialized).toHaveProperty(fileName);
     expect(serialized[fileName].content).toContain('a regular string');
     expect(serialized[fileName].content).toContain('one strict');
@@ -100,7 +100,7 @@ describe('android strings serialization', () => {
     // The backslash escape guards Android's parser; the XML builder then
     // entity-encodes the quote/apostrophe. aapt XML-decodes `\&apos;` back to
     // `\'` (Android-safe) — a bare `&apos;` would decode to an unescaped `'`.
-    const fileName = 'values-en/strings';
+    const fileName = 'values-en/strings.xml';
     expect(serialized).toHaveProperty(fileName);
     expect(serialized[fileName].content).toContain('it\\&apos;s');
     expect(serialized[fileName].content).toContain('\\&quot;quote\\&quot;');
@@ -118,9 +118,26 @@ describe('android strings serialization', () => {
 
     const filenames = Object.keys(serialized).sort();
     expect(filenames).toEqual([
-      'values-en-rGB/strings.xml',
-      'values-en-rUS/strings.xml',
+      'values-en-GB/strings.xml',
+      'values-en-US/strings.xml',
     ]);
+  });
+
+  it('should format label keys correctly when invalid characters are encountered', () => {
+    const serialized = transformer.serialize(
+      { '123.some.key': { translations: { en_US: '123' } } },
+      mockSerializationOptions({
+        locales: ['en_US'],
+        referenceLocale: 'en_US',
+      })
+    );
+
+    // Prefixes the key since it starts with a number, and
+    // removes all dots in favor of underscores
+    expect(serialized).toHaveProperty('values-en/strings.xml');
+    expect(serialized['values-en/strings.xml'].content).toContain(
+      '"_123_some_key"'
+    );
   });
 });
 

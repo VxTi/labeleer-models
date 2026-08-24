@@ -26,6 +26,8 @@ export interface LanguageFileTransformer<
 
   parse(input: string, options: TParseOptions): TranslationDataset;
 
+  formatKey(key: string): string;
+
   parseAggregate(
     inputs: Partial<Record<Locale, string>>,
     options: TParseOptions
@@ -60,7 +62,7 @@ export function makeLanguageTransformer<
       >,
       'canParse'
     >,
-    'parseAggregate'
+    'parseAggregate' | 'formatKey'
   >
 ): LanguageFileTransformer<
   TFormat,
@@ -69,6 +71,7 @@ export function makeLanguageTransformer<
   TSerializeOptions
 > {
   return {
+    formatKey: $in => $in, // No transformation
     ...options,
     canParse(extension: string): extension is NoInfer<TFileExtensions>[number] {
       const normalized = extension.toLowerCase().trim();
@@ -102,10 +105,10 @@ export function makeLanguageTransformer<
   };
 }
 
-export type InferLanguageFileFormat<T extends SomeLanguageFileTransformer> =
+type InferLanguageFileFormat<T extends SomeLanguageFileTransformer> =
   T extends LanguageFileTransformer<infer Fmt, any, any, any> ? Fmt : never;
 
-export type InferParserWithFormat<
+type InferParserWithFormat<
   TTransformer extends SomeLanguageFileTransformer,
   TFmt extends LanguageFileFormat,
 > =
@@ -180,16 +183,18 @@ export function makeParserSet<
     inputs: Partial<Record<Locale, string>>,
     format: TFmt,
     options: InferParsingOptions<InferParserWithFormat<TTransformers, TFmt>>
-  ): TranslationDataset => {
-    return get(format).parseAggregate(inputs, options);
-  };
+  ): TranslationDataset => get(format).parseAggregate(inputs, options);
 
   const serialize = <TOpt extends TTransformers>(
     dataset: TranslationDataset,
     format: InferLanguageFileFormat<TOpt>,
     options: SerializationOptions
-  ): SerializationResult => {
-    return get(format).serialize(dataset, options);
+  ): SerializationResult => get(format).serialize(dataset, options);
+
+  const formats = (): InferLanguageFileFormat<TTransformers>[] => {
+    return transformers.map(
+      tfm => tfm.fileFormat
+    ) as InferLanguageFileFormat<TTransformers>[];
   };
 
   return {
@@ -198,11 +203,6 @@ export function makeParserSet<
     parse,
     parseAggregate,
     serialize,
-
-    formats(): InferLanguageFileFormat<TTransformers>[] {
-      return transformers.map(
-        tfm => tfm.fileFormat
-      ) as InferLanguageFileFormat<TTransformers>[];
-    },
+    formats,
   };
 }
