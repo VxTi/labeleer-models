@@ -12,11 +12,11 @@ describe('yaml serialization', () => {
         pluralForm: {
           translations: {},
           plurals: {
-            [Plurality.ONE]: {
-              en_US: 'hello',
+            en_US: {
+              [Plurality.ONE]: 'hello',
             },
-            [Plurality.OTHER]: {
-              nl_NL: 'world',
+            nl_NL: {
+              [Plurality.OTHER]: 'world',
             },
           },
         },
@@ -31,10 +31,10 @@ describe('yaml serialization', () => {
           "content": "pluralForm:
         translations: {}
         plurals:
-          one:
-            en_US: hello
-          other:
-            nl_NL: world
+          en_US:
+            one: hello
+          nl_NL:
+            other: world
       ",
         },
       }

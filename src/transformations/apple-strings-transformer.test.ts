@@ -1,6 +1,9 @@
 import { mockParsingOptions, mockSerializationOptions } from '@/__testutils__';
 import { type Locale, toBCP47 } from '@/locales';
-import { AppleStringsDatasetTransformer } from '@/transformations/apple-strings-transformer';
+import {
+  AppleStringsDatasetTransformer,
+  type AppleStringsSerializationOptions,
+} from '@/transformations/apple-strings-transformer';
 import { describe, expect, it } from 'vitest';
 
 const transformer = AppleStringsDatasetTransformer;
@@ -137,7 +140,7 @@ describe('apple strings serialization', () => {
           },
         },
       },
-      mockSerializationOptions({
+      mockSerializationOptions<AppleStringsSerializationOptions>({
         referenceLocale: 'en_US',
         locales: ['en_US', 'nl_NL'],
         keylessTranslation: false,
@@ -168,7 +171,7 @@ describe('apple strings serialization', () => {
           },
         },
       },
-      mockSerializationOptions({
+      mockSerializationOptions<AppleStringsSerializationOptions>({
         referenceLocale: refLang,
         locales: [refLang],
         keylessTranslation: false,

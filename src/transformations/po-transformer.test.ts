@@ -1,5 +1,5 @@
 import { mockParsingOptions, mockSerializationOptions } from '@/__testutils__';
-import { type SerializationResult } from '@/definitions';
+import { Plurality, type SerializationResult } from '@/definitions';
 import { PODatasetTransformer } from '@/transformations/po-transformer';
 import { describe, expect, it } from 'vitest';
 
@@ -30,14 +30,10 @@ describe('po parsing', () => {
       {
         "first-entry": {
           "plurals": {
-            "one": {
-              "en_US": "0 hellos",
-            },
-            "other": {
-              "en_US": "1 hello",
-            },
-            "two": {
-              "en_US": "2 hellos",
+            "en_US": {
+              "one": "0 hellos",
+              "other": "1 hello",
+              "two": "2 hellos",
             },
           },
           "translations": {},
@@ -65,14 +61,10 @@ describe('po serialization', () => {
         'something-plural': {
           translations: {},
           plurals: {
-            zero: {
-              en_US: 'There are no items',
-            },
-            one: {
-              en_US: 'There is one item',
-            },
-            other: {
-              en_US: 'There are {count} items',
+            en_US: {
+              [Plurality.ZERO]: 'There are no items',
+              [Plurality.ONE]: 'There is one item',
+              [Plurality.OTHER]: 'There are {count} items',
             },
           },
         },

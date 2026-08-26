@@ -17,7 +17,7 @@ export interface LanguageFileTransformer<
   TFormat extends LanguageFileFormat,
   TFileExtensions extends FileExtensions,
   TParseOptions extends ParsingOptions,
-  TSerializeOptions extends object,
+  TSerializeOptions extends SerializationOptions = SerializationOptions,
 > {
   readonly fileFormat: TFormat;
   readonly extensions: TFileExtensions;
@@ -35,7 +35,7 @@ export interface LanguageFileTransformer<
 
   serialize(
     dataset: TranslationDataset,
-    options: SerializationOptions<TSerializeOptions>
+    options: TSerializeOptions
   ): SerializationResult;
 }
 
@@ -50,7 +50,7 @@ export function makeLanguageTransformer<
   TFormat extends LanguageFileFormat = LanguageFileFormat,
   TFileExtensions extends FileExtensions = FileExtensions,
   TParseOptions extends ParsingOptions = ParsingOptions,
-  TSerializeOptions extends object = object,
+  TSerializeOptions extends SerializationOptions = SerializationOptions,
 >(
   options: MakeOptional<
     Omit<

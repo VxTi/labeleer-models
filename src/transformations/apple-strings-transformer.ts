@@ -12,6 +12,10 @@ import { type Locale, toBCP47 } from '@/locales';
 import { makeLanguageTransformer } from '@/transformer';
 import { entries } from '@/util/data-extraction';
 
+export interface AppleStringsSerializationOptions extends SerializationOptions {
+  keylessTranslation?: boolean;
+}
+
 export const AppleStringsDatasetTransformer = makeLanguageTransformer({
   fileFormat: LanguageFileFormat.APPLE_STRINGS,
   extensions: ['.strings'],
@@ -67,7 +71,7 @@ export const AppleStringsDatasetTransformer = makeLanguageTransformer({
 
   serialize(
     dataset: TranslationDataset,
-    options: SerializationOptions
+    options: AppleStringsSerializationOptions
   ): SerializationResult {
     return Object.fromEntries(
       options.locales.map(loc => {

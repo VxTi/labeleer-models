@@ -3,7 +3,7 @@ import {
   mockParsingOptions,
   mockSerializationOptions,
 } from '@/__testutils__';
-import { type TranslationDataset } from '@/definitions';
+import { Plurality, type TranslationDataset } from '@/definitions';
 import { AndroidStringsDatasetTransformer } from './android-strings-transformer';
 import { describe, expect, it } from 'vitest';
 
@@ -59,9 +59,7 @@ describe('android strings serialization', () => {
       strict: {
         translations: {},
         plurals: {
-          one: {
-            [refLocale]: 'one strict',
-          },
+          [refLocale]: { [Plurality.ONE]: 'one strict' },
         },
       },
     };

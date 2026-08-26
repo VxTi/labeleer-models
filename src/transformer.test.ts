@@ -3,6 +3,7 @@ import {
   type SerializationResult,
 } from '@/definitions';
 import { defaultTransformerSet } from '@/parser';
+import { type AppleStringsSerializationOptions } from '@/transformations';
 import { describe, it, expect } from 'vitest';
 import { LanguageFileFormat } from './file-formats';
 import { mockDataset, mockSerializationOptions } from '@/__testutils__';
@@ -39,7 +40,7 @@ describe('serializer', () => {
       const result = transformerSet.serialize(
         mockDataset(),
         LanguageFileFormat.APPLE_STRINGS,
-        mockSerializationOptions({
+        mockSerializationOptions<AppleStringsSerializationOptions>({
           locales: ['en_US', 'nl_NL', 'fr_FR'],
           keylessTranslation: false,
         })

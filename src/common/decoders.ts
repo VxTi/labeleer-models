@@ -45,8 +45,8 @@ export const JsonTranslationDatasetDecoder = z.record(
     // `partialRecord` keeps plural categories optional (not all-or-nothing).
     plurals: z
       .partialRecord(
-        z.enum(Plurality),
-        z.partialRecord(LocaleDecoder, z.string())
+        LocaleDecoder,
+        z.partialRecord(z.enum(Plurality), z.string())
       )
       .default({}),
     translations: z.partialRecord(LocaleDecoder, z.string()).default({}),

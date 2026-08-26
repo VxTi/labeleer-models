@@ -58,9 +58,11 @@ export const XCStringsDatasetTransformer = makeLanguageTransformer({
           const other = pluralVariations.other.stringUnit.value;
 
           datasetBuilder.addPluralEntry(key, {
-            ...(zero ? { zero: { [locale]: zero } } : {}),
-            one: { [locale]: one },
-            other: { [locale]: other },
+            [locale]: {
+              ...(zero ? { zero } : {}),
+              one,
+              other,
+            },
           });
         }
       });
@@ -100,18 +102,18 @@ export const XCStringsDatasetTransformer = makeLanguageTransformer({
           };
         }
 
-        entries(entry.plurals ?? {}).forEach(([quantity, pluralEntry]) => {
+        const pluralization = entry.plurals?.[locale];
+
+        entries(pluralization ?? {}).forEach(([plurality, value]) => {
           const variation: XCStringsPluralVariations =
-            quantityToXcstringsType(quantity);
+            pluralityToXcstringsType(plurality);
+
           merge(stringUnit.localizations, {
             [languageTag]: {
               variations: {
                 plural: {
                   [variation]: {
-                    stringUnit: {
-                      state: 'translated',
-                      value: pluralEntry[locale] ?? '',
-                    },
+                    stringUnit: { state: 'translated', value },
                   },
                 },
               },
@@ -131,7 +133,7 @@ export const XCStringsDatasetTransformer = makeLanguageTransformer({
   },
 });
 
-function quantityToXcstringsType(
+function pluralityToXcstringsType(
   pluralForm: Plurality
 ): XCStringsPluralVariations {
   switch (pluralForm) {

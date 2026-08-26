@@ -128,12 +128,12 @@ function buildXmlDataset(
     }
 
     const pluralItems: ASXmlPluralEntry[] = [];
+    const plurals = entry.plurals?.[locale] ?? {};
 
-    entries(entry.plurals ?? {}).forEach(([quantity, pluralEntry]) => {
-      const value = pluralEntry[locale];
+    entries(plurals).forEach(([plurality, value]) => {
       pluralItems.push({
-        '@_quantity': quantity,
-        '#text': escapeAndroidText(value ?? ''),
+        '@_quantity': plurality,
+        '#text': escapeAndroidText(value),
       });
     });
 
@@ -202,17 +202,16 @@ function constructPerLanguageDatasets(
     locales.forEach((locale: Locale) => {
       const builder = new DatasetBuilder();
 
-      const pluralEntries = entries(entry.plurals ?? {});
+      const plurals: TranslationPluralization = {};
 
-      const plurals: TranslationPluralization = Object.fromEntries(
-        pluralEntries.map(([qt, pluralEntry]) => {
-          const pluralValue = pluralEntry[locale] ?? '';
-
-          return [qt, { [locale]: pluralValue }];
-        })
+      entries(entry.plurals?.[locale] ?? {}).forEach(
+        ([plurality, translation]) => {
+          plurals[locale] ??= {};
+          plurals[locale][plurality] = translation;
+        }
       );
 
-      if (pluralEntries.length > 0) {
+      if (Object.keys(plurals).length > 0) {
         builder.addPluralEntry(key, plurals);
       } else {
         builder.addTranslation(key, {

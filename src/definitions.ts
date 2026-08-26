@@ -24,9 +24,15 @@ export enum Plurality {
 /**
  * Pluralization entries for different quantities,
  * each containing localized translations.
+ * @example
+ * const plural: TranslationPluralization = {
+ *   en_US: {
+ *     [Plurality.ONE]: 'something'
+ *   }
+ * }
  */
 export type TranslationPluralization = Partial<
-  Record<Plurality, TranslationLocalizedEntries>
+  Record<Locale, Partial<Record<Plurality, string>>>
 >;
 
 export type TranslationLocalizedEntries = Partial<Record<Locale, string>>;
@@ -62,7 +68,7 @@ export interface ParsingOptions {
 /**
  * Options for serialization functions
  */
-export type SerializationOptions<TAdditionalOptions extends object = object> = {
+export interface SerializationOptions {
   /**
    * The reference locale for the serialization process.
    * This is necessary for formats that require a base language,
@@ -74,7 +80,7 @@ export type SerializationOptions<TAdditionalOptions extends object = object> = {
    * The list of locales to include in the serialization output.
    */
   locales: Locale[];
-} & Partial<TAdditionalOptions>;
+}
 
 export interface SerializationFileFragment {
   filename: string;
@@ -82,7 +88,6 @@ export interface SerializationFileFragment {
 }
 
 export interface SerializationFile {
-  isDirectory?: boolean;
   content: string;
 }
 

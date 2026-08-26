@@ -134,7 +134,9 @@ function extractPlurals(
   entry.msgstr.slice(0, PO_PLURAL_ORDER.length).forEach((plural, index) => {
     if (plural.trim().length === 0) return;
 
-    plurals[PO_PLURAL_ORDER[index]] = { [targetLocale]: plural };
+    const plurality = PO_PLURAL_ORDER[index];
+    plurals[targetLocale] ??= {};
+    plurals[targetLocale][plurality] = plural;
   });
 
   return plurals;
@@ -143,7 +145,7 @@ function extractPlurals(
 function constructPoSerializationFragment(
   input: TranslationDataset,
   locale: Locale,
-  referenceLocale: Locale,
+  _referenceLocale: Locale,
   extensions: ['.po', '.pot']
 ): SerializationFileFragment {
   // TODO: Add support for more headers (e.g., Project-Id-Version, POT-Creation-Date, etc.)
@@ -183,13 +185,12 @@ function constructPoSerializationFragment(
       poEntry.comments.reference = entry.tags.join('\n');
     }
 
-    const one = entry.plurals?.one?.[locale];
-    const other = entry.plurals?.other?.[locale];
+    const { one, other } = entry.plurals?.[locale] ?? {};
 
     if (one !== undefined || other !== undefined) {
       // `msgid_plural` is the source-language plural form; `msgstr[0]`/`[1]`
       // are the target's singular (`one`) and plural (`other`) translations.
-      poEntry.msgid_plural = entry.plurals?.other?.[referenceLocale] ?? key;
+      poEntry.msgid_plural = other ?? key;
       poEntry.msgstr = [one ?? '', other ?? ''];
     }
 

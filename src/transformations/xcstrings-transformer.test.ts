@@ -45,13 +45,13 @@ describe('xcstrings parsing', () => {
                     "one": {
                       "stringUnit": {
                         "state": "translated",
-                        "value": "hello"
+                        "value": "singular"
                       }
                     },
                     "other": {
                       "stringUnit": {
                         "state": "translated",
-                        "value": "hello"
+                        "value": "other"
                       }
                     }
                   }
@@ -63,13 +63,13 @@ describe('xcstrings parsing', () => {
                     "one": {
                       "stringUnit": {
                         "state": "translated",
-                        "value": "world"
+                        "value": "enkel"
                       }
                     },
                     "other": {
                       "stringUnit": {
                         "state": "translated",
-                        "value": "again"
+                        "value": "meer"
                       }
                     }
                   }
@@ -90,13 +90,13 @@ describe('xcstrings parsing', () => {
       },
       'plural-entry': {
         plurals: {
-          [Plurality.ONE]: {
-            en_US: 'hello',
-            nl_NL: 'world',
+          en_US: {
+            [Plurality.ONE]: 'singular',
+            [Plurality.OTHER]: 'other',
           },
-          [Plurality.OTHER]: {
-            en_US: 'hello',
-            nl_NL: 'again',
+          nl_NL: {
+            [Plurality.ONE]: 'enkel',
+            [Plurality.OTHER]: 'meer',
           },
         },
       },
@@ -115,14 +115,8 @@ describe('xcstrings serialization', () => {
       plural: {
         translations: {},
         plurals: {
-          one: {
-            en_US: 'hello',
-            nl_NL: 'world',
-          },
-          other: {
-            en_US: 'hello',
-            nl_NL: 'again',
-          },
+          en_US: { [Plurality.ONE]: 'hello', [Plurality.OTHER]: 'helloos' },
+          nl_NL: { [Plurality.ONE]: 'hallo', [Plurality.OTHER]: 'halloos' },
         },
       },
     });
@@ -200,7 +194,7 @@ describe('xcstrings serialization', () => {
                     "other": {
                       "stringUnit": {
                         "state": "translated",
-                        "value": "hello"
+                        "value": "helloos"
                       }
                     }
                   }
@@ -212,13 +206,13 @@ describe('xcstrings serialization', () => {
                     "one": {
                       "stringUnit": {
                         "state": "translated",
-                        "value": "world"
+                        "value": "hallo"
                       }
                     },
                     "other": {
                       "stringUnit": {
                         "state": "translated",
-                        "value": "again"
+                        "value": "halloos"
                       }
                     }
                   }

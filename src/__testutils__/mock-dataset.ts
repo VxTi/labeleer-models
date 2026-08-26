@@ -26,11 +26,9 @@ export function mockPluralDataset(updates: Partial<TranslationDataset> = {}) {
   return {
     'plural-entry': {
       plurals: {
-        [Plurality.ONE]: {
-          en_US: 'One thing',
-        },
-        [Plurality.OTHER]: {
-          en_US: 'Many things',
+        en_US: {
+          [Plurality.ONE]: 'One thing',
+          [Plurality.OTHER]: 'Many things',
         },
       },
       translations: {},
