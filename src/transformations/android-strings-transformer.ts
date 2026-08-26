@@ -17,9 +17,10 @@ import {
 } from '@/locales';
 import { makeLanguageTransformer } from '@/transformer';
 import { entries, extractArray } from '@/util/data-extraction';
-import { XMLBuilder, XMLParser } from 'fast-xml-parser';
+import { XMLParser } from 'fast-xml-parser';
+import Builder, { type XMLBuilder } from 'fast-xml-builder';
+import { merge } from 'lodash-es';
 import * as z from 'zod';
-import merge from 'lodash-es/merge';
 
 export const AndroidStringsDatasetTransformer = makeLanguageTransformer({
   fileFormat: LanguageFileFormat.ANDROID_STRINGS,
@@ -67,7 +68,7 @@ export const AndroidStringsDatasetTransformer = makeLanguageTransformer({
       const perLanguageDatasets: Partial<Record<Locale, TranslationDataset>> =
         constructPerLanguageDatasets(dataset, options.locales);
 
-      const builder = new XMLBuilder({
+      const builder = new Builder({
         format: true,
         ignoreAttributes: false,
       });
@@ -79,10 +80,7 @@ export const AndroidStringsDatasetTransformer = makeLanguageTransformer({
             const dirname = androidValuesDirectory(locale, options.locales);
             const filename = [dirname, 'strings'].join('/');
 
-            return [
-              filename + this.extensions[0],
-              { content, isDirectory: true },
-            ];
+            return [filename + this.extensions[0], { content }];
           }
         )
       );

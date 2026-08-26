@@ -27,7 +27,7 @@ describe('yaml serialization', () => {
     expect(serialized).toBeDefined();
     expect(serialized).toMatchInlineSnapshot(`
       {
-        "labels": {
+        "labels.yaml": {
           "content": "pluralForm:
         translations: {}
         plurals:

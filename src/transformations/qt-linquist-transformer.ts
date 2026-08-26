@@ -11,7 +11,8 @@ import { LanguageFileFormat } from '@/file-formats';
 import { isBCP47Locale, isLocale, type Locale, toPOSIX } from '@/locales';
 import { makeLanguageTransformer } from '@/transformer';
 import { entries, extractArray } from '@/util/data-extraction';
-import { XMLBuilder, XMLParser } from 'fast-xml-parser';
+import Builder, { type XMLBuilder } from 'fast-xml-builder';
+import { XMLParser } from 'fast-xml-parser';
 import * as z from 'zod';
 
 export const TsDatasetTransformer = makeLanguageTransformer({
@@ -75,7 +76,7 @@ export const TsDatasetTransformer = makeLanguageTransformer({
     const nonReferenceLanguages = locales.filter(
       loc => loc !== referenceLocale
     );
-    const builder = new XMLBuilder({
+    const builder = new Builder({
       ignoreAttributes: false,
       format: true,
     });

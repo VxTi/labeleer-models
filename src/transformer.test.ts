@@ -23,15 +23,12 @@ describe('serializer', () => {
       expect(result).toMatchObject<SerializationResult>({
         'values-en/strings.xml': expect.objectContaining<SerializationFile>({
           content: expect.any(String),
-          isDirectory: true,
         }),
         'values-nl/strings.xml': expect.objectContaining<SerializationFile>({
           content: expect.any(String),
-          isDirectory: true,
         }),
         'values-fr/strings.xml': expect.objectContaining<SerializationFile>({
           content: expect.any(String),
-          isDirectory: true,
         }),
       });
     });

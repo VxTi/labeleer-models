@@ -1,18 +1,19 @@
 import { LocaleDecoder } from '@/common';
 import { DatasetBuilder } from '@/dataset-builder';
-import {
-  type ParsingOptions,
-  type SerializationFileFragment,
-  type SerializationOptions,
-  type SerializationResult,
-  type TranslationDataset,
+import type {
+  ParsingOptions,
+  SerializationFileFragment,
+  SerializationOptions,
+  SerializationResult,
+  TranslationDataset,
 } from '@/definitions';
 import { ParsingError } from '@/errors';
 import { LanguageFileFormat } from '@/file-formats';
 import { type Locale, toISO639_1LanguageCode } from '@/locales';
 import { makeLanguageTransformer } from '@/transformer';
 import { entries } from '@/util/data-extraction';
-import { XMLBuilder, XMLParser } from 'fast-xml-parser';
+import Builder, { type XMLBuilder } from 'fast-xml-builder';
+import { XMLParser } from 'fast-xml-parser';
 import * as z from 'zod';
 
 export const XLIFFDatasetTransformer = makeLanguageTransformer({
@@ -66,7 +67,7 @@ export const XLIFFDatasetTransformer = makeLanguageTransformer({
     options: SerializationOptions
   ): SerializationResult {
     const { locales, referenceLocale } = options;
-    const builder = new XMLBuilder({
+    const builder = new Builder({
       ignoreAttributes: false,
       format: true,
       suppressEmptyNode: true,

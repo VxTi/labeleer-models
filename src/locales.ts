@@ -3,82 +3,72 @@
  * @see [GNU - Locale names](https://www.gnu.org/software/libc/manual/html_node/Locale-Names.html)
  */
 export const Locales = [
+  // African & Middle Eastern
   'af_ZA', // Afrikaans
   'am_ET', // Amharic
   'ar_SA', // Arabic
+  'ps_AF', // Pashto
+  'sw_KE', // Swahili
+  'wo_SN', // Wolof
+  'xh_ZA', // Xhosa
+  'yo_NG', // Yoruba
+  'yo_BJ', // Yoruba (Benin)
+  'zu_ZA', // Zulu
+
+  // Caucasian & Central Asian
   'az_AZ', // Azerbaijani
-  'be_BY', // Belarusian
-  'bg_BG', // Bulgarian
-  'bn_BD', // Bengali
-  'bs_BA', // Bosnian
-  'ca_ES', // Catalan
-  'cs_CZ', // Czech
-  'cy_GB', // Welsh
-  'da_DK', // Danish
-  'de_DE', // German
-  'el_GR', // Greek
-  'es_ES', // Spanish
-  'et_EE', // Estonian
-  'eu_ES', // Basque
-  'fa_IR', // Persian (Farsi)
-  'fi_FI', // Finnish
-  'fr_FR', // French
-  'nl_BE', // Flemish
-  'ga_IE', // Irish
-  'gl_ES', // Galician
-  'gu_IN', // Gujarati
-  'he_IL', // Hebrew
-  'hi_IN', // Hindi
-  'hr_HR', // Croatian
-  'hu_HU', // Hungarian
   'hy_AM', // Armenian
-  'is_IS', // Icelandic
-  'it_IT', // Italian
-  'ja_JP', // Japanese
   'ka_GE', // Georgian
   'kk_KZ', // Kazakh
-  'km_KH', // Khmer
-  'kn_IN', // Kannada
-  'ko_KR', // Korean
   'ky_KG', // Kyrgyz
-  'lo_LA', // Lao
+  'tk_TM', // Turkmen
+  'ug_CN', // Uyghur
+  'uz_UZ', // Uzbek
+
+  // Kashmiri variants
+  'ks_IN', // Kashmiri (India - Arabic script / RTL)
+  'ks_PK', // Kashmiri (Pakistan - Arabic script / RTL)
+
+  // European - Baltic & Slavic
+  'be_BY', // Belarusian
+  'bg_BG', // Bulgarian
+  'bs_BA', // Bosnian
+  'cs_CZ', // Czech
+  'hr_HR', // Croatian
   'lt_LT', // Lithuanian
   'lv_LV', // Latvian
   'mk_MK', // Macedonian
-  'ml_IN', // Malayalam
-  'mn_MN', // Mongolian
-  'ms_MY', // Malay
-  'mt_MT', // Maltese
-  'my_MM', // Burmese
-  'ne_NP', // Nepali
-  'nl_NL', // Dutch
-  'no_NO', // Norwegian
-  'pa_IN', // Punjabi
   'pl_PL', // Polish
-  'ps_AF', // Pashto
-  'pt_PT', // Portuguese
-  'ro_RO', // Romanian
   'ru_RU', // Russian
-  'si_LK', // Sinhala
   'sk_SK', // Slovak
   'sl_SI', // Slovenian
   'sq_AL', // Albanian
   'sr_RS', // Serbian
-  'sv_SE', // Swedish
-  'sw_KE', // Swahili
-  'ta_IN', // Tamil
-  'te_IN', // Telugu
-  'th_TH', // Thai
-  'tr_TR', // Turkish
+  'sr_BA', // Serbian (Bosnia)
+  'sr_ME', // Serbian (Montenegro)
   'uk_UA', // Ukrainian
-  'ur_PK', // Urdu
-  'uz_UZ', // Uzbek
-  'vi_VN', // Vietnamese
-  'xh_ZA', // Xhosa
-  'yo_NG', // Yoruba
-  'zh_CN', // Chinese (Simplified)
-  'zh_TW', // Chinese (Traditional)
-  'zu_ZA', // Zulu
+
+  // European - Romance & Germanic
+  'ca_ES', // Catalan
+  'cy_GB', // Welsh
+  'da_DK', // Danish
+  'de_DE', // German
+  'el_GR', // Greek
+  'et_EE', // Estonian
+  'eu_ES', // Basque
+  'fi_FI', // Finnish
+  'ga_IE', // Irish
+  'gl_ES', // Galician
+  'hu_HU', // Hungarian
+  'is_IS', // Icelandic
+  'it_IT', // Italian
+  'mt_MT', // Maltese
+  'nl_NL', // Dutch
+  'nl_BE', // Flemish
+  'no_NO', // Norwegian (Bokmål)
+  'nn_NO', // Norwegian (Nynorsk)
+  'ro_RO', // Romanian
+  'sv_SE', // Swedish
 
   // English variants
   'en_US',
@@ -89,53 +79,140 @@ export const Locales = [
   'en_IN',
 
   // French variants
+  'fr_FR',
   'fr_CA',
   'fr_BE',
   'fr_CH',
 
-  // Portuguese variants
-  'pt_BR',
-
-  // Chinese variants
-  'zh_HK',
-
-  // Norwegian variant
-  'nn_NO',
-
-  // Serbian variants
-  'sr_BA',
-  'sr_ME',
-
-  // Malay-Indonesian variants
-  'id_ID',
-  'ms_BN',
   // Spanish variants
+  'es_ES',
   'es_MX',
   'es_AR',
   'es_CO',
   'es_CL',
   'es_US',
+
+  // Portuguese variants
+  'pt_PT',
+  'pt_BR',
+
+  // South Asian & Indo-Iranian
+  'bn_BD', // Bengali
+  'dv_MV', // Dhivehi
+  'fa_IR', // Persian (Iran)
+  'fa_AF', // Persian/Dari (Afghanistan)
+  'gu_IN', // Gujarati
+  'he_IL', // Hebrew
+  'hi_IN', // Hindi
+  'kn_IN', // Kannada
+  'ku_TR', // Kurdish (Turkey)
+  'ku_IR', // Kurdish (Iran)
+  'ku_IQ', // Kurdish (Iraq)
+  'ku_SY', // Kurdish (Syria)
+  'ml_IN', // Malayalam
+  'ne_NP', // Nepali
+  'pa_IN', // Punjabi
+  'sd_IN', // Sindhi (India)
+  'sd_PK', // Sindhi (Pakistan)
+  'si_LK', // Sinhala
+  'ta_IN', // Tamil
+  'te_IN', // Telugu
+  'ur_PK', // Urdu (Pakistan)
+  'ur_IN', // Urdu (India)
+
+  // East & Southeast Asian
+  'bo_CN', // Tibetan (China)
+  'bo_IN', // Tibetan (India)
+  'dz_BT', // Dzongkha
+  'id_ID', // Indonesian
+  'ja_JP', // Japanese
+  'jv_ID', // Javanese
+  'km_KH', // Khmer
+  'ko_KR', // Korean
+  'lo_LA', // Lao
+  'mn_MN', // Mongolian
+  'ms_MY', // Malay (Malaysia)
+  'ms_BN', // Malay (Brunei)
+  'my_MM', // Burmese
+  'su_ID', // Sundanese
+  'th_TH', // Thai
+  'vi_VN', // Vietnamese
+  'zh_CN', // Chinese (Simplified)
+  'zh_TW', // Chinese (Traditional, Taiwan)
+  'zh_HK', // Chinese (Traditional, HK)
+  'zh_SG', // Chinese (Simplified, Singapore)
+
+  // Americas & Indigenous
+  'gug_PY', // Guaraní
+
+  // Yiddish variants
+  'yi_US',
+  'yi_IL',
+  'yi_DE',
+  'tr_TR', // Turkish
 ] as const;
 
 /**
  * Set of language codes that are written in right-to-left (RTL) scripts.
- *
- * This set includes ISO 639-1 codes for languages such as Arabic, Hebrew, Persian, Urdu, and others.
  */
-const rtlLanguages = new Set([
+const rtlLanguages = new Set<ISO639_1LanguageCode>([
   'ar', // Arabic
   'he', // Hebrew
   'fa', // Persian/Farsi
   'ur', // Urdu
   'yi', // Yiddish
-  'ji', // Yiddish (alternative code)
-  'iw', // Hebrew (deprecated code, but still used)
   'ku', // Kurdish
   'ps', // Pashto
   'sd', // Sindhi
   'ug', // Uyghur
   'dv', // Dhivehi/Maldivian
   'ks', // Kashmiri
+]);
+
+const nonPluralLocales = new Set<Locale>([
+  // East & Southeast Asian
+  'ja_JP',
+  'ko_KR',
+  'zh_CN',
+  'zh_TW',
+  'zh_HK',
+  'zh_SG',
+  'vi_VN',
+  'th_TH',
+  'km_KH',
+  'lo_LA',
+  'my_MM',
+  'id_ID',
+  'ms_MY',
+  'ms_BN',
+
+  // Turkic & Uralic
+  'tr_TR',
+  'az_AZ',
+  'hu_HU',
+  'uz_UZ',
+  'kk_KZ',
+  'ug_CN',
+  'ky_KG',
+  'tk_TM',
+
+  // Dravidian & Other Asian
+  'kn_IN',
+  'bo_CN',
+  'bo_IN',
+  'dz_BT',
+
+  // African & Indigenous
+  'yo_NG',
+  'yo_BJ',
+  'wo_SN',
+  'su_ID',
+  'jv_ID',
+  'gug_PY',
+
+  // Persian / Iranian
+  'fa_IR',
+  'fa_AF',
 ]);
 
 export type InferBCP47Locale<T extends string> =
@@ -306,6 +383,16 @@ export function getCountryFromLocale(locale: Locale): CountryCode | null {
  * @param language - The `ISO 639-1` language code to check.
  * @returns `true` if the locale is RTL, `false` otherwise.
  */
-export function isRtlLanguage(language: string | undefined) {
+export function isRtlLanguage(language: ISO639_1LanguageCode | undefined) {
   return !!language && rtlLanguages.has(language);
+}
+
+/**
+ * Determines if the given locale supports pluralization.
+ *
+ * @param {Locale} locale - The locale to check for pluralization support.
+ * @return {boolean} `true` if the locale supports pluralization, `false` otherwise.
+ */
+export function supportsPluralization(locale: Locale): boolean {
+  return !nonPluralLocales.has(locale);
 }

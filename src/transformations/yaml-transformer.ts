@@ -43,7 +43,7 @@ export const YamlDatasetTransformer = makeLanguageTransformer({
     const content = YAML.stringify(dataset);
 
     return {
-      [DEFAULT_YAML_FILE_NAME]: { content },
+      [DEFAULT_YAML_FILE_NAME + this.extensions[0]]: { content },
     };
   },
 });

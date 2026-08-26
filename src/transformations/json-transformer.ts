@@ -37,7 +37,7 @@ export const JsonDatasetTransformer = makeLanguageTransformer({
     const content = JSON.stringify(dataset, null, 2);
 
     return {
-      [DEFAULT_JSON_FILE_NAME]: { content },
+      [DEFAULT_JSON_FILE_NAME + this.extensions[0]]: { content },
     };
   },
 });

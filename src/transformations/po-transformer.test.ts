@@ -85,9 +85,9 @@ describe('po serialization', () => {
 
     expect(serialized).toBeDefined();
     expect(serialized).toMatchObject<SerializationResult>({
-      ['en_US']: expect.objectContaining({ content: expect.any(String) }),
+      ['en_US.po']: expect.objectContaining({ content: expect.any(String) }),
     });
-    expect(serialized['en_US'].content).toMatchInlineSnapshot(`
+    expect(serialized['en_US.po'].content).toMatchInlineSnapshot(`
       "msgid ""
       msgstr ""
       "Content-Type: text/plain; charset=utf-8\\n"

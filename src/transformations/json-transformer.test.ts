@@ -55,11 +55,13 @@ describe('json serialization', () => {
       mockDataset(),
       mockSerializationOptions()
     );
+    const fileName = `${DEFAULT_JSON_FILE_NAME}.json`;
+
     expect(serialized).toBeDefined();
-    expect(serialized).toHaveProperty(DEFAULT_JSON_FILE_NAME);
-    expect(serialized[DEFAULT_JSON_FILE_NAME].content).toContain('hello');
-    expect(serialized[DEFAULT_JSON_FILE_NAME].content).toContain('again');
-    expect(serialized[DEFAULT_JSON_FILE_NAME].content).toMatchInlineSnapshot(`
+    expect(serialized).toHaveProperty(fileName);
+    expect(serialized[fileName].content).toContain('hello');
+    expect(serialized[fileName].content).toContain('again');
+    expect(serialized[fileName].content).toMatchInlineSnapshot(`
       "{
         "first-entry": {
           "plurals": {},

@@ -93,18 +93,6 @@ export type SerializationResult = {
   [filename: string]: SerializationFile;
 };
 
-/**
- * A function that takes a TranslationDataset and optional serialization options,
- * and returns an array of SerializationFragments, a single string, or undefined if serialization fails.
- *
- * A {@link SerializationResult} represents a part of the serialized output,
- * which can be useful for formats that require multiple files.
- */
-export type SerializerFn<TAdditionalOptions extends object = object> = (
-  dataset: TranslationDataset,
-  options: SerializationOptions<TAdditionalOptions>
-) => SerializationResult[];
-
 export type MaybeArray<T> = Array<T> | T;
 
 export type MakeOptional<T extends object, K extends keyof T> = Omit<T, K> &

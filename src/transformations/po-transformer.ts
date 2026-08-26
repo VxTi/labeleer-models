@@ -93,7 +93,8 @@ export const PODatasetTransformer = makeLanguageTransformer({
         const { filename, content } = constructPoSerializationFragment(
           dataset,
           locale,
-          referenceLocale
+          referenceLocale,
+          this.extensions
         );
 
         return [filename, { content }];
@@ -142,7 +143,8 @@ function extractPlurals(
 function constructPoSerializationFragment(
   input: TranslationDataset,
   locale: Locale,
-  referenceLocale: Locale
+  referenceLocale: Locale,
+  extensions: ['.po', '.pot']
 ): SerializationFileFragment {
   // TODO: Add support for more headers (e.g., Project-Id-Version, POT-Creation-Date, etc.)
   // And also different encoding types
@@ -197,7 +199,7 @@ function constructPoSerializationFragment(
   const content = po.compile(output).toString('utf-8');
 
   return {
-    filename: locale,
+    filename: locale + extensions[0],
     content,
   };
 }
