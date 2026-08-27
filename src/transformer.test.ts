@@ -2,8 +2,8 @@ import {
   type SerializationFile,
   type SerializationResult,
 } from '@/definitions';
-import { defaultTransformerSet } from '@/parser';
 import { type AppleStringsSerializationOptions } from '@/transformations';
+import { defaultTransformerSet, type FileExtension } from '@/transformer';
 import { describe, it, expect } from 'vitest';
 import { LanguageFileFormat } from './file-formats';
 import { mockDataset, mockSerializationOptions } from '@/__testutils__';
@@ -73,4 +73,34 @@ describe('serializer', () => {
       });
     });
   });
+});
+
+describe('getSupportedExtensions', () => {
+  it.each`
+    extension       | expectedFormat
+    ${'.json'}      | ${LanguageFileFormat.JSON}
+    ${'.xml'}       | ${LanguageFileFormat.ANDROID_STRINGS}
+    ${'.strings'}   | ${LanguageFileFormat.APPLE_STRINGS}
+    ${'.po'}        | ${LanguageFileFormat.PO}
+    ${'.pot'}       | ${LanguageFileFormat.PO}
+    ${'.ts'}        | ${LanguageFileFormat.TS}
+    ${'.xcstrings'} | ${LanguageFileFormat.XCSTRINGS}
+    ${'.xlf'}       | ${LanguageFileFormat.XLIFF}
+    ${'.yml'}       | ${LanguageFileFormat.YAML}
+    ${'.yaml'}      | ${LanguageFileFormat.YAML}
+    ${'.unknown'}   | ${undefined}
+  `(
+    'should extract the correct transformers by extension',
+    ({
+      extension,
+      expectedFormat,
+    }: {
+      extension: FileExtension;
+      expectedFormat: LanguageFileFormat;
+    }) => {
+      expect(transformerSet.getByExtension(extension)?.fileFormat).toEqual(
+        expectedFormat
+      );
+    }
+  );
 });

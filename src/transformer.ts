@@ -8,9 +8,19 @@ import {
 } from '@/definitions';
 import { type LanguageFileFormat } from '@/file-formats';
 import type { Locale } from '@/locales';
+import {
+  AndroidStringsDatasetTransformer,
+  AppleStringsDatasetTransformer,
+  JsonDatasetTransformer,
+  PODatasetTransformer,
+  TsDatasetTransformer,
+  XCStringsDatasetTransformer,
+  XLIFFDatasetTransformer,
+  YamlDatasetTransformer,
+} from '@/transformations';
 import merge from 'lodash-es/merge';
 
-type FileExtension<T extends string = string> = `.${T}`;
+export type FileExtension<T extends string = string> = `.${T}`;
 type FileExtensions = [FileExtension, ...FileExtension[]];
 
 export interface LanguageFileTransformer<
@@ -30,7 +40,7 @@ export interface LanguageFileTransformer<
 
   parseAggregate(
     inputs: Partial<Record<Locale, string>>,
-    options: TParseOptions
+    options: NoInfer<TParseOptions> // Infer from main parsing method
   ): TranslationDataset;
 
   serialize(
@@ -105,8 +115,27 @@ export function makeLanguageTransformer<
   };
 }
 
+// Utility types (not relevant for library consumers)
+
 type InferLanguageFileFormat<T extends SomeLanguageFileTransformer> =
   T extends LanguageFileTransformer<infer Fmt, any, any, any> ? Fmt : never;
+
+type InferExtensions<T extends SomeLanguageFileTransformer> =
+  T extends LanguageFileTransformer<any, infer ExtArr, any, any> ?
+    ExtArr extends [infer _Ext, ...infer _Rest] ?
+      ExtArr[number]
+    : never
+  : never;
+
+type InferParserWithExtension<
+  Ext extends FileExtension,
+  TTransformer extends SomeLanguageFileTransformer,
+> =
+  TTransformer extends LanguageFileTransformer<any, infer SomeExts, any, any> ?
+    SomeExts extends [Ext] ?
+      TTransformer
+    : never
+  : never;
 
 type InferParserWithFormat<
   TTransformer extends SomeLanguageFileTransformer,
@@ -124,11 +153,20 @@ type InferParsingOptions<T> =
 export interface ParserSet<TTransformers extends SomeLanguageFileTransformer> {
   formats(): InferLanguageFileFormat<NoInfer<TTransformers>>[];
 
-  has(
+  getByExtension<TExt extends InferExtensions<TTransformers>>(
+    extension: TExt
+  ): InferParserWithExtension<TExt, TTransformers>;
+  getByExtension<TExt extends FileExtension>(
+    extension: TExt
+  ): InferParserWithExtension<TExt, TTransformers> | undefined;
+
+  getSupportedExtensions(): InferExtensions<TTransformers>[];
+
+  hasFormat(
     format: LanguageFileFormat
   ): format is InferLanguageFileFormat<TTransformers>;
 
-  get<TFmt extends InferLanguageFileFormat<TTransformers>>(
+  getByFormat<TFmt extends InferLanguageFileFormat<TTransformers>>(
     format: TFmt
   ): InferParserWithFormat<TTransformers, TFmt>;
 
@@ -156,7 +194,7 @@ export interface ParserSet<TTransformers extends SomeLanguageFileTransformer> {
 export function makeParserSet<
   TTransformers extends SomeLanguageFileTransformer,
 >(transformers: TTransformers[]): ParserSet<TTransformers> {
-  const get = <TFmt extends InferLanguageFileFormat<TTransformers>>(
+  const getByFormat = <TFmt extends InferLanguageFileFormat<TTransformers>>(
     format: TFmt
   ): InferParserWithFormat<TTransformers, TFmt> => {
     // Normally, this would yield 'T | undefined', though
@@ -167,7 +205,7 @@ export function makeParserSet<
     ) as InferParserWithFormat<TTransformers, TFmt>;
   };
 
-  const has = (
+  const hasFormat = (
     format: LanguageFileFormat
   ): format is InferLanguageFileFormat<TTransformers> => {
     return transformers.find(tfm => tfm.fileFormat === format) !== undefined;
@@ -177,19 +215,19 @@ export function makeParserSet<
     input: string,
     format: TFmt,
     options: InferParsingOptions<InferParserWithFormat<TTransformers, TFmt>>
-  ): TranslationDataset => get(format).parse(input, options);
+  ): TranslationDataset => getByFormat(format).parse(input, options);
 
   const parseAggregate = <TFmt extends InferLanguageFileFormat<TTransformers>>(
     inputs: Partial<Record<Locale, string>>,
     format: TFmt,
     options: InferParsingOptions<InferParserWithFormat<TTransformers, TFmt>>
-  ): TranslationDataset => get(format).parseAggregate(inputs, options);
+  ): TranslationDataset => getByFormat(format).parseAggregate(inputs, options);
 
   const serialize = <TOpt extends TTransformers>(
     dataset: TranslationDataset,
     format: InferLanguageFileFormat<TOpt>,
     options: SerializationOptions
-  ): SerializationResult => get(format).serialize(dataset, options);
+  ): SerializationResult => getByFormat(format).serialize(dataset, options);
 
   const formats = (): InferLanguageFileFormat<TTransformers>[] => {
     return transformers.map(
@@ -197,12 +235,39 @@ export function makeParserSet<
     ) as InferLanguageFileFormat<TTransformers>[];
   };
 
+  const getSupportedExtensions = (): InferExtensions<TTransformers>[] =>
+    transformers
+      .map(trf => trf.extensions)
+      .flat() as InferExtensions<TTransformers>[];
+
+  const getByExtension = <
+    TExt extends FileExtension | InferExtensions<TTransformers>,
+  >(
+    extension: TExt | string
+  ): InferParserWithExtension<TExt, TTransformers> => {
+    return transformers.find(tft =>
+      tft.extensions.includes(extension as FileExtension)
+    ) as InferParserWithExtension<TExt, TTransformers>;
+  };
+
   return {
-    get,
-    has,
+    getSupportedExtensions,
+    getByExtension,
+    getByFormat,
+    hasFormat,
     parse,
     parseAggregate,
     serialize,
     formats,
   };
 }
+export const defaultTransformerSet = makeParserSet([
+  JsonDatasetTransformer,
+  YamlDatasetTransformer,
+  TsDatasetTransformer,
+  PODatasetTransformer,
+  AndroidStringsDatasetTransformer,
+  AppleStringsDatasetTransformer,
+  XLIFFDatasetTransformer,
+  XCStringsDatasetTransformer,
+] as const);

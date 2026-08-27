@@ -12,7 +12,7 @@ import YAML, { parse } from 'yaml';
 
 export const YamlDatasetTransformer = makeLanguageTransformer({
   fileFormat: LanguageFileFormat.YAML,
-  extensions: ['.yaml'],
+  extensions: ['.yml', '.yaml'],
   parse(input: string, _options: ParsingOptions): TranslationDataset {
     try {
       const parsedYaml: unknown = parse(input);

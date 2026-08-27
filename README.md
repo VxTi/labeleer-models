@@ -166,7 +166,7 @@ subset (or superset) of transformers with `makeParserSet([...])`.
 | `serialize(dataset, format, options)` | Serialize a dataset into a `SerializationResult`. |
 | `formats()` | List the `LanguageFileFormat`s this set supports. |
 | `has(format)` | Type guard: whether the set supports a format. |
-| `get(format)` | Retrieve the underlying transformer for a format. |
+| `getByFormat(format)` | Retrieve the underlying transformer for a format. |
 
 All methods are synchronous.
 
