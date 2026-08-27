@@ -7,3 +7,4 @@ export * from './xcstrings-transformer';
 export * from './xliff-transformer';
 export * from './yaml-transformer';
 export * from './transformer';
+export * from './default-transformer-set';

@@ -6,18 +6,9 @@ import type {
   SerializationResult,
   TranslationDataset,
 } from '@/definitions';
-import type { FileFormat } from '@/transformations/file-formats';
+import type { FileFormat } from './file-formats';
 import type { Locale } from '@/locales';
-import {
-  AndroidStringsDatasetTransformer,
-  AppleStringsDatasetTransformer,
-  JsonDatasetTransformer,
-  PODatasetTransformer,
-  TsDatasetTransformer,
-  XCStringsDatasetTransformer,
-  XLIFFDatasetTransformer,
-  YamlDatasetTransformer,
-} from '@/transformations';
+
 import merge from 'lodash-es/merge';
 
 export type FileExtension<T extends string = string> = `.${T}`;
@@ -261,13 +252,3 @@ export function makeParserSet<
     formats,
   };
 }
-export const defaultTransformerSet = makeParserSet([
-  JsonDatasetTransformer,
-  YamlDatasetTransformer,
-  TsDatasetTransformer,
-  PODatasetTransformer,
-  AndroidStringsDatasetTransformer,
-  AppleStringsDatasetTransformer,
-  XLIFFDatasetTransformer,
-  XCStringsDatasetTransformer,
-] as const);

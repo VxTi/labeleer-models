@@ -1,4 +1,4 @@
-import { z } from 'zod';
+import * as z from 'zod';
 import {
   MAX_TAG_COUNT,
   MAX_TAG_LENGTH,
@@ -6,7 +6,7 @@ import {
   MAX_TRANSLATION_KEY_LENGTH,
   MIN_TAG_LENGTH,
   MIN_TRANSLATION_KEY_LENGTH,
-} from '@/common/constants';
+} from './constants';
 import { Plurality, type TranslationDataset } from '@/definitions';
 import {
   isBCP47Locale,
