@@ -1,11 +1,8 @@
-import {
-  type SerializationFile,
-  type SerializationResult,
-} from '@/definitions';
+import type { SerializationFile, SerializationResult } from '@/definitions';
 import {
   type AppleStringsSerializationOptions,
-  defaultTransformerSet,
   type FileExtension,
+  defaultTransformerSet,
 } from '@/transformations';
 import { describe, it, expect } from 'vitest';
 import { FileFormat } from '@/transformations/file-formats';
