@@ -4,3 +4,4 @@ export * from './transformations';
 export * from './dataset-builder';
 export * from './definitions';
 export * from './errors';
+export { Plurality } from '@/locales';

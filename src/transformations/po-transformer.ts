@@ -1,17 +1,16 @@
 import { DatasetBuilder } from '@/dataset-builder';
-import {
-  type ParsingOptions,
-  type SerializationFileFragment,
-  type SerializationOptions,
-  type SerializationResult,
-  type TranslationDataset,
-  type TranslationPluralization,
-  Plurality,
+import type {
+  ParsingOptions,
+  SerializationFileFragment,
+  SerializationOptions,
+  SerializationResult,
+  TranslationDataset,
+  TranslationPluralization,
 } from '@/definitions';
 import { ParsingError } from '@/errors';
-import { FileFormat } from '@/transformations/file-formats';
-import { type Locale, toISO639_1LanguageCode } from '@/locales';
-import { makeLanguageTransformer } from '@/transformations/transformer';
+import { FileFormat } from './file-formats';
+import { type Locale, Plurality, toISO639_1LanguageCode } from '@/locales';
+import { makeLanguageTransformer } from './transformer';
 import { entries } from '@/util/data-extraction';
 import {
   type GetTextTranslation,

@@ -1,5 +1,6 @@
 import { mockParsingOptions, mockSerializationOptions } from '@/__testutils__';
-import { Plurality, type SerializationResult } from '@/definitions';
+import { type SerializationResult } from '@/definitions';
+import { Plurality } from '@/locales';
 import { PODatasetTransformer } from '@/transformations/po-transformer';
 import { describe, expect, it } from 'vitest';
 

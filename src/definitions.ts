@@ -1,4 +1,4 @@
-import type { Locale } from './locales';
+import type { Locale, Plurality } from './locales';
 
 /**
  * An entry in a translation dataset,
@@ -11,15 +11,6 @@ export type TranslationEntry<TPlural extends true | false = boolean> = {
   description?: string;
 } & (TPlural extends true ? { plurals: TranslationPluralization }
 : { plurals?: undefined });
-
-export enum Plurality {
-  ZERO = 'zero',
-  ONE = 'one',
-  TWO = 'two',
-  FEW = 'few',
-  MANY = 'many',
-  OTHER = 'other',
-}
 
 /**
  * Pluralization entries for different quantities,

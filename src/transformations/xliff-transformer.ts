@@ -8,9 +8,9 @@ import type {
   TranslationDataset,
 } from '@/definitions';
 import { ParsingError } from '@/errors';
-import { FileFormat } from '@/transformations/file-formats';
+import { FileFormat } from './file-formats';
 import { type Locale, toISO639_1LanguageCode } from '@/locales';
-import { makeLanguageTransformer } from '@/transformations/transformer';
+import { makeLanguageTransformer } from './transformer';
 import { entries } from '@/util/data-extraction';
 import Builder, { type XMLBuilder } from 'fast-xml-builder';
 import { XMLParser } from 'fast-xml-parser';

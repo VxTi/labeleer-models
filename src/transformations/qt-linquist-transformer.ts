@@ -7,9 +7,9 @@ import type {
   TranslationDataset,
 } from '@/definitions';
 import { ParsingError } from '@/errors';
-import { FileFormat } from '@/transformations/file-formats';
+import { FileFormat } from './file-formats';
 import { type Locale, isBCP47Locale, isLocale, toPOSIX } from '@/locales';
-import { makeLanguageTransformer } from '@/transformations/transformer';
+import { makeLanguageTransformer } from './transformer';
 import { entries, extractArray } from '@/util/data-extraction';
 import Builder, { type XMLBuilder } from 'fast-xml-builder';
 import { XMLParser } from 'fast-xml-parser';

@@ -4,15 +4,14 @@ import {
   type SerializationOptions,
   type SerializationResult,
   type TranslationDataset,
-  Plurality,
 } from '@/definitions';
 import { ParsingError } from '@/errors';
-import { FileFormat } from '@/transformations/file-formats';
-import { type Locale, toBCP47 } from '@/locales';
-import { makeLanguageTransformer } from '@/transformations/transformer';
+import { FileFormat } from './file-formats';
+import { type Locale, Plurality, toBCP47 } from '@/locales';
+import { makeLanguageTransformer } from './transformer';
 import { entries } from '@/util/data-extraction';
-import merge from 'lodash-es/merge';
 import { tryParseJson } from '@/util/parsing';
+import merge from 'lodash-es/merge';
 import * as z from 'zod';
 
 export const XCStringsDatasetTransformer = makeLanguageTransformer({

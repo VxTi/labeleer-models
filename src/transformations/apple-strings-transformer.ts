@@ -7,9 +7,9 @@ import type {
   TranslationDataset,
 } from '@/definitions';
 import { ParsingError } from '@/errors';
-import { FileFormat } from '@/transformations/file-formats';
+import { FileFormat } from './file-formats';
 import { type Locale, toBCP47 } from '@/locales';
-import { makeLanguageTransformer } from '@/transformations/transformer';
+import { makeLanguageTransformer } from './transformer';
 import { entries } from '@/util/data-extraction';
 
 export interface AppleStringsSerializationOptions extends SerializationOptions {

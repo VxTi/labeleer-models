@@ -1,4 +1,5 @@
-import { Plurality, type TranslationDataset } from '@/definitions';
+import { type TranslationDataset } from '@/definitions';
+import { Plurality } from '@/locales';
 
 export function mockDataset(
   updates: Partial<TranslationDataset> = {}

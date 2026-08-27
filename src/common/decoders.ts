@@ -1,3 +1,4 @@
+import { Plurality } from '@/locales';
 import * as z from 'zod';
 import {
   MAX_TAG_COUNT,
@@ -7,7 +8,7 @@ import {
   MIN_TAG_LENGTH,
   MIN_TRANSLATION_KEY_LENGTH,
 } from './constants';
-import { Plurality, type TranslationDataset } from '@/definitions';
+import { type TranslationDataset } from '@/definitions';
 import {
   isBCP47Locale,
   isISO639_1LanguageCode,

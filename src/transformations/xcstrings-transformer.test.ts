@@ -3,7 +3,8 @@ import {
   mockParsingOptions,
   mockSerializationOptions,
 } from '@/__testutils__';
-import { Plurality } from '@/definitions';
+
+import { Plurality } from '@/locales';
 import {
   DEFAULT_XCSTRINGS_FILE_NAME,
   XCStringsDatasetTransformer,

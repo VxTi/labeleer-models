@@ -3,7 +3,8 @@ import {
   mockParsingOptions,
   mockSerializationOptions,
 } from '@/__testutils__';
-import { Plurality, type TranslationDataset } from '@/definitions';
+import { type TranslationDataset } from '@/definitions';
+import { Plurality } from '@/locales';
 import { AndroidStringsDatasetTransformer } from './android-strings-transformer';
 import { describe, expect, it } from 'vitest';
 
