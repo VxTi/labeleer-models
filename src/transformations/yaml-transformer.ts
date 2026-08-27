@@ -1,13 +1,13 @@
 import { JsonTranslationDatasetDecoder } from '@/common';
-import {
-  type ParsingOptions,
-  type SerializationOptions,
-  type SerializationResult,
-  type TranslationDataset,
+import type {
+  ParsingOptions,
+  SerializationOptions,
+  SerializationResult,
+  TranslationDataset,
 } from '@/definitions';
 import { ParsingError } from '@/errors';
 import { FileFormat } from '@/file-formats';
-import { makeLanguageTransformer } from '@/transformer';
+import { makeLanguageTransformer } from '@/transformations/transformer';
 import YAML, { parse } from 'yaml';
 
 export const YamlDatasetTransformer = makeLanguageTransformer({

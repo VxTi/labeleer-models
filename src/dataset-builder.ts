@@ -1,10 +1,10 @@
 import _merge from 'lodash-es/merge';
-import {
-  type TranslationDataset,
-  type TranslationLocalizedEntries,
-  type TranslationPluralization,
+import type {
+  TranslationDataset,
+  TranslationLocalizedEntries,
+  TranslationPluralization,
 } from '@/definitions';
-import type { Locale } from '@/locales/locales';
+import type { Locale } from '@/locales';
 /**
  * A builder class for constructing translation datasets.
  */

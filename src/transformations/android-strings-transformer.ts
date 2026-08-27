@@ -12,10 +12,10 @@ import { ParsingError, SerializationError } from '@/errors';
 import { FileFormat } from '@/file-formats';
 import {
   getCountryFromLocale,
-  type Locale,
   toISO639_1LanguageCode,
-} from '@/locales/locales';
-import { makeLanguageTransformer } from '@/transformer';
+  type Locale,
+} from '@/locales';
+import { makeLanguageTransformer } from '@/transformations/transformer';
 import { entries, extractArray } from '@/util/data-extraction';
 import { XMLParser } from 'fast-xml-parser';
 import Builder, { type XMLBuilder } from 'fast-xml-builder';

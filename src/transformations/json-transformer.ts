@@ -7,7 +7,7 @@ import type {
 } from '@/definitions';
 import { ParsingError } from '@/errors';
 import { FileFormat } from '@/file-formats';
-import { makeLanguageTransformer } from '@/transformer';
+import { makeLanguageTransformer } from '@/transformations/transformer';
 
 export const JsonDatasetTransformer = makeLanguageTransformer({
   fileFormat: FileFormat.JSON,

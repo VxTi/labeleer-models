@@ -1,20 +1,15 @@
 import { DatasetBuilder } from '@/dataset-builder';
-import {
-  type ParsingOptions,
-  type SerializationFileFragment,
-  type SerializationOptions,
-  type SerializationResult,
-  type TranslationDataset,
+import type {
+  ParsingOptions,
+  SerializationFileFragment,
+  SerializationOptions,
+  SerializationResult,
+  TranslationDataset,
 } from '@/definitions';
 import { ParsingError } from '@/errors';
 import { FileFormat } from '@/file-formats';
-import {
-  isBCP47Locale,
-  isLocale,
-  type Locale,
-  toPOSIX,
-} from '@/locales/locales';
-import { makeLanguageTransformer } from '@/transformer';
+import { type Locale, isBCP47Locale, isLocale, toPOSIX } from '@/locales';
+import { makeLanguageTransformer } from '@/transformations/transformer';
 import { entries, extractArray } from '@/util/data-extraction';
 import Builder, { type XMLBuilder } from 'fast-xml-builder';
 import { XMLParser } from 'fast-xml-parser';

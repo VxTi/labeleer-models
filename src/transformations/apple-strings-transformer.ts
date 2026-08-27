@@ -8,8 +8,8 @@ import type {
 } from '@/definitions';
 import { ParsingError } from '@/errors';
 import { FileFormat } from '@/file-formats';
-import { type Locale, toBCP47 } from '@/locales/locales';
-import { makeLanguageTransformer } from '@/transformer';
+import { type Locale, toBCP47 } from '@/locales';
+import { makeLanguageTransformer } from '@/transformations/transformer';
 import { entries } from '@/util/data-extraction';
 
 export interface AppleStringsSerializationOptions extends SerializationOptions {

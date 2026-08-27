@@ -2,10 +2,13 @@ import {
   type SerializationFile,
   type SerializationResult,
 } from '@/definitions';
-import { type AppleStringsSerializationOptions } from '@/transformations';
-import { defaultTransformerSet, type FileExtension } from '@/transformer';
+import {
+  type AppleStringsSerializationOptions,
+  defaultTransformerSet,
+  type FileExtension,
+} from '@/transformations';
 import { describe, it, expect } from 'vitest';
-import { FileFormat } from './file-formats';
+import { FileFormat } from '@/file-formats';
 import { mockDataset, mockSerializationOptions } from '@/__testutils__';
 
 const transformerSet = defaultTransformerSet;

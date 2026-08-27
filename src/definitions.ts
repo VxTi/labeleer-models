@@ -1,4 +1,4 @@
-import type { Locale } from './locales/locales';
+import type { Locale } from './locales';
 
 /**
  * An entry in a translation dataset,

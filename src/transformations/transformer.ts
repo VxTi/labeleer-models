@@ -1,13 +1,13 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import {
-  type MakeOptional,
-  type ParsingOptions,
-  type SerializationOptions,
-  type SerializationResult,
-  type TranslationDataset,
+import type {
+  MakeOptional,
+  ParsingOptions,
+  SerializationOptions,
+  SerializationResult,
+  TranslationDataset,
 } from '@/definitions';
-import { type FileFormat } from '@/file-formats';
-import type { Locale } from '@/locales/locales';
+import type { FileFormat } from '@/file-formats';
+import type { Locale } from '@/locales';
 import {
   AndroidStringsDatasetTransformer,
   AppleStringsDatasetTransformer,
