@@ -5,7 +5,7 @@ import {
 import { type AppleStringsSerializationOptions } from '@/transformations';
 import { defaultTransformerSet, type FileExtension } from '@/transformer';
 import { describe, it, expect } from 'vitest';
-import { LanguageFileFormat } from './file-formats';
+import { FileFormat } from './file-formats';
 import { mockDataset, mockSerializationOptions } from '@/__testutils__';
 
 const transformerSet = defaultTransformerSet;
@@ -15,7 +15,7 @@ describe('serializer', () => {
     it('should serialize Android strings correctly', () => {
       const result = transformerSet.serialize(
         mockDataset(),
-        LanguageFileFormat.ANDROID_STRINGS,
+        FileFormat.ANDROID_STRINGS,
         mockSerializationOptions({
           locales: ['en_US', 'nl_NL', 'fr_FR'],
         })
@@ -39,7 +39,7 @@ describe('serializer', () => {
     it('should serialize Apple strings correctly', () => {
       const result = transformerSet.serialize(
         mockDataset(),
-        LanguageFileFormat.APPLE_STRINGS,
+        FileFormat.APPLE_STRINGS,
         mockSerializationOptions<AppleStringsSerializationOptions>({
           locales: ['en_US', 'nl_NL', 'fr_FR'],
           keylessTranslation: false,
@@ -57,7 +57,7 @@ describe('serializer', () => {
     it('should serialize TS files correctly', () => {
       const result = transformerSet.serialize(
         mockDataset(),
-        LanguageFileFormat.TS,
+        FileFormat.TS,
         mockSerializationOptions({
           referenceLocale: 'en_US',
           locales: ['en_US', 'nl_NL', 'fr_FR'],
@@ -75,32 +75,59 @@ describe('serializer', () => {
   });
 });
 
-describe('getSupportedExtensions', () => {
+describe('getByExtension', () => {
   it.each`
     extension       | expectedFormat
-    ${'.json'}      | ${LanguageFileFormat.JSON}
-    ${'.xml'}       | ${LanguageFileFormat.ANDROID_STRINGS}
-    ${'.strings'}   | ${LanguageFileFormat.APPLE_STRINGS}
-    ${'.po'}        | ${LanguageFileFormat.PO}
-    ${'.pot'}       | ${LanguageFileFormat.PO}
-    ${'.ts'}        | ${LanguageFileFormat.TS}
-    ${'.xcstrings'} | ${LanguageFileFormat.XCSTRINGS}
-    ${'.xlf'}       | ${LanguageFileFormat.XLIFF}
-    ${'.yml'}       | ${LanguageFileFormat.YAML}
-    ${'.yaml'}      | ${LanguageFileFormat.YAML}
+    ${'.json'}      | ${FileFormat.JSON}
+    ${'.xml'}       | ${FileFormat.ANDROID_STRINGS}
+    ${'.strings'}   | ${FileFormat.APPLE_STRINGS}
+    ${'.po'}        | ${FileFormat.PO}
+    ${'.pot'}       | ${FileFormat.PO}
+    ${'.ts'}        | ${FileFormat.TS}
+    ${'.xcstrings'} | ${FileFormat.XCSTRINGS}
+    ${'.xlf'}       | ${FileFormat.XLIFF}
+    ${'.yml'}       | ${FileFormat.YAML}
+    ${'.yaml'}      | ${FileFormat.YAML}
     ${'.unknown'}   | ${undefined}
   `(
-    'should extract the correct transformers by extension',
+    'should extract format $expectedFormat from extension $extension',
     ({
       extension,
       expectedFormat,
     }: {
       extension: FileExtension;
-      expectedFormat: LanguageFileFormat;
+      expectedFormat: FileFormat;
     }) => {
       expect(transformerSet.getByExtension(extension)?.fileFormat).toEqual(
         expectedFormat
       );
     }
   );
+});
+
+describe('getByFormat', () => {
+  it.each`
+    format                        | expected
+    ${FileFormat.JSON}            | ${{ fileFormat: FileFormat.JSON }}
+    ${FileFormat.ANDROID_STRINGS} | ${{ fileFormat: FileFormat.ANDROID_STRINGS }}
+    ${FileFormat.APPLE_STRINGS}   | ${{ fileFormat: FileFormat.APPLE_STRINGS }}
+    ${FileFormat.PO}              | ${{ fileFormat: FileFormat.PO }}
+    ${FileFormat.TS}              | ${{ fileFormat: FileFormat.TS }}
+    ${FileFormat.XCSTRINGS}       | ${{ fileFormat: FileFormat.XCSTRINGS }}
+    ${FileFormat.XLIFF}           | ${{ fileFormat: FileFormat.XLIFF }}
+    ${FileFormat.YAML}            | ${{ fileFormat: FileFormat.YAML }}
+    ${'unknown format'}           | ${undefined}
+  `(
+    'should produce the correct transformer from format $format',
+    ({ format, expected }) => {
+      expect(defaultTransformerSet.getByFormat(format)).toMatchObject(expected);
+    }
+  );
+});
+
+describe('hasFormat', () => {
+  it('should determine correctly whether the set has the transformer', () => {
+    expect(defaultTransformerSet.hasFormat(FileFormat.YAML)).toBeTruthy();
+    expect(defaultTransformerSet.hasFormat('something' as never)).toBeFalsy();
+  });
 });

@@ -7,8 +7,13 @@ import {
   type TranslationDataset,
 } from '@/definitions';
 import { ParsingError } from '@/errors';
-import { LanguageFileFormat } from '@/file-formats';
-import { isBCP47Locale, isLocale, type Locale, toPOSIX } from '@/locales';
+import { FileFormat } from '@/file-formats';
+import {
+  isBCP47Locale,
+  isLocale,
+  type Locale,
+  toPOSIX,
+} from '@/locales/locales';
 import { makeLanguageTransformer } from '@/transformer';
 import { entries, extractArray } from '@/util/data-extraction';
 import Builder, { type XMLBuilder } from 'fast-xml-builder';
@@ -16,7 +21,7 @@ import { XMLParser } from 'fast-xml-parser';
 import * as z from 'zod';
 
 export const TsDatasetTransformer = makeLanguageTransformer({
-  fileFormat: LanguageFileFormat.TS,
+  fileFormat: FileFormat.TS,
   extensions: ['.ts'],
   parse(input: string, options: ParsingOptions): TranslationDataset {
     try {

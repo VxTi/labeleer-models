@@ -7,8 +7,8 @@ import type {
   TranslationDataset,
 } from '@/definitions';
 import { ParsingError } from '@/errors';
-import { LanguageFileFormat } from '@/file-formats';
-import { type Locale, toBCP47 } from '@/locales';
+import { FileFormat } from '@/file-formats';
+import { type Locale, toBCP47 } from '@/locales/locales';
 import { makeLanguageTransformer } from '@/transformer';
 import { entries } from '@/util/data-extraction';
 
@@ -17,7 +17,7 @@ export interface AppleStringsSerializationOptions extends SerializationOptions {
 }
 
 export const AppleStringsDatasetTransformer = makeLanguageTransformer({
-  fileFormat: LanguageFileFormat.APPLE_STRINGS,
+  fileFormat: FileFormat.APPLE_STRINGS,
   extensions: ['.strings'],
 
   parse(input: string, options: ParsingOptions): TranslationDataset {

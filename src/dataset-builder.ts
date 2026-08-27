@@ -4,7 +4,7 @@ import {
   type TranslationLocalizedEntries,
   type TranslationPluralization,
 } from '@/definitions';
-import type { Locale } from '@/locales';
+import type { Locale } from '@/locales/locales';
 /**
  * A builder class for constructing translation datasets.
  */

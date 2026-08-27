@@ -6,8 +6,8 @@ import {
   type SerializationResult,
   type TranslationDataset,
 } from '@/definitions';
-import { type LanguageFileFormat } from '@/file-formats';
-import type { Locale } from '@/locales';
+import { type FileFormat } from '@/file-formats';
+import type { Locale } from '@/locales/locales';
 import {
   AndroidStringsDatasetTransformer,
   AppleStringsDatasetTransformer,
@@ -24,7 +24,7 @@ export type FileExtension<T extends string = string> = `.${T}`;
 type FileExtensions = [FileExtension, ...FileExtension[]];
 
 export interface LanguageFileTransformer<
-  TFormat extends LanguageFileFormat,
+  TFormat extends FileFormat,
   TFileExtensions extends FileExtensions,
   TParseOptions extends ParsingOptions,
   TSerializeOptions extends SerializationOptions = SerializationOptions,
@@ -50,14 +50,14 @@ export interface LanguageFileTransformer<
 }
 
 type SomeLanguageFileTransformer = LanguageFileTransformer<
-  LanguageFileFormat,
+  FileFormat,
   FileExtensions,
   any,
   any
 >;
 
 export function makeLanguageTransformer<
-  TFormat extends LanguageFileFormat = LanguageFileFormat,
+  TFormat extends FileFormat = FileFormat,
   TFileExtensions extends FileExtensions = FileExtensions,
   TParseOptions extends ParsingOptions = ParsingOptions,
   TSerializeOptions extends SerializationOptions = SerializationOptions,
@@ -139,7 +139,7 @@ type InferParserWithExtension<
 
 type InferParserWithFormat<
   TTransformer extends SomeLanguageFileTransformer,
-  TFmt extends LanguageFileFormat,
+  TFmt extends FileFormat,
 > =
   TTransformer extends LanguageFileTransformer<infer TSomeFmt, any, any, any> ?
     TSomeFmt extends TFmt ?
@@ -163,7 +163,7 @@ export interface ParserSet<TTransformers extends SomeLanguageFileTransformer> {
   getSupportedExtensions(): InferExtensions<TTransformers>[];
 
   hasFormat(
-    format: LanguageFileFormat
+    format: FileFormat
   ): format is InferLanguageFileFormat<TTransformers>;
 
   getByFormat<TFmt extends InferLanguageFileFormat<TTransformers>>(
@@ -206,7 +206,7 @@ export function makeParserSet<
   };
 
   const hasFormat = (
-    format: LanguageFileFormat
+    format: FileFormat
   ): format is InferLanguageFileFormat<TTransformers> => {
     return transformers.find(tfm => tfm.fileFormat === format) !== undefined;
   };

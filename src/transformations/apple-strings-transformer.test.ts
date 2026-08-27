@@ -1,5 +1,5 @@
 import { mockParsingOptions, mockSerializationOptions } from '@/__testutils__';
-import { type Locale, toBCP47 } from '@/locales';
+import { type Locale, toBCP47 } from '@/locales/locales';
 import {
   AppleStringsDatasetTransformer,
   type AppleStringsSerializationOptions,

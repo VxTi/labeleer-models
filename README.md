@@ -24,12 +24,12 @@ synchronous `parse`, `parseAggregate` and `serialize` methods.
 ### Parsing a dataset
 
 Parse a string into a standardized `TranslationDataset`. The format is selected
-via the `LanguageFileFormat` enum.
+via the `FileFormat` enum.
 
 ```typescript
 import {
   defaultTransformerSet,
-  LanguageFileFormat,
+  FileFormat,
 } from '@labeleer/translation-dataset-transformers';
 
 const jsonString = `{
@@ -43,7 +43,7 @@ const jsonString = `{
 
 const dataset = defaultTransformerSet.parse(
   jsonString,
-  LanguageFileFormat.JSON,
+  FileFormat.JSON,
   { referenceLocale: 'en_US' }
 );
 
@@ -58,7 +58,7 @@ Some single-locale formats (Apple `.strings`, PO, …) carry no locale
 information in the file itself and therefore require a `targetLocale`:
 
 ```typescript
-const dataset = defaultTransformerSet.parse(appleStrings, LanguageFileFormat.APPLE_STRINGS, {
+const dataset = defaultTransformerSet.parse(appleStrings, FileFormat.APPLE_STRINGS, {
   referenceLocale: 'en_US',
   targetLocale: 'nl_NL',
 });
@@ -75,7 +75,7 @@ const dataset = defaultTransformerSet.parseAggregate(
     en_US: englishStringsFile,
     nl_NL: dutchStringsFile,
   },
-  LanguageFileFormat.APPLE_STRINGS,
+  FileFormat.APPLE_STRINGS,
   { referenceLocale: 'en_US' }
 );
 ```
@@ -91,7 +91,7 @@ return several entries; single-file formats (JSON, YAML, XCStrings) return one.
 ```typescript
 import {
   defaultTransformerSet,
-  LanguageFileFormat,
+  FileFormat,
   type TranslationDataset,
 } from '@labeleer/translation-dataset-transformers';
 
@@ -101,7 +101,7 @@ const dataset: TranslationDataset = {
   },
 };
 
-const result = defaultTransformerSet.serialize(dataset, LanguageFileFormat.JSON, {
+const result = defaultTransformerSet.serialize(dataset, FileFormat.JSON, {
   referenceLocale: 'en_US',
   locales: ['en_US', 'nl_NL'],
 });
@@ -117,7 +117,7 @@ An Android serialization, by contrast, yields one resource file per locale,
 each flagged as living in its own directory:
 
 ```typescript
-const result = defaultTransformerSet.serialize(dataset, LanguageFileFormat.ANDROID_STRINGS, {
+const result = defaultTransformerSet.serialize(dataset, FileFormat.ANDROID_STRINGS, {
   referenceLocale: 'en_US',
   locales: ['en_US', 'nl_NL'],
 });
@@ -145,7 +145,7 @@ Every format supports both parsing and serialization.
 
 Helpers for working with formats and extensions:
 
-- `getFormatForExtension(extension)` — resolve a `LanguageFileFormat` from a
+- `getFormatForExtension(extension)` — resolve a `FileFormat` from a
   file extension.
 - `getFileExtensionsFromFormat(format)` — list the extensions for a format.
 - `supportedFileExtensions()` — every extension across all formats.
@@ -164,7 +164,7 @@ subset (or superset) of transformers with `makeParserSet([...])`.
 | `parse(input, format, options)` | Parse a single file's content into a `TranslationDataset`. |
 | `parseAggregate(inputs, format, options)` | Parse a `Partial<Record<Locale, string>>` map of per-locale files into one dataset. |
 | `serialize(dataset, format, options)` | Serialize a dataset into a `SerializationResult`. |
-| `formats()` | List the `LanguageFileFormat`s this set supports. |
+| `formats()` | List the `FileFormat`s this set supports. |
 | `has(format)` | Type guard: whether the set supports a format. |
 | `getByFormat(format)` | Retrieve the underlying transformer for a format. |
 

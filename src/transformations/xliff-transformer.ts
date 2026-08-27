@@ -8,8 +8,8 @@ import type {
   TranslationDataset,
 } from '@/definitions';
 import { ParsingError } from '@/errors';
-import { LanguageFileFormat } from '@/file-formats';
-import { type Locale, toISO639_1LanguageCode } from '@/locales';
+import { FileFormat } from '@/file-formats';
+import { type Locale, toISO639_1LanguageCode } from '@/locales/locales';
 import { makeLanguageTransformer } from '@/transformer';
 import { entries } from '@/util/data-extraction';
 import Builder, { type XMLBuilder } from 'fast-xml-builder';
@@ -17,7 +17,7 @@ import { XMLParser } from 'fast-xml-parser';
 import * as z from 'zod';
 
 export const XLIFFDatasetTransformer = makeLanguageTransformer({
-  fileFormat: LanguageFileFormat.XLIFF,
+  fileFormat: FileFormat.XLIFF,
   extensions: ['.xlf', '.xliff'],
 
   parse(input: string, _options: ParsingOptions): TranslationDataset {

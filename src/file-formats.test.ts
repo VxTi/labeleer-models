@@ -1,16 +1,16 @@
 import { describe, expect, it } from 'vitest';
-import { isCompressedFormat, LanguageFileFormat } from './file-formats';
+import { isCompressedFormat, FileFormat } from './file-formats';
 
 describe('isCompressedFormat', () => {
   it.each`
-    format                                | compression
-    ${LanguageFileFormat.JSON}            | ${false}
-    ${LanguageFileFormat.YAML}            | ${false}
-    ${LanguageFileFormat.TS}              | ${true}
-    ${LanguageFileFormat.PO}              | ${true}
-    ${LanguageFileFormat.ANDROID_STRINGS} | ${true}
-    ${LanguageFileFormat.APPLE_STRINGS}   | ${true}
-    ${LanguageFileFormat.XLIFF}           | ${true}
+    format                        | compression
+    ${FileFormat.JSON}            | ${false}
+    ${FileFormat.YAML}            | ${false}
+    ${FileFormat.TS}              | ${true}
+    ${FileFormat.PO}              | ${true}
+    ${FileFormat.ANDROID_STRINGS} | ${true}
+    ${FileFormat.APPLE_STRINGS}   | ${true}
+    ${FileFormat.XLIFF}           | ${true}
   `(
     'should return true for formats that require compression ($format = $compression)',
     ({ format, compression }) => {

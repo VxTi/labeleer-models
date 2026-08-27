@@ -9,12 +9,12 @@ import {
   type SerializationFile,
 } from '@/definitions';
 import { ParsingError, SerializationError } from '@/errors';
-import { LanguageFileFormat } from '@/file-formats';
+import { FileFormat } from '@/file-formats';
 import {
   getCountryFromLocale,
   type Locale,
   toISO639_1LanguageCode,
-} from '@/locales';
+} from '@/locales/locales';
 import { makeLanguageTransformer } from '@/transformer';
 import { entries, extractArray } from '@/util/data-extraction';
 import { XMLParser } from 'fast-xml-parser';
@@ -23,7 +23,7 @@ import { merge } from 'lodash-es';
 import * as z from 'zod';
 
 export const AndroidStringsDatasetTransformer = makeLanguageTransformer({
-  fileFormat: LanguageFileFormat.ANDROID_STRINGS,
+  fileFormat: FileFormat.ANDROID_STRINGS,
   extensions: ['.xml'],
   formatKey,
 

@@ -6,12 +6,12 @@ import {
   type TranslationDataset,
 } from '@/definitions';
 import { ParsingError } from '@/errors';
-import { LanguageFileFormat } from '@/file-formats';
+import { FileFormat } from '@/file-formats';
 import { makeLanguageTransformer } from '@/transformer';
 import YAML, { parse } from 'yaml';
 
 export const YamlDatasetTransformer = makeLanguageTransformer({
-  fileFormat: LanguageFileFormat.YAML,
+  fileFormat: FileFormat.YAML,
   extensions: ['.yml', '.yaml'],
   parse(input: string, _options: ParsingOptions): TranslationDataset {
     try {

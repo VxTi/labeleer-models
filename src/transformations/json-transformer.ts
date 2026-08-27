@@ -6,11 +6,11 @@ import type {
   TranslationDataset,
 } from '@/definitions';
 import { ParsingError } from '@/errors';
-import { LanguageFileFormat } from '@/file-formats';
+import { FileFormat } from '@/file-formats';
 import { makeLanguageTransformer } from '@/transformer';
 
 export const JsonDatasetTransformer = makeLanguageTransformer({
-  fileFormat: LanguageFileFormat.JSON,
+  fileFormat: FileFormat.JSON,
   extensions: ['.json'],
   parse(input: string, _options: ParsingOptions): TranslationDataset {
     const json = safeParseJson(input);

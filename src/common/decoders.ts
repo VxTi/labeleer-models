@@ -14,7 +14,7 @@ import {
   isLocale,
   iso639_1ToLocale,
   toPOSIX,
-} from '@/locales';
+} from '@/locales/locales';
 
 export const LocaleDecoder = z
   .string()

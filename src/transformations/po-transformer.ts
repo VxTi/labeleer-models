@@ -9,8 +9,8 @@ import {
   type TranslationPluralization,
 } from '@/definitions';
 import { ParsingError } from '@/errors';
-import { LanguageFileFormat } from '@/file-formats';
-import { type Locale, toISO639_1LanguageCode } from '@/locales';
+import { FileFormat } from '@/file-formats';
+import { type Locale, toISO639_1LanguageCode } from '@/locales/locales';
 import { makeLanguageTransformer } from '@/transformer';
 import { entries } from '@/util/data-extraction';
 import {
@@ -20,7 +20,7 @@ import {
 } from 'gettext-parser';
 
 export const PODatasetTransformer = makeLanguageTransformer({
-  fileFormat: LanguageFileFormat.PO,
+  fileFormat: FileFormat.PO,
   extensions: ['.po', '.pot'],
   parse(input: string, options: ParsingOptions): TranslationDataset {
     const { targetLocale } = options;

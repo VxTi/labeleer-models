@@ -7,8 +7,8 @@ import {
   Plurality,
 } from '@/definitions';
 import { ParsingError } from '@/errors';
-import { LanguageFileFormat } from '@/file-formats';
-import { type Locale, toBCP47 } from '@/locales';
+import { FileFormat } from '@/file-formats';
+import { type Locale, toBCP47 } from '@/locales/locales';
 import { makeLanguageTransformer } from '@/transformer';
 import { entries } from '@/util/data-extraction';
 import merge from 'lodash-es/merge';
@@ -16,7 +16,7 @@ import { tryParseJson } from '@/util/parsing';
 import * as z from 'zod';
 
 export const XCStringsDatasetTransformer = makeLanguageTransformer({
-  fileFormat: LanguageFileFormat.XCSTRINGS,
+  fileFormat: FileFormat.XCSTRINGS,
   extensions: ['.xcstrings'],
 
   parse(input: string): TranslationDataset {
