@@ -1,4 +1,4 @@
-import { Locales, type Locale } from './posix-locales';
+import { Locales, type Locale } from './dataset';
 
 /**
  * Set of language codes that are written in right-to-left (RTL) scripts.
