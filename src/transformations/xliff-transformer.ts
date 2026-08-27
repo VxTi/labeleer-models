@@ -8,7 +8,7 @@ import type {
   TranslationDataset,
 } from '@/definitions';
 import { ParsingError } from '@/errors';
-import { FileFormat } from '@/file-formats';
+import { FileFormat } from '@/transformations/file-formats';
 import { type Locale, toISO639_1LanguageCode } from '@/locales';
 import { makeLanguageTransformer } from '@/transformations/transformer';
 import { entries } from '@/util/data-extraction';

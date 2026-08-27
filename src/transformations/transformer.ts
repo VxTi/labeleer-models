@@ -6,7 +6,7 @@ import type {
   SerializationResult,
   TranslationDataset,
 } from '@/definitions';
-import type { FileFormat } from '@/file-formats';
+import type { FileFormat } from '@/transformations/file-formats';
 import type { Locale } from '@/locales';
 import {
   AndroidStringsDatasetTransformer,

@@ -6,7 +6,7 @@ import {
   MAX_TRANSLATION_KEY_LENGTH,
   MIN_TAG_LENGTH,
   MIN_TRANSLATION_KEY_LENGTH,
-} from '@/constants';
+} from '@/common/constants';
 import { Plurality, type TranslationDataset } from '@/definitions';
 import {
   isBCP47Locale,

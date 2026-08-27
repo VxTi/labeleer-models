@@ -8,7 +8,7 @@ import {
   type FileExtension,
 } from '@/transformations';
 import { describe, it, expect } from 'vitest';
-import { FileFormat } from '@/file-formats';
+import { FileFormat } from '@/transformations/file-formats';
 import { mockDataset, mockSerializationOptions } from '@/__testutils__';
 
 const transformerSet = defaultTransformerSet;

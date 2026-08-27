@@ -9,7 +9,7 @@ import {
   type SerializationFile,
 } from '@/definitions';
 import { ParsingError, SerializationError } from '@/errors';
-import { FileFormat } from '@/file-formats';
+import { FileFormat } from '@/transformations/file-formats';
 import {
   getCountryFromLocale,
   toISO639_1LanguageCode,

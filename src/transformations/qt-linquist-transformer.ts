@@ -7,7 +7,7 @@ import type {
   TranslationDataset,
 } from '@/definitions';
 import { ParsingError } from '@/errors';
-import { FileFormat } from '@/file-formats';
+import { FileFormat } from '@/transformations/file-formats';
 import { type Locale, isBCP47Locale, isLocale, toPOSIX } from '@/locales';
 import { makeLanguageTransformer } from '@/transformations/transformer';
 import { entries, extractArray } from '@/util/data-extraction';
