@@ -1,0 +1,245 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`getLocaleName > should format af_ZA correctly 1`] = `"Afrikaans (South Africa)"`;
+
+exports[`getLocaleName > should format am_ET correctly 1`] = `"Amharic (Ethiopia)"`;
+
+exports[`getLocaleName > should format ar_SA correctly 1`] = `"Arabic (Saudi Arabia)"`;
+
+exports[`getLocaleName > should format az_AZ correctly 1`] = `"Azerbaijani (Azerbaijan)"`;
+
+exports[`getLocaleName > should format be_BY correctly 1`] = `"Belarusian (Belarus)"`;
+
+exports[`getLocaleName > should format bg_BG correctly 1`] = `"Bulgarian (Bulgaria)"`;
+
+exports[`getLocaleName > should format bn_BD correctly 1`] = `"Bangla (Bangladesh)"`;
+
+exports[`getLocaleName > should format bo_CN correctly 1`] = `"Tibetan (China)"`;
+
+exports[`getLocaleName > should format bo_IN correctly 1`] = `"Tibetan (India)"`;
+
+exports[`getLocaleName > should format bs_BA correctly 1`] = `"Bosnian (Bosnia & Herzegovina)"`;
+
+exports[`getLocaleName > should format ca_ES correctly 1`] = `"Catalan (Spain)"`;
+
+exports[`getLocaleName > should format cs_CZ correctly 1`] = `"Czech (Czechia)"`;
+
+exports[`getLocaleName > should format cy_GB correctly 1`] = `"Welsh (United Kingdom)"`;
+
+exports[`getLocaleName > should format da_DK correctly 1`] = `"Danish (Denmark)"`;
+
+exports[`getLocaleName > should format de_DE correctly 1`] = `"German (Germany)"`;
+
+exports[`getLocaleName > should format dv_MV correctly 1`] = `"Divehi (Maldives)"`;
+
+exports[`getLocaleName > should format dz_BT correctly 1`] = `"Dzongkha (Bhutan)"`;
+
+exports[`getLocaleName > should format el_GR correctly 1`] = `"Greek (Greece)"`;
+
+exports[`getLocaleName > should format en_AU correctly 1`] = `"English (Australia)"`;
+
+exports[`getLocaleName > should format en_CA correctly 1`] = `"English (Canada)"`;
+
+exports[`getLocaleName > should format en_GB correctly 1`] = `"English (United Kingdom)"`;
+
+exports[`getLocaleName > should format en_IN correctly 1`] = `"English (India)"`;
+
+exports[`getLocaleName > should format en_NZ correctly 1`] = `"English (New Zealand)"`;
+
+exports[`getLocaleName > should format en_US correctly 1`] = `"English (United States)"`;
+
+exports[`getLocaleName > should format es_AR correctly 1`] = `"Spanish (Argentina)"`;
+
+exports[`getLocaleName > should format es_CL correctly 1`] = `"Spanish (Chile)"`;
+
+exports[`getLocaleName > should format es_CO correctly 1`] = `"Spanish (Colombia)"`;
+
+exports[`getLocaleName > should format es_ES correctly 1`] = `"Spanish (Spain)"`;
+
+exports[`getLocaleName > should format es_MX correctly 1`] = `"Spanish (Mexico)"`;
+
+exports[`getLocaleName > should format es_US correctly 1`] = `"Spanish (United States)"`;
+
+exports[`getLocaleName > should format et_EE correctly 1`] = `"Estonian (Estonia)"`;
+
+exports[`getLocaleName > should format eu_ES correctly 1`] = `"Basque (Spain)"`;
+
+exports[`getLocaleName > should format fa_AF correctly 1`] = `"Persian (Afghanistan)"`;
+
+exports[`getLocaleName > should format fa_IR correctly 1`] = `"Persian (Iran)"`;
+
+exports[`getLocaleName > should format fi_FI correctly 1`] = `"Finnish (Finland)"`;
+
+exports[`getLocaleName > should format fr_BE correctly 1`] = `"French (Belgium)"`;
+
+exports[`getLocaleName > should format fr_CA correctly 1`] = `"French (Canada)"`;
+
+exports[`getLocaleName > should format fr_CH correctly 1`] = `"French (Switzerland)"`;
+
+exports[`getLocaleName > should format fr_FR correctly 1`] = `"French (France)"`;
+
+exports[`getLocaleName > should format ga_IE correctly 1`] = `"Irish (Ireland)"`;
+
+exports[`getLocaleName > should format gl_ES correctly 1`] = `"Galician (Spain)"`;
+
+exports[`getLocaleName > should format gu_IN correctly 1`] = `"Gujarati (India)"`;
+
+exports[`getLocaleName > should format gug_PY correctly 1`] = `"Guarani (Paraguay)"`;
+
+exports[`getLocaleName > should format he_IL correctly 1`] = `"Hebrew (Israel)"`;
+
+exports[`getLocaleName > should format hi_IN correctly 1`] = `"Hindi (India)"`;
+
+exports[`getLocaleName > should format hr_HR correctly 1`] = `"Croatian (Croatia)"`;
+
+exports[`getLocaleName > should format hu_HU correctly 1`] = `"Hungarian (Hungary)"`;
+
+exports[`getLocaleName > should format hy_AM correctly 1`] = `"Armenian (Armenia)"`;
+
+exports[`getLocaleName > should format id_ID correctly 1`] = `"Indonesian (Indonesia)"`;
+
+exports[`getLocaleName > should format is_IS correctly 1`] = `"Icelandic (Iceland)"`;
+
+exports[`getLocaleName > should format it_IT correctly 1`] = `"Italian (Italy)"`;
+
+exports[`getLocaleName > should format ja_JP correctly 1`] = `"Japanese (Japan)"`;
+
+exports[`getLocaleName > should format jv_ID correctly 1`] = `"Javanese (Indonesia)"`;
+
+exports[`getLocaleName > should format ka_GE correctly 1`] = `"Georgian (Georgia)"`;
+
+exports[`getLocaleName > should format kk_KZ correctly 1`] = `"Kazakh (Kazakhstan)"`;
+
+exports[`getLocaleName > should format km_KH correctly 1`] = `"Khmer (Cambodia)"`;
+
+exports[`getLocaleName > should format kn_IN correctly 1`] = `"Kannada (India)"`;
+
+exports[`getLocaleName > should format ko_KR correctly 1`] = `"Korean (South Korea)"`;
+
+exports[`getLocaleName > should format ks_IN correctly 1`] = `"Kashmiri (India)"`;
+
+exports[`getLocaleName > should format ks_PK correctly 1`] = `"Kashmiri (Pakistan)"`;
+
+exports[`getLocaleName > should format ku_IQ correctly 1`] = `"Kurdish (Iraq)"`;
+
+exports[`getLocaleName > should format ku_IR correctly 1`] = `"Kurdish (Iran)"`;
+
+exports[`getLocaleName > should format ku_SY correctly 1`] = `"Kurdish (Syria)"`;
+
+exports[`getLocaleName > should format ku_TR correctly 1`] = `"Kurdish (Türkiye)"`;
+
+exports[`getLocaleName > should format ky_KG correctly 1`] = `"Kyrgyz (Kyrgyzstan)"`;
+
+exports[`getLocaleName > should format lo_LA correctly 1`] = `"Lao (Laos)"`;
+
+exports[`getLocaleName > should format lt_LT correctly 1`] = `"Lithuanian (Lithuania)"`;
+
+exports[`getLocaleName > should format lv_LV correctly 1`] = `"Latvian (Latvia)"`;
+
+exports[`getLocaleName > should format mk_MK correctly 1`] = `"Macedonian (North Macedonia)"`;
+
+exports[`getLocaleName > should format ml_IN correctly 1`] = `"Malayalam (India)"`;
+
+exports[`getLocaleName > should format mn_MN correctly 1`] = `"Mongolian (Mongolia)"`;
+
+exports[`getLocaleName > should format ms_BN correctly 1`] = `"Malay (Brunei)"`;
+
+exports[`getLocaleName > should format ms_MY correctly 1`] = `"Malay (Malaysia)"`;
+
+exports[`getLocaleName > should format mt_MT correctly 1`] = `"Maltese (Malta)"`;
+
+exports[`getLocaleName > should format my_MM correctly 1`] = `"Burmese (Myanmar (Burma))"`;
+
+exports[`getLocaleName > should format ne_NP correctly 1`] = `"Nepali (Nepal)"`;
+
+exports[`getLocaleName > should format nl_BE correctly 1`] = `"Dutch (Belgium)"`;
+
+exports[`getLocaleName > should format nl_NL correctly 1`] = `"Dutch (Netherlands)"`;
+
+exports[`getLocaleName > should format nn_NO correctly 1`] = `"Norwegian Nynorsk (Norway)"`;
+
+exports[`getLocaleName > should format no_NO correctly 1`] = `"Norwegian (Norway)"`;
+
+exports[`getLocaleName > should format pa_IN correctly 1`] = `"Punjabi (India)"`;
+
+exports[`getLocaleName > should format pl_PL correctly 1`] = `"Polish (Poland)"`;
+
+exports[`getLocaleName > should format ps_AF correctly 1`] = `"Pashto (Afghanistan)"`;
+
+exports[`getLocaleName > should format pt_BR correctly 1`] = `"Portuguese (Brazil)"`;
+
+exports[`getLocaleName > should format pt_PT correctly 1`] = `"Portuguese (Portugal)"`;
+
+exports[`getLocaleName > should format ro_RO correctly 1`] = `"Romanian (Romania)"`;
+
+exports[`getLocaleName > should format ru_RU correctly 1`] = `"Russian (Russia)"`;
+
+exports[`getLocaleName > should format sd_IN correctly 1`] = `"Sindhi (India)"`;
+
+exports[`getLocaleName > should format sd_PK correctly 1`] = `"Sindhi (Pakistan)"`;
+
+exports[`getLocaleName > should format si_LK correctly 1`] = `"Sinhala (Sri Lanka)"`;
+
+exports[`getLocaleName > should format sk_SK correctly 1`] = `"Slovak (Slovakia)"`;
+
+exports[`getLocaleName > should format sl_SI correctly 1`] = `"Slovenian (Slovenia)"`;
+
+exports[`getLocaleName > should format sq_AL correctly 1`] = `"Albanian (Albania)"`;
+
+exports[`getLocaleName > should format sr_BA correctly 1`] = `"Serbian (Bosnia & Herzegovina)"`;
+
+exports[`getLocaleName > should format sr_ME correctly 1`] = `"Serbian (Montenegro)"`;
+
+exports[`getLocaleName > should format sr_RS correctly 1`] = `"Serbian (Serbia)"`;
+
+exports[`getLocaleName > should format su_ID correctly 1`] = `"Sundanese (Indonesia)"`;
+
+exports[`getLocaleName > should format sv_SE correctly 1`] = `"Swedish (Sweden)"`;
+
+exports[`getLocaleName > should format sw_KE correctly 1`] = `"Swahili (Kenya)"`;
+
+exports[`getLocaleName > should format ta_IN correctly 1`] = `"Tamil (India)"`;
+
+exports[`getLocaleName > should format te_IN correctly 1`] = `"Telugu (India)"`;
+
+exports[`getLocaleName > should format th_TH correctly 1`] = `"Thai (Thailand)"`;
+
+exports[`getLocaleName > should format tk_TM correctly 1`] = `"Turkmen (Turkmenistan)"`;
+
+exports[`getLocaleName > should format tr_TR correctly 1`] = `"Turkish (Türkiye)"`;
+
+exports[`getLocaleName > should format ug_CN correctly 1`] = `"Uyghur (China)"`;
+
+exports[`getLocaleName > should format uk_UA correctly 1`] = `"Ukrainian (Ukraine)"`;
+
+exports[`getLocaleName > should format ur_IN correctly 1`] = `"Urdu (India)"`;
+
+exports[`getLocaleName > should format ur_PK correctly 1`] = `"Urdu (Pakistan)"`;
+
+exports[`getLocaleName > should format uz_UZ correctly 1`] = `"Uzbek (Uzbekistan)"`;
+
+exports[`getLocaleName > should format vi_VN correctly 1`] = `"Vietnamese (Vietnam)"`;
+
+exports[`getLocaleName > should format wo_SN correctly 1`] = `"Wolof (Senegal)"`;
+
+exports[`getLocaleName > should format xh_ZA correctly 1`] = `"Xhosa (South Africa)"`;
+
+exports[`getLocaleName > should format yi_DE correctly 1`] = `"Yiddish (Germany)"`;
+
+exports[`getLocaleName > should format yi_IL correctly 1`] = `"Yiddish (Israel)"`;
+
+exports[`getLocaleName > should format yi_US correctly 1`] = `"Yiddish (United States)"`;
+
+exports[`getLocaleName > should format yo_BJ correctly 1`] = `"Yoruba (Benin)"`;
+
+exports[`getLocaleName > should format yo_NG correctly 1`] = `"Yoruba (Nigeria)"`;
+
+exports[`getLocaleName > should format zh_CN correctly 1`] = `"Chinese (China)"`;
+
+exports[`getLocaleName > should format zh_HK correctly 1`] = `"Chinese (Hong Kong SAR China)"`;
+
+exports[`getLocaleName > should format zh_SG correctly 1`] = `"Chinese (Singapore)"`;
+
+exports[`getLocaleName > should format zh_TW correctly 1`] = `"Chinese (Taiwan)"`;
+
+exports[`getLocaleName > should format zu_ZA correctly 1`] = `"Zulu (South Africa)"`;
