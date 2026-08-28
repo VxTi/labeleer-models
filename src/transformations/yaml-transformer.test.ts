@@ -1,5 +1,5 @@
 import { Plurality } from '@/locales';
-import { YamlDatasetTransformer } from '@/transformations/yaml-transformer';
+import { YamlDatasetTransformer } from './yaml-transformer';
 import { describe, it, expect } from 'vitest';
 import { mockSerializationOptions } from '@/__testutils__';
 

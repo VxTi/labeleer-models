@@ -1,4 +1,11 @@
-import { Plurality } from '@/locales';
+import {
+  Plurality,
+  isBCP47Locale,
+  isISO639_1LanguageCode,
+  isLocale,
+  iso639_1ToLocale,
+  toPOSIX,
+} from '@/locales';
 import * as z from 'zod';
 import {
   MAX_TAG_COUNT,
@@ -9,13 +16,6 @@ import {
   MIN_TRANSLATION_KEY_LENGTH,
 } from './constants';
 import { type TranslationDataset } from '@/definitions';
-import {
-  isBCP47Locale,
-  isISO639_1LanguageCode,
-  isLocale,
-  iso639_1ToLocale,
-  toPOSIX,
-} from '@/locales/locales';
 
 export const LocaleDecoder = z
   .string()
