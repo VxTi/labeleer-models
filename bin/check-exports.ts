@@ -1,13 +1,18 @@
 /**
- * Verifies that every `index.ts` barrel file re-exports all of its siblings.
+ * Verifies that every `index.ts` barrel file re-exports all of its siblings,
+ * and — when `useEsm` is set — that it does so through runtime-resolvable
+ * specifiers.
  *
  * A module that is never re-exported by its parent barrel is invisible to
- * consumers of the published package, even though it compiles fine. This
- * script is therefore run before `build` so a missing export fails the build
- * instead of shipping an incomplete public API.
+ * consumers of the published package, even though it compiles fine. An
+ * extensionless specifier is just as invisible: the emitted ESM keeps it
+ * verbatim, so Node throws `ERR_MODULE_NOT_FOUND` at import time. This script
+ * is therefore run before `build` so either mistake fails the build instead of
+ * shipping a broken public API.
  *
  * Usage: `tsx bin/check-exports.ts [--fix]`, where `--fix` appends the missing
- * `export * from` statements to the barrels instead of failing.
+ * `export * from` statements to the barrels and rewrites the specifiers that
+ * lack a `.js` extension, instead of failing.
  */
 import chalk                                from 'chalk';
 import { existsSync, readdirSync }          from 'node:fs';
@@ -43,9 +48,22 @@ const excluded: string[] = [
 /** File extensions that are considered exportable modules. */
 const moduleExtensions = ['.ts', '.tsx'];
 
+/** Extensions a runtime accepts verbatim in an ESM specifier. */
+const runtimeExtensions = ['.js', '.mjs', '.cjs', '.json', '.node'];
+
+/** Half-open range of an expression in the source text of its file. */
+interface Range {
+  start: number;
+  end: number;
+}
+
 interface Reexport {
-  /** Absolute path of the file the specifier resolves to. */
-  resolvedFileName: string;
+  /** The module specifier as written, e.g. `./utils.js`. */
+  specifier: string;
+  /** Range of the specifier's string literal, quotes included. */
+  range: Range;
+  /** Absolute path of the file the specifier resolves to, if it resolves. */
+  resolvedFileName?: string;
   /** Whether this is a `export * from` / `export * as ns from` statement. */
   isWildcard: boolean;
 }
@@ -53,10 +71,21 @@ interface Reexport {
 interface Problem {
   /** Project-root relative path of the barrel file. */
   barrel: string;
-  /** Specifier that should be added, e.g. `'./utils'`. */
+  /** Specifier that should be added, e.g. `'./utils.js'`. */
   specifier: string;
   /** Project-root relative path of the module that is not exported. */
   target: string;
+}
+
+interface ExtensionProblem {
+  /** Project-root relative path of the barrel file. */
+  barrel: string;
+  /** The specifier as written, e.g. `./utils`. */
+  specifier: string;
+  /** The specifier it should be rewritten to, e.g. `./utils.js`. */
+  expected: string;
+  /** Range of the specifier's string literal, quotes included. */
+  range: Range;
 }
 
 /** The project's compiler options, so module resolution honours `paths`. */
@@ -158,11 +187,17 @@ function collectReexports(barrelPath: string): Reexport[] {
       moduleResolutionCache
     );
 
-    if (!resolvedModule) return [];
-
     return [
       {
-        resolvedFileName: resolve(resolvedModule.resolvedFileName),
+        specifier: statement.moduleSpecifier.text,
+        range: {
+          start: statement.moduleSpecifier.getStart(source),
+          end: statement.moduleSpecifier.end,
+        },
+        // A specifier that does not resolve is still worth reporting on, so it
+        // is kept rather than dropped.
+        resolvedFileName:
+          resolvedModule && resolve(resolvedModule.resolvedFileName),
         // `export * from` and `export * as ns from` re-export everything;
         // an `export { a, b } from` clause only covers what it names.
         isWildcard:
@@ -173,12 +208,58 @@ function collectReexports(barrelPath: string): Reexport[] {
   });
 }
 
+/**
+ * The module specifier a barrel in `directory` should use to re-export
+ * `target`. Under ESM a subdirectory cannot be referenced by its name alone:
+ * the barrel inside it has to be spelled out in full.
+ */
+function specifierFor(target: string, directory: string): string {
+  const targetDirectory = dirname(target);
+  const name = basenameWithoutExtension(target);
+
+  if (targetDirectory === directory)
+    return `./${name}${useEsm ? '.js' : ''}`;
+
+  const directoryName = basenameWithoutExtension(targetDirectory);
+
+  return useEsm ? `./${directoryName}/${name}.js` : `./${directoryName}`;
+}
+
+/**
+ * The ESM-resolvable form of a re-export's specifier, or `undefined` when it
+ * needs no rewriting. Only relative specifiers are checked — a bare specifier
+ * is resolved by the importing runtime through `node_modules` or the package's
+ * own `exports` map, where no extension is expected.
+ */
+function esmSpecifierOf({
+  specifier,
+  resolvedFileName,
+}: Reexport): string | undefined {
+  if (!specifier.startsWith('.')) return undefined;
+  if (runtimeExtensions.some(extension => specifier.endsWith(extension)))
+    return undefined;
+
+  // `./utils.ts` is no more resolvable at runtime than `./utils` is: both have
+  // to point at the emitted `.js` file.
+  const base = specifier.replace(/\.(ts|tsx|mts|cts)$/, '');
+
+  // A bare directory specifier resolves to that directory's barrel, so the
+  // extension alone is not enough to make it resolvable.
+  const isDirectory =
+    resolvedFileName !== undefined &&
+    /[\\/]index\.tsx?$/.test(resolvedFileName) &&
+    !/(^|[\\/])index$/.test(base);
+
+  return `${base}${isDirectory ? '/index' : ''}.js`;
+}
+
 const success = (message: string) => console.log(chalk.green(message));
 const error = (message: string): void => console.log(chalk.red(message));
 const warn = (message: string): void => console.log(chalk.yellow(message));
 
 const problems: Problem[] = [];
 const partialExports: Problem[] = [];
+const extensionProblems: ExtensionProblem[] = [];
 const unbarrelledDirectories: string[] = [];
 
 /** Checks a single directory and recurses into its subdirectories. */
@@ -212,13 +293,9 @@ function checkDirectory(directory: string): void {
       );
       if (matches.some(reexport => reexport.isWildcard)) return;
 
-      const targetDirectory = dirname(target);
       const problem: Problem = {
         barrel: toRelativePath(barrelPath),
-        specifier:
-          targetDirectory === directory ?
-            `./${basenameWithoutExtension(target)}`
-          : `./${basenameWithoutExtension(targetDirectory)}`,
+        specifier: specifierFor(target, directory),
         target: toRelativePath(target),
       };
 
@@ -226,6 +303,19 @@ function checkDirectory(directory: string): void {
       // added to it later, so it is reported separately as a warning.
       (matches.length > 0 ? partialExports : problems).push(problem);
     })
+
+    if (useEsm)
+      reexports.forEach(reexport => {
+        const expectedSpecifier = esmSpecifierOf(reexport);
+        if (expectedSpecifier === undefined) return;
+
+        extensionProblems.push({
+          barrel: toRelativePath(barrelPath),
+          specifier: reexport.specifier,
+          expected: expectedSpecifier,
+          range: reexport.range,
+        });
+      });
   } else if (directory !== join(projectRoot, sourceRoot) && files.length > 0) {
     unbarrelledDirectories.push(toRelativePath(directory));
   }
@@ -245,7 +335,7 @@ function addExports(barrel: string, specifiers: string[]): void {
   const barrelPath = resolve(projectRoot, barrel);
   const original = ts.sys.readFile(barrelPath) ?? '';
   const statements = specifiers
-    .map(specifier => `export * from '${specifier}${useEsm ? '.js' : ''};`)
+    .map(specifier => `export * from '${specifier}';`)
     .join('\n').concat('\n')
 
   const source = ts.createSourceFile(
@@ -275,8 +365,31 @@ function addExports(barrel: string, specifiers: string[]): void {
   );
 }
 
-function groupByBarrel(items: Problem[]): Map<string, Problem[]> {
-  return items.reduce<Map<string, Problem[]>>((grouped, item) => {
+/**
+ * Rewrites the specifiers of a barrel in place, leaving the rest of the file —
+ * its export clauses, comments and formatting — untouched.
+ */
+function fixSpecifiers(barrel: string, items: ExtensionProblem[]): void {
+  const barrelPath = resolve(projectRoot, barrel);
+  const original = ts.sys.readFile(barrelPath) ?? '';
+
+  // Applied back to front, so an earlier replacement cannot shift the range of
+  // a later one.
+  const fixed = [...items]
+    .sort((left, right) => right.range.start - left.range.start)
+    .reduce((text, { range, expected }) => {
+      const quote = text[range.start] === '"' ? '"' : "'";
+
+      return `${text.slice(0, range.start)}${quote}${expected}${quote}${text.slice(range.end)}`;
+    }, original);
+
+  ts.sys.writeFile(barrelPath, fixed);
+}
+
+function groupByBarrel<T extends { barrel: string }>(
+  items: T[]
+): Map<string, T[]> {
+  return items.reduce<Map<string, T[]>>((grouped, item) => {
     grouped.set(item.barrel, [...(grouped.get(item.barrel) ?? []), item]);
     return grouped;
   }, new Map());
@@ -293,12 +406,26 @@ for (const [barrel, items] of groupByBarrel(partialExports)) {
 for (const directory of unbarrelledDirectories)
   warn(`⚠ ${directory} has no index.ts, so it is not part of the API`);
 
-if (problems.length === 0) {
-  success('✔ All index.ts files export their siblings');
+if (problems.length === 0 && extensionProblems.length === 0) {
+  success(
+    useEsm ?
+      '✔ All index.ts files export their siblings with a .js extension'
+    : '✔ All index.ts files export their siblings'
+  );
   process.exit(0);
 }
 
 if (shouldFix) {
+  // Specifiers are rewritten first: their ranges come from the barrel as it is
+  // on disk now, and appending statements would invalidate them.
+  for (const [barrel, items] of groupByBarrel(extensionProblems)) {
+    fixSpecifiers(barrel, items);
+
+    success(`✔ ${barrel} — fixed ${items.length} specifier(s):`);
+    for (const { specifier, expected } of items)
+      success(`    '${specifier}' → '${expected}'`);
+  }
+
   for (const [barrel, items] of groupByBarrel(problems)) {
     // Duplicate specifiers cannot occur: a barrel is only ever missing one
     // statement per sibling, and siblings have unique names.
@@ -312,7 +439,9 @@ if (shouldFix) {
       success(`    export * from '${specifier}';`);
   }
 
-  success(`\n${problems.length} missing export(s) added.`);
+  success(
+    `\n${problems.length} missing export(s) added, ${extensionProblems.length} specifier(s) fixed.`
+  );
   process.exit(0);
 }
 
@@ -324,7 +453,15 @@ for (const [barrel, items] of groupByBarrel(problems)) {
     );
 }
 
+for (const [barrel, items] of groupByBarrel(extensionProblems)) {
+  error(
+    `\n✖ ${barrel} has ${items.length} specifier(s) that ESM cannot resolve:`
+  );
+  for (const { specifier, expected } of items)
+    error(`    ${chalk.underline(specifier)} — use \`'${expected}'\``);
+}
+
 error(
-  `\n${problems.length} missing export(s). Run with --fix to add them, or add the files to the exclusion list in bin/check-exports.ts.`
+  `\n${problems.length} missing export(s) and ${extensionProblems.length} unresolvable specifier(s). Run with --fix to correct them, or add the files to the exclusion list in bin/check-exports.ts.`
 );
 process.exit(1);

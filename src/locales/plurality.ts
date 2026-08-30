@@ -14,7 +14,7 @@ export enum Plurality {
  * Locales that have no grammatical plural distinction and therefore only
  * support {@link Plurality.OTHER}.
  */
-export const nonPluralLocales = new Set<Locale>([
+export const nonPluralLocales = [
   // East & Southeast Asian
   'ja_JP',
   'ko_KR',
@@ -58,7 +58,11 @@ export const nonPluralLocales = new Set<Locale>([
   // Persian / Iranian
   'fa_IR',
   'fa_AF',
-]);
+] as const satisfies Locale[];
+
+export type NonPluralLocale = (typeof nonPluralLocales)[number];
+
+export const nonPluralLocalesSet = new Set(nonPluralLocales);
 
 /**
  * Determines if the given locale supports pluralization.
@@ -66,8 +70,10 @@ export const nonPluralLocales = new Set<Locale>([
  * @param {Locale} locale - The locale to check for pluralization support.
  * @return {boolean} `true` if the locale supports pluralization, `false` otherwise.
  */
-export function hasPluralization(locale: Locale): boolean {
-  return !nonPluralLocales.has(locale);
+export function hasPluralization(
+  locale: Locale
+): locale is Exclude<Locale, NonPluralLocale> {
+  return !nonPluralLocalesSet.has(locale as NonPluralLocale);
 }
 
 /**

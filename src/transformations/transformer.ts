@@ -110,7 +110,7 @@ export function makeLanguageTransformer<
 type InferLanguageFileFormat<T extends SomeLanguageFileTransformer> =
   T extends LanguageFileTransformer<infer Fmt, any, any, any> ? Fmt : never;
 
-type InferExtensions<T extends SomeLanguageFileTransformer> =
+export type InferExtensions<T extends SomeLanguageFileTransformer> =
   T extends LanguageFileTransformer<any, infer ExtArr, any, any> ?
     ExtArr extends [infer _Ext, ...infer _Rest] ?
       ExtArr[number]
