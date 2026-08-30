@@ -1,4 +1,4 @@
-import type { MaybeArray } from '@/definitions';
+import type { MaybeArray } from '../definitions.js';
 
 export function extractArray<T>(arr: MaybeArray<T> | undefined): T[] {
   if (!arr) return [];

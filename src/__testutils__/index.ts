@@ -1,3 +1,3 @@
-export * from './mock-dataset';
-export * from './mock-parsing-options';
-export * from './mock-serialization-options';
+export * from './mock-dataset.js';
+export * from './mock-parsing-options.js';
+export * from './mock-serialization-options.js';

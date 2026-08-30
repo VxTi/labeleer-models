@@ -1,11 +1,11 @@
-import { type SerializationResult } from '@/definitions';
-import { XLIFFDatasetTransformer } from '@/transformations/xliff-transformer';
 import { describe, expect, it } from 'vitest';
+import { type SerializationResult } from '../definitions.js';
+import { XLIFFDatasetTransformer } from './xliff-transformer.js';
 import {
   mockDataset,
   mockSerializationOptions,
   mockParsingOptions,
-} from '@/__testutils__';
+} from '../__testutils__/index.js';
 
 const transformer = XLIFFDatasetTransformer;
 

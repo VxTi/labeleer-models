@@ -1,6 +1,6 @@
-import { getCountryFromLocale, getLocaleName } from './utils';
-import { type CountryCode, type Locale, Locales } from '@/locales/locales';
 import { describe, expect, it } from 'vitest';
+import { getCountryFromLocale, getLocaleName } from './utils.js';
+import { type CountryCode, type Locale, Locales } from '../locales/index.js';
 
 describe('getLocaleName', () => {
   it.each(Locales)('should format %s correctly', locale => {

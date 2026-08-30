@@ -1,11 +1,13 @@
 import { describe, expect, it } from 'vitest';
-import { mockParsingOptions } from '@/__testutils__';
-import { mockDataset } from '@/__testutils__/mock-dataset';
-import { mockSerializationOptions } from '@/__testutils__/mock-serialization-options';
+import {
+  mockParsingOptions,
+  mockDataset,
+  mockSerializationOptions,
+} from '../__testutils__/index.js';
 import {
   DEFAULT_JSON_FILE_NAME,
   JsonDatasetTransformer,
-} from './json-transformer';
+} from './json-transformer.js';
 
 const transformer = JsonDatasetTransformer;
 

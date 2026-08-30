@@ -1,14 +1,14 @@
-import { JsonTranslationDatasetDecoder } from '@/common';
+import YAML, { parse } from 'yaml';
+import { JsonTranslationDatasetDecoder } from '../common/decoders.js';
 import type {
   ParsingOptions,
   SerializationOptions,
   SerializationResult,
   TranslationDataset,
-} from '@/definitions';
-import { ParsingError } from '@/errors';
-import { FileFormat } from './file-formats';
-import { makeLanguageTransformer } from './transformer';
-import YAML, { parse } from 'yaml';
+} from '../definitions.js';
+import { ParsingError } from '../errors.js';
+import { FileFormat } from './file-formats.js';
+import { makeLanguageTransformer } from './transformer.js';
 
 export const YamlDatasetTransformer = makeLanguageTransformer({
   fileFormat: FileFormat.YAML,

@@ -1,8 +1,11 @@
-import { mockParsingOptions, mockSerializationOptions } from '@/__testutils__';
-import { type SerializationResult } from '@/definitions';
-import { Plurality } from '@/locales';
-import { PODatasetTransformer } from '@/transformations/po-transformer';
 import { describe, expect, it } from 'vitest';
+import {
+  mockParsingOptions,
+  mockSerializationOptions,
+} from '../__testutils__/index.js';
+import { type SerializationResult } from '../definitions.js';
+import { Plurality } from '../locales/index.js';
+import { PODatasetTransformer } from './po-transformer.js';
 
 const transformer = PODatasetTransformer;
 

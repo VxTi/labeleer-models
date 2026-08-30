@@ -1,16 +1,16 @@
-import { DatasetBuilder } from '@/dataset-builder';
+import { DatasetBuilder } from '../dataset-builder.js';
 import type {
   ParsingOptions,
   SerializationFileFragment,
   SerializationOptions,
   SerializationResult,
   TranslationDataset,
-} from '@/definitions';
-import { ParsingError } from '@/errors';
-import { FileFormat } from './file-formats';
-import { type Locale, toBCP47 } from '@/locales';
-import { makeLanguageTransformer } from './transformer';
-import { entries } from '@/util/data-extraction';
+} from '../definitions.js';
+import { ParsingError } from '../errors.js';
+import { FileFormat } from './file-formats.js';
+import { type Locale, toBCP47 } from '../locales/index.js';
+import { makeLanguageTransformer } from './transformer.js';
+import { entries } from '../util/data-extraction.js';
 
 export interface AppleStringsSerializationOptions extends SerializationOptions {
   keylessTranslation?: boolean;

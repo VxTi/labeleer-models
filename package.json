@@ -1,6 +1,6 @@
 {
   "name": "@labeleer/translation-dataset-transformers",
-  "version": "2.2.0",
+  "version": "2.2.1",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "exports": {
@@ -21,6 +21,7 @@
   "scripts": {
     "check:types": "tsc --noEmit",
     "check:imports": "tsx ./bin/check-exports.ts",
+    "fix:imports": "tsx ./bin/check-exports.ts --fix",
     "build": "tsc --p tsconfig.release.json && tsc-alias -p tsconfig.release.json",
     "prepublishOnly": "pnpm run clean; pnpm run lint && pnpm run test && pnpm run check:imports && pnpm run build;",
     "test": "vitest run -u",

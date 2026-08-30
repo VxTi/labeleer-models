@@ -1,2 +1,2 @@
-export * from './decoders';
-export * from './constants';
+export * from './decoders.js';
+export * from './constants.js';

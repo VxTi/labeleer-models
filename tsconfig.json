@@ -2,8 +2,8 @@
   "compilerOptions": {
     "rootDir": "./src",
     "skipLibCheck": true,
-    "module": "ESNext",
-    "moduleResolution": "bundler",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
     "target": "ESNext",
     "isolatedModules": true,
     "esModuleInterop": true,
@@ -20,10 +20,7 @@
     "noUnusedParameters": true,
     "noFallthroughCasesInSwitch": true,
     "emitDeclarationOnly": false,
-    "moduleDetection": "force",
-    "paths": {
-      "@/*": ["./src/*"]
-    }
+    "moduleDetection": "force"
   },
   "include": ["./src/**/*"],
   "exclude": ["./dist", "./node_modules"]

@@ -5,11 +5,10 @@ import type {
   SerializationOptions,
   SerializationResult,
   TranslationDataset,
-} from '@/definitions';
-import type { FileFormat } from './file-formats';
-import type { Locale } from '@/locales';
-
-import merge from 'lodash-es/merge';
+} from '../definitions.js';
+import type { FileFormat } from './file-formats.js';
+import type { Locale } from '../locales/index.js';
+import { merge } from 'lodash-es';
 
 export type FileExtension<T extends string = string> = `.${T}`;
 type FileExtensions = [FileExtension, ...FileExtension[]];

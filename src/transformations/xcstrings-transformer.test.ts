@@ -1,15 +1,14 @@
+import { expect, it, describe } from 'vitest';
 import {
   mockDataset,
   mockParsingOptions,
   mockSerializationOptions,
-} from '@/__testutils__';
-
-import { Plurality } from '@/locales';
+} from '../__testutils__/index.js';
+import { Plurality } from '../locales/index.js';
 import {
   DEFAULT_XCSTRINGS_FILE_NAME,
   XCStringsDatasetTransformer,
-} from './xcstrings-transformer';
-import { expect, it, describe } from 'vitest';
+} from './xcstrings-transformer.js';
 
 const transformer = XCStringsDatasetTransformer;
 

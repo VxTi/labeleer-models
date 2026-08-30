@@ -30,7 +30,7 @@ via the `FileFormat` enum.
 import {
   defaultTransformerSet,
   FileFormat,
-} from '@labeleer/translation-dataset-transformers';
+} from '.labeleer/translation-dataset-transformer.js';
 
 const jsonString = `{
   "hello_world": {
@@ -93,7 +93,7 @@ import {
   defaultTransformerSet,
   FileFormat,
   type TranslationDataset,
-} from '@labeleer/translation-dataset-transformers';
+} from '.labeleer/translation-dataset-transformer.js';
 
 const dataset: TranslationDataset = {
   hello_world: {
@@ -243,7 +243,7 @@ names.
 without hand-writing the nested structure:
 
 ```typescript
-import { DatasetBuilder } from '@labeleer/translation-dataset-transformers';
+import { DatasetBuilder } from '.labeleer/translation-dataset-transformer.js';
 
 const dataset = new DatasetBuilder()
   .addTranslation('hello_world', { en_US: 'Hello World!', nl_NL: 'Hallo Wereld!' })

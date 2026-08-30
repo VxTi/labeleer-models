@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isCompressedFormat, FileFormat } from './file-formats';
+import { isCompressedFormat, FileFormat } from './file-formats.js';
 
 describe('isCompressedFormat', () => {
   it.each`

@@ -1,4 +1,4 @@
-import type { Locale, Plurality } from './locales';
+import type { Locale, Plurality } from './locales/index.js';
 
 /**
  * An entry in a translation dataset,

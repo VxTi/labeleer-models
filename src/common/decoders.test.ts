@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { LocaleDecoder } from './decoders';
+import { LocaleDecoder } from './decoders.js';
 
 describe('decoders', () => {
   describe('locale decoding', () => {

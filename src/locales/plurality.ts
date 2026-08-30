@@ -1,5 +1,5 @@
-import { type ISO639_1LanguageCode, type Locale } from './locales';
-import { toISO639_1LanguageCode } from './utils';
+import { type ISO639_1LanguageCode, type Locale } from './locales.js';
+import { toISO639_1LanguageCode } from './utils.js';
 
 export enum Plurality {
   ZERO = 'zero',

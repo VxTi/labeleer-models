@@ -20,6 +20,8 @@ const projectRoot = resolve(dirname(fileURLToPath(import.meta.url)), '..');
 /** Directory that is walked, relative to the project root. */
 const sourceRoot = 'src';
 
+const useEsm = true; // Whether to add extensions to exports
+
 /** Whether missing exports are written to the barrels instead of reported. */
 const shouldFix = process.argv.slice(2).includes('--fix');
 
@@ -204,12 +206,11 @@ function checkDirectory(directory: string): void {
       ...files.filter(path => path !== barrelPath),
       ...directories.flatMap(path => barrelPathOf(path) ?? []),
     ];
-
-    for (const target of expected) {
+    expected.forEach(target => {
       const matches = reexports.filter(
         reexport => reexport.resolvedFileName === target
       );
-      if (matches.some(reexport => reexport.isWildcard)) continue;
+      if (matches.some(reexport => reexport.isWildcard)) return;
 
       const targetDirectory = dirname(target);
       const problem: Problem = {
@@ -224,7 +225,7 @@ function checkDirectory(directory: string): void {
       // A named re-export covers the module, but silently drops any member
       // added to it later, so it is reported separately as a warning.
       (matches.length > 0 ? partialExports : problems).push(problem);
-    }
+    })
   } else if (directory !== join(projectRoot, sourceRoot) && files.length > 0) {
     unbarrelledDirectories.push(toRelativePath(directory));
   }
@@ -243,9 +244,9 @@ function basenameWithoutExtension(path: string): string {
 function addExports(barrel: string, specifiers: string[]): void {
   const barrelPath = resolve(projectRoot, barrel);
   const original = ts.sys.readFile(barrelPath) ?? '';
-  const statements = `${specifiers
-    .map(specifier => `export * from '${specifier}';`)
-    .join('\n')}\n`;
+  const statements = specifiers
+    .map(specifier => `export * from '${specifier}${useEsm ? '.js' : ''};`)
+    .join('\n').concat('\n')
 
   const source = ts.createSourceFile(
     barrelPath,

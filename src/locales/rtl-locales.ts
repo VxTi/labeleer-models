@@ -1,4 +1,4 @@
-import type { ISO639_1LanguageCode } from './locales';
+import type { ISO639_1LanguageCode } from './locales.js';
 
 /**
  * Set of language codes that are written in right-to-left (RTL) scripts.

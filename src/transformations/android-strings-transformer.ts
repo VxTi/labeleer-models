@@ -1,4 +1,4 @@
-import { DatasetBuilder } from '@/dataset-builder';
+import { DatasetBuilder } from '../dataset-builder.js';
 import type {
   ParsingOptions,
   SerializationOptions,
@@ -6,17 +6,17 @@ import type {
   TranslationDataset,
   TranslationPluralization,
   SerializationFile,
-} from '@/definitions';
-import { ParsingError, SerializationError } from '@/errors';
-import { FileFormat } from '@/transformations/file-formats';
+} from '../definitions.js';
+import { ParsingError, SerializationError } from '../errors.js';
+import { FileFormat } from './file-formats.js';
 import {
   type Locale,
   getCountryFromLocale,
   toISO639_1LanguageCode,
   Plurality,
-} from '@/locales';
-import { makeLanguageTransformer } from '@/transformations/transformer';
-import { entries, extractArray } from '@/util/data-extraction';
+} from '../locales/index.js';
+import { makeLanguageTransformer } from './transformer.js';
+import { entries, extractArray } from '../util/data-extraction.js';
 import { XMLParser } from 'fast-xml-parser';
 import Builder, { type XMLBuilder } from 'fast-xml-builder';
 import { merge } from 'lodash-es';

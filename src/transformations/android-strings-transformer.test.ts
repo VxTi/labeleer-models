@@ -1,12 +1,12 @@
+import { describe, expect, it } from 'vitest';
 import {
   mockDataset,
   mockParsingOptions,
   mockSerializationOptions,
-} from '@/__testutils__';
-import { type TranslationDataset } from '@/definitions';
-import { Plurality } from '@/locales';
-import { AndroidStringsDatasetTransformer } from './android-strings-transformer';
-import { describe, expect, it } from 'vitest';
+} from '../__testutils__/index.js';
+import { type TranslationDataset } from '../definitions.js';
+import { Plurality } from '../locales/index.js';
+import { AndroidStringsDatasetTransformer } from './android-strings-transformer.js';
 
 const transformer = AndroidStringsDatasetTransformer;
 

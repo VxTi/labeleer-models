@@ -1,10 +1,10 @@
-import { TsDatasetTransformer } from '@/transformations/qt-linquist-transformer';
 import { describe, expect, it } from 'vitest';
+import { TsDatasetTransformer } from './qt-linquist-transformer.js';
 import {
   mockDataset,
   mockSerializationOptions,
   mockParsingOptions,
-} from '@/__testutils__';
+} from '../__testutils__/index.js';
 
 const transformer = TsDatasetTransformer;
 

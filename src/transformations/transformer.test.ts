@@ -1,12 +1,13 @@
-import type { SerializationFile, SerializationResult } from '@/definitions';
-import {
-  type AppleStringsSerializationOptions,
-  type FileExtension,
-  defaultTransformerSet,
-} from '@/transformations';
+import { type FileExtension } from './transformer.js';
 import { describe, it, expect } from 'vitest';
-import { FileFormat } from '@/transformations/file-formats';
-import { mockDataset, mockSerializationOptions } from '@/__testutils__';
+import {
+  mockDataset,
+  mockSerializationOptions,
+} from '../__testutils__/index.js';
+import type { SerializationFile, SerializationResult } from '../definitions.js';
+import { defaultTransformerSet } from './default-transformer-set.js';
+import { FileFormat } from './file-formats.js';
+import { type AppleStringsSerializationOptions } from './apple-strings-transformer.js';
 
 const transformerSet = defaultTransformerSet;
 

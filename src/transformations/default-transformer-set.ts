@@ -1,12 +1,12 @@
-import { AndroidStringsDatasetTransformer } from './android-strings-transformer';
-import { AppleStringsDatasetTransformer } from './apple-strings-transformer';
-import { JsonDatasetTransformer } from './json-transformer';
-import { PODatasetTransformer } from './po-transformer';
-import { TsDatasetTransformer } from './qt-linquist-transformer';
-import { XCStringsDatasetTransformer } from './xcstrings-transformer';
-import { XLIFFDatasetTransformer } from './xliff-transformer';
-import { YamlDatasetTransformer } from './yaml-transformer';
-import { makeParserSet } from './transformer';
+import { AndroidStringsDatasetTransformer } from './android-strings-transformer.js';
+import { AppleStringsDatasetTransformer } from './apple-strings-transformer.js';
+import { JsonDatasetTransformer } from './json-transformer.js';
+import { PODatasetTransformer } from './po-transformer.js';
+import { TsDatasetTransformer } from './qt-linquist-transformer.js';
+import { XCStringsDatasetTransformer } from './xcstrings-transformer.js';
+import { XLIFFDatasetTransformer } from './xliff-transformer.js';
+import { YamlDatasetTransformer } from './yaml-transformer.js';
+import { makeParserSet } from './transformer.js';
 
 export const defaultTransformerSet = makeParserSet([
   JsonDatasetTransformer,

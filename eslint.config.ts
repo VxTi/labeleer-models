@@ -65,6 +65,14 @@ export default defineConfig([
       'import/no-useless-path-segments': 2, // Prevent unnecessary path segments in import and require statements
       'import/newline-after-import': 2, // Enforce a newline after import statements
       'import/no-duplicates': 2, // Prevent duplicate imports
+      'import/extensions': [
+        'error',
+        'ignorePackages',
+        {
+          js: 'always',
+          ts: 'always'
+        }
+      ],
 
       '@typescript-eslint/consistent-type-imports': [
         'error',

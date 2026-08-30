@@ -1,17 +1,17 @@
-import { LocaleDecoder } from '@/common';
-import { DatasetBuilder } from '@/dataset-builder';
+import { LocaleDecoder } from '../common/index.js';
+import { DatasetBuilder } from '../dataset-builder.js';
 import type {
   ParsingOptions,
   SerializationFileFragment,
   SerializationOptions,
   SerializationResult,
   TranslationDataset,
-} from '@/definitions';
-import { ParsingError } from '@/errors';
-import { FileFormat } from './file-formats';
-import { type Locale, toISO639_1LanguageCode } from '@/locales';
-import { makeLanguageTransformer } from './transformer';
-import { entries } from '@/util/data-extraction';
+} from '../definitions.js';
+import { ParsingError } from '../errors.js';
+import { FileFormat } from './file-formats.js';
+import { type Locale, toISO639_1LanguageCode } from '../locales/index.js';
+import { makeLanguageTransformer } from './transformer.js';
+import { entries } from '../util/data-extraction.js';
 import Builder, { type XMLBuilder } from 'fast-xml-builder';
 import { XMLParser } from 'fast-xml-parser';
 import * as z from 'zod';

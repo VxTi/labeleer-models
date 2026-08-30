@@ -5,7 +5,7 @@ import {
   isLocale,
   iso639_1ToLocale,
   toPOSIX,
-} from '@/locales';
+} from '../locales/index.js';
 import * as z from 'zod';
 import {
   MAX_TAG_COUNT,
@@ -14,8 +14,8 @@ import {
   MAX_TRANSLATION_KEY_LENGTH,
   MIN_TAG_LENGTH,
   MIN_TRANSLATION_KEY_LENGTH,
-} from './constants';
-import { type TranslationDataset } from '@/definitions';
+} from './constants.js';
+import { type TranslationDataset } from '../definitions.js';
 
 export const LocaleDecoder = z
   .string()

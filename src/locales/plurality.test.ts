@@ -4,8 +4,8 @@ import {
   nonPluralLocales,
   Plurality,
   hasPluralization,
-} from './plurality';
-import { type Locale, Locales } from './locales';
+} from './plurality.js';
+import { type Locale, Locales } from './locales.js';
 
 describe('supportsPluralization', () => {
   it.each<[Locale, boolean]>([

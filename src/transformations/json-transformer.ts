@@ -1,13 +1,13 @@
-import { JsonTranslationDatasetDecoder } from '@/common';
+import { JsonTranslationDatasetDecoder } from '../common/index.js';
 import type {
   ParsingOptions,
   SerializationOptions,
   SerializationResult,
   TranslationDataset,
-} from '@/definitions';
-import { ParsingError } from '@/errors';
-import { FileFormat } from './file-formats';
-import { makeLanguageTransformer } from './transformer';
+} from '../definitions.js';
+import { ParsingError } from '../errors.js';
+import { FileFormat } from './file-formats.js';
+import { makeLanguageTransformer } from './transformer.js';
 
 export const JsonDatasetTransformer = makeLanguageTransformer({
   fileFormat: FileFormat.JSON,

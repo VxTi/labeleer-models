@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest';
-import { isRtlLanguage } from './rtl-locales';
+import { isRtlLanguage } from './rtl-locales.js';
 
 describe('isRtlLanguage', () => {
   it.each`

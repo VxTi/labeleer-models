@@ -1,4 +1,4 @@
-import { DatasetBuilder } from '@/dataset-builder';
+import { DatasetBuilder } from '../dataset-builder.js';
 import type {
   ParsingOptions,
   SerializationFileFragment,
@@ -6,12 +6,16 @@ import type {
   SerializationResult,
   TranslationDataset,
   TranslationPluralization,
-} from '@/definitions';
-import { ParsingError } from '@/errors';
-import { FileFormat } from './file-formats';
-import { type Locale, Plurality, toISO639_1LanguageCode } from '@/locales';
-import { makeLanguageTransformer } from './transformer';
-import { entries } from '@/util/data-extraction';
+} from '../definitions.js';
+import { ParsingError } from '../errors.js';
+import { FileFormat } from './file-formats.js';
+import {
+  type Locale,
+  Plurality,
+  toISO639_1LanguageCode,
+} from '../locales/index.js';
+import { makeLanguageTransformer } from './transformer.js';
+import { entries } from '../util/data-extraction.js';
 import {
   type GetTextTranslation,
   type GetTextTranslations,

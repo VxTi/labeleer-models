@@ -6,7 +6,7 @@ import {
   type InferBCP47Locale,
   type InferPosixFromBCP47Locale,
   type CountryCode,
-} from './locales';
+} from './locales.js';
 
 /**
  * Checks whether the provided value is a valid `ISO 639-1` language code.

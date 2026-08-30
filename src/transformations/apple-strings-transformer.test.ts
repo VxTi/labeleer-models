@@ -1,10 +1,13 @@
-import { mockParsingOptions, mockSerializationOptions } from '@/__testutils__';
-import { type Locale, toBCP47 } from '@/locales';
+import { describe, expect, it } from 'vitest';
+import {
+  mockParsingOptions,
+  mockSerializationOptions,
+} from '../__testutils__/index.js';
+import { type Locale, toBCP47 } from '../locales/index.js';
 import {
   AppleStringsDatasetTransformer,
   type AppleStringsSerializationOptions,
-} from '@/transformations/apple-strings-transformer';
-import { describe, expect, it } from 'vitest';
+} from './apple-strings-transformer.js';
 
 const transformer = AppleStringsDatasetTransformer;
 

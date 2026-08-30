@@ -1,7 +1,6 @@
-export * from './common';
-export * from './locales';
-export * from './transformations';
-export * from './dataset-builder';
-export * from './definitions';
-export * from './errors';
-export { Plurality } from '@/locales';
+export * from './common/index.js';
+export * from './locales/index.js';
+export * from './transformations/index.js';
+export * from './dataset-builder.js';
+export * from './definitions.js';
+export * from './errors.js';

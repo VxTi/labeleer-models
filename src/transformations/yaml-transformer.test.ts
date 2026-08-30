@@ -1,7 +1,7 @@
-import { Plurality } from '@/locales';
-import { YamlDatasetTransformer } from './yaml-transformer';
 import { describe, it, expect } from 'vitest';
-import { mockSerializationOptions } from '@/__testutils__';
+import { Plurality } from '../locales/index.js';
+import { YamlDatasetTransformer } from './yaml-transformer.js';
+import { mockSerializationOptions } from '../__testutils__/index.js';
 
 const transformer = YamlDatasetTransformer;
 
